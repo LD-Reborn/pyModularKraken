@@ -1,0 +1,65 @@
+from log.log import *
+import configparser
+import importlib
+import threading
+import queue
+import time
+import imp
+import os
+
+def test(): # what?
+    pass
+
+
+if __name__ == "__main__":
+    #import module names from .ini
+    config = configparser.ConfigParser()
+    basepath = os.path.dirname(os.path.realpath(__file__))
+    config.read(basepath + '/config.ini')
+    listmodules = config["modules"]
+    modules = []
+    #initiate modules and deliver queues
+    for module in listmodules:
+        log(module)
+        hImport = imp.load_source(module, basepath + "/" + module + "/" + module + ".py")
+        try:
+            moduleclass = hImport.mainclass
+            
+            modulequeueIn = queue.Queue()
+            modulequeueOut = queue.Queue()
+            moduleclass.initcore(modulequeueIn, modulequeueOut)
+            modules.append((module, moduleclass, modulequeueIn, modulequeueOut))
+        except AttributeError as msg:
+            errout("CORE: Error loading module. {}".format(msg))
+    for module in modules:
+        hThread = threading.Thread(target=module[1].run)
+        hThread.start()
+
+    while True:
+        time.sleep(0.01)
+        for module in modules:
+            #module = (modulename, moduleclass, modulequeueIn, modulequeueOut)
+            if not module[2].empty():
+                read = module[2].get()
+                print("CORE has received: {}".format(read))
+                if len(read) < 2:
+                    errout("CORE: Unfit parameter size:{}".format(read))
+                else:
+                    if read[0] == "core":
+                        if read[1] == "getmodulelist":
+                            aModules = []
+                            for mod in modules:
+                                aModules.append(mod[0])
+                            module[3].put(("core", "modulelist", aModules))
+                        #elif read[1] == "getmodulelistverbose":
+
+                    else:
+                        for target in modules:
+                            if target[0] == read[0] or (type(read[0]) == list and target[0] in read[0]):
+                                #print("CORE - found!")
+                                #print(target)
+                                read = list(read) # Why? - Sincerely: 3am me.
+                                read[0] = module[0] # Why? - Sincerely: 3am me.
+                                target[3].put(read)
+                                break # Do not break if in a list? ~~ToDo
+                module[2].task_done()

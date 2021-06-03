@@ -1,0 +1,93 @@
+Fri Apr 10 17:00:16 2020: Conmanager startup error: [Errno 98] Address already in use
+Fri Apr 10 17:00:28 2020: Conmanager startup error: [Errno 98] Address already in use
+Fri Apr 10 17:00:44 2020: Conmanager startup error: [Errno 98] Address already in use
+Fri Apr 10 17:12:03 2020: Conmanager startup error: [Errno 98] Address already in use
+Fri Apr 10 17:32:26 2020: Conmanager startup error: [Errno 98] Address already in use
+Fri Apr 10 17:43:52 2020: Conmanager startup error: [Errno 98] Address already in use
+Fri Apr 10 17:44:16 2020: Conmanager startup error: [Errno 98] Address already in use
+Fri Apr 10 18:15:06 2020: Already connected client tried to connect again. ('192.168.0.222', 42820)
+Fri Apr 10 18:15:06 2020: Unknown connection. ('192.168.0.222', 42820), <socket.socket fd=9, family=AddressFamily.AF_INET, type=2049, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.222', 42820)>
+Fri Apr 10 18:15:07 2020: Already connected client tried to connect again. ('192.168.0.222', 42822)
+Fri Apr 10 18:15:08 2020: Unknown connection. ('192.168.0.222', 42822), <socket.socket fd=10, family=AddressFamily.AF_INET, type=2049, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.222', 42822)>
+Fri Apr 10 19:12:53 2020: Already connected client tried to connect again. ('192.168.0.222', 43152)
+Fri Apr 10 19:12:54 2020: Unknown connection. ('192.168.0.222', 43152), <socket.socket fd=9, family=AddressFamily.AF_INET, type=2049, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.222', 43152)>
+Sun Apr 26 16:55:30 2020: Conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 18:04:27 2020: conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 18:04:28 2020: conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 18:05:12 2020: conmanager: Unknown connection. ('192.168.0.115', 58004), <socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58004)>
+Sun Apr 26 18:05:13 2020: conmanager: Unknown connection. ('192.168.0.115', 58008), <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58008)>
+Sun Apr 26 18:05:15 2020: conmanager: Unknown connection. ('192.168.0.115', 58012), <socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58012)>
+Sun Apr 26 18:05:17 2020: conmanager: Unknown connection. ('192.168.0.115', 58016), <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58016)>
+Sun Apr 26 18:05:17 2020: conmanager: Unknown connection. ('192.168.0.115', 58020), <socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58020)>
+Sun Apr 26 18:05:19 2020: conmanager: Unknown connection. ('192.168.0.115', 58024), <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58024)>
+Sun Apr 26 18:05:19 2020: conmanager: Unknown connection. ('192.168.0.115', 58028), <socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58028)>
+Sun Apr 26 18:05:20 2020: conmanager: Unknown connection. ('192.168.0.115', 58032), <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58032)>
+Sun Apr 26 18:05:20 2020: conmanager: Unknown connection. ('192.168.0.115', 58036), <socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58036)>
+Sun Apr 26 18:05:22 2020: conmanager: Unknown connection. ('192.168.0.115', 58040), <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58040)>
+Sun Apr 26 18:05:23 2020: conmanager: Unknown connection. ('192.168.0.115', 58044), <socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58044)>
+Sun Apr 26 18:05:24 2020: conmanager: Unknown connection. ('192.168.0.115', 58048), <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58048)>
+Sun Apr 26 18:05:26 2020: conmanager: Unknown connection. ('192.168.0.115', 58052), <socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58052)>
+Sun Apr 26 18:05:29 2020: conmanager: Unknown connection. ('192.168.0.115', 58056), <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58056)>
+Sun Apr 26 18:07:48 2020: conmanager: Unknown connection. ('192.168.0.115', 58104), <socket.socket fd=8, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58104)>
+Sun Apr 26 18:22:04 2020: conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 18:35:35 2020: conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 18:41:18 2020: conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 18:44:03 2020: conmanager: Already connected client tried to connect again. ('192.168.0.115', 58214)
+Sun Apr 26 18:44:03 2020: conmanager: Unknown connection. ('192.168.0.115', 58214), <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58214)>
+Sun Apr 26 18:47:59 2020: conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 18:48:14 2020: conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 18:48:18 2020: conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 18:48:23 2020: conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 18:48:27 2020: conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 19:57:04 2020: conmanager: Already connected client tried to connect again. ('192.168.0.115', 58262)
+Sun Apr 26 19:57:04 2020: conmanager: Unknown connection. ('192.168.0.115', 58262), <socket.socket fd=6, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.220', 42069), raddr=('192.168.0.115', 58262)>
+Sun Apr 26 22:38:16 2020: conmanager startup error: [Errno 98] Address already in use
+Sun Apr 26 22:38:31 2020: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 01:39:21 2021: conmanager startup error: No section: 'keychain'
+Fri May 28 01:43:11 2021: conmanager startup error: 'names'
+Fri May 28 01:46:02 2021: conmanager startup error: 'names'
+Fri May 28 01:46:43 2021: conmanager startup error: 'names'
+Fri May 28 01:46:53 2021: conmanager startup error: 'names'
+Fri May 28 15:00:49 2021: conmanager startup error: 'names'
+Fri May 28 15:34:46 2021: conmanager startup error: 'names'
+Fri May 28 15:37:07 2021: conmanager startup error: too many values to unpack (expected 2)
+Fri May 28 15:38:26 2021: conmanager startup error: too many values to unpack (expected 2)
+Fri May 28 15:39:27 2021: conmanager startup error: too many values to unpack (expected 2)
+Fri May 28 15:40:55 2021: conmanager startup error: too many values to unpack (expected 2)
+Fri May 28 15:43:23 2021: conmanager startup error: Unable to find any name for this machine. Check key authority and/or network settings
+Fri May 28 15:51:56 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 15:52:18 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 15:58:15 2021: conmanager startup error: name 'closeListenSocket' is not defined
+Fri May 28 16:08:52 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 16:09:04 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 16:25:13 2021: conmanager startup error: 'PKCS1OAEP_Cipher' object has no attribute 'publickey'
+Fri May 28 16:34:19 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 16:41:16 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 16:41:27 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 16:41:38 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 16:41:54 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 17:08:27 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 17:08:36 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 17:09:18 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 18:39:47 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 18:40:09 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 18:40:19 2021: conmanager startup error: [Errno 98] Address already in use
+Fri May 28 18:40:24 2021: conmanager startup error: [Errno 98] Address already in use
+Sat May 29 14:38:38 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 14:38:44 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 15:52:49 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 15:53:07 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 15:57:05 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 15:59:29 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 16:00:12 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 16:49:41 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 17:54:58 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 17:55:13 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 17:55:20 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 17:55:30 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 17:55:35 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 17:55:41 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 18:09:36 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 20:35:32 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 20:56:16 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat May 29 20:57:00 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use

@@ -1,0 +1,100 @@
+How commands.xml is structured:
+
+1. XML version
+	<?xml version="1.0"?>
+
+2.	<main> The pointer is always reset to the <main> node
+	</main>
+
+3. 	<sub>	The sub is the frame of your command. You just need to add
+	</sub>	the instructions into it, like what expression to look for and
+			the command to be executed.
+
+4,	<text>	Text contains what expression to look for. In it you can use
+	</text>	variables like $callsign$, $name$, $text$ and $scriptpath$
+			and also regular expressions. (Look up regex. It may help
+			dealing with deviations, created by voice recognition.
+			e.g. whatever + what ever ==regex==> what?ever
+			You may as well use multiple <text></text> tags to
+			comply with multiple ways of expressing something
+
+5.	<command>				This is the actual thing you are
+	</command>				looking for. In this tag you reference
+	or						a script that you have put into the script
+	<command nobreak="true">	folder. You may also add parameters like $text$ etc.
+	</command>				If you don't want the engine to stop, despite the
+							sentence not being over, you should insert a
+							nobreak="true" into the <command> tag.
+							(see example 1)
+extra:
+<jumpto></jumpto>
+<jumplabel></jumplabel>
+
+If you have more than one expression, thus more than one path for one command,
+you may use labels and jumps in a goto-like way.
+
+
+e.g. "open audacity" and "please open audacity", with the "please" being redundant.
+
+example 1:
+
+<sub>
+	<jumplabel>open</jumplabel>
+	<text>open</text>
+	<sub>
+		...
+	</sub>
+</sub>
+<sub>
+	<text>please</text>
+	<command nobreak="true">
+		increasePolitenessCounter.py %text%
+	</command>
+	<jumpto>open</jumpto>
+</sub>
+
+example 2: (full)
+
+<?xml version="1.0"?>
+<main>
+	<sub>
+		<text>Hey $callsign$.?</text>
+		<command nobreak="true">
+			call.py '$text$'
+		</command>
+		<sub>
+			<text>tell the clock</text>
+			<command>
+				telltheclock.py
+			</command>
+		</sub>
+		<sub>
+			<text>open</text>
+			<text>run</text>
+			<jumplabel>open</jumplabel>
+			<sub>
+				<text>blender</text>
+				<command nobreak="true">
+					run-blender.py
+				</command>
+				<sub>
+					<text>and</text>
+					<jumpto>open</jumpto>
+				</sub>
+			</sub>
+			<sub>
+				<text>Team Fortress( 2| two)?</text>
+				<command>
+					run-tf2.py
+				</command>
+				<sub> 
+					<text>and</text>
+					<jumpto>open</jumpto>
+				</sub>
+			</sub>
+		</sub>
+	</sub>
+</main>
+
+
+But you may also export some tasks to self made scripts. Instead of creating 1000 scripts

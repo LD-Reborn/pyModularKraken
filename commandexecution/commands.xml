@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<main>
+	<sub>
+		<text>Hey $callsign$.?</text>
+		<command nobreak="true">
+			call.py '$text$'
+		</command>
+		<sub>
+			<text>wie?viel Uhr haben wir</text>
+			<command>
+				telltheclock.py
+			</command>
+		</sub>
+		<sub>
+			<text>öffne</text>
+			<text>open</text>
+			<jumplabel>open</jumplabel>
+			<command>
+				run.py $text$
+			</command>
+			<sub>
+				<text>blender</text>
+				<command nobreak="true">
+					run-blender.py
+				</command>
+				<sub>
+					<text>(a|u)nd</text>
+					<jumpto>open</jumpto>
+				</sub>
+			</sub>
+			<sub>
+				<text>Team Fortress</text>
+				<text>Team Fortress 2</text>
+				<text>Team Fortress two</text>
+				<command>
+					run-tf2.py
+				</command>
+				<sub>
+					<text>(a|u)nd</text>
+					<jumpto>open</jumpto>
+				</sub>
+			</sub>
+		</sub>
+	</sub>
+</main>

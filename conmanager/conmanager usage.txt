@@ -1,0 +1,18 @@
+How to send data via conmanager:
+    1. get to know what your target PC is called / "broadcast"
+        ("conmanager", ("listdevices"))
+        --> ("conmanager", ("devicelist", (devicelist)))
+    2. send data (Data needs to be a bytearray (e.g. b'bla') and MUST NOT be
+    a tuple!)
+        ("conmanager", ("senddata", targetPCName, targetModule, actualData))
+        --> ("conmanager", ("sentdata", (booleanSuccess, errorinfo, (ip, port), name)))
+        # Reply gets queued only if an error occurs! See 2.1
+    2.1 If you need a response wether your packet was transmitted or not:
+        ("conmanager", ("senddata", targetPCName, targetModule, actualData, packetID))
+        --> ("conmanager", ("sentdata", (booleanSuccess, errorinfo, (ip, port), name), packetID))
+        # packetID can be chosen freely. Feel free to name it whatever you want.
+How to receive data via conmanager:
+    1. Get items from your in queue. They should look like this:
+        ("conmanager", ("recvdata", originPCName, originModule, actualData))
+    
+

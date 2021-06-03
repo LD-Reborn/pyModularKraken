@@ -1,0 +1,40 @@
+Required elements of a module:
+    class MODULENAME(object):
+        def __init__(self):
+            #Definitions of global variables to be used across the class.
+            #Please put initiation code here.
+            #Be aware that all code put here is executed in the main
+            #thread! This is NOT the place for your main loops!
+            #Only reading .ini files, declaring global variables and
+            #loading other essential ressources.
+
+        #initcore() is called by the main thread to pass communication queues
+        # for the future thread to use.
+        def initcore(self, pOutQueue, pInQueue):
+            global outQueue, inQueue
+            outQueue = pOutQueue
+            inQueue = pInQueue
+
+        def run(self):
+            #Place your main execution code here.
+    
+    #The following code line is for creating an instance of your
+    #class, so that the core can access all methods from it. It
+    #is needed, because I haven't yet found a way to make the
+    #core create an instance of a module with variable name.
+    mainclass = MODULENAME()
+
+Queue protocol:
+    All requests consist of at least a 2-tuple with the following structure:
+        (targetmodule, data)
+    Of course the data itself can consist of tuples or whatever you need.
+    
+Items that are directed towards other modules are forwarded respectively,
+with "targetmodule" being replaced by "sendermodule" for the recipient
+to be able to know who this packet came from.
+Here is a quick visualisation:
+    (targetmodule, data)--->core--->(sendermodule, data)
+
+The core on the other hand is programmed to support the following functions:
+-   ("core", "getmodulelist") - Answer: ("core", [module1, module2,...])
+
