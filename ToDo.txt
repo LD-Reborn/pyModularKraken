@@ -1,3 +1,4 @@
+TEST123
 Gg.:
 	Netzwerk mit Teilnehmern A,B,C.
 	A:
