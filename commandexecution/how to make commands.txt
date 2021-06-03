@@ -14,7 +14,7 @@ How commands.xml is structured:
 	</text>	variables like $callsign$, $name$, $text$ and $scriptpath$
 			and also regular expressions. (Look up regex. It may help
 			dealing with deviations, created by voice recognition.
-			e.g. whatever + what ever ==regex==> what?ever
+			e.g. "whatever" OR "what ever" ==regex==> what?ever
 			You may as well use multiple <text></text> tags to
 			comply with multiple ways of expressing something
 
@@ -22,8 +22,8 @@ How commands.xml is structured:
 	</command>				looking for. In this tag you reference
 	or						a script that you have put into the script
 	<command nobreak="true">	folder. You may also add parameters like $text$ etc.
-	</command>				If you don't want the engine to stop, despite the
-							sentence not being over, you should insert a
+	</command>				If you don't want the engine to stop, should the
+							sentence not be over, you can also insert a
 							nobreak="true" into the <command> tag.
 							(see example 1)
 extra:
@@ -34,9 +34,7 @@ If you have more than one expression, thus more than one path for one command,
 you may use labels and jumps in a goto-like way.
 
 
-e.g. "open audacity" and "please open audacity", with the "please" being redundant.
-
-example 1:
+example 1: "open audacity" and "please open audacity", with the "please" being redundant.
 
 <sub>
 	<jumplabel>open</jumplabel>
