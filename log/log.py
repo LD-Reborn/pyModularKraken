@@ -1,15 +1,15 @@
 import time
 
-def errout(psErrMsg):
-    psErrMsg = "{}: {}\n".format(time.asctime(), psErrMsg)
-    print(psErrMsg)
+def errout(message):
+    message = "{}: {}\n".format(time.asctime(), message)
+    print(message)
     hFile = open("errorlog.txt", "a")
-    hFile.write(psErrMsg)
+    hFile.write(message)
     hFile.close()
 
-def log(psMsg):
-    psMsg = "{}: {}\n".format(time.asctime(), psMsg)
-    print(psMsg)
+def log(message):
+    message = "{}: {}\n".format(time.asctime(), message)
+    print(message)
     hFile = open("log.txt", "a")
-    hFile.write(psMsg)
+    hFile.write(message)
     hFile.close()

@@ -48,3 +48,4 @@ Conmanager:
     booleanSuccess und errorinfo (beim Pakete versenden) zu Einem verschmelzbar; Redundanz.
         Umbenennen zu errorinfo. z.B. Kein Fehler = False; Fehler = $Info
 
+    "updatefile" und "deletefile" ---> (zuletzt Zeile 225) überprüfen, ob Befehl von Admin kommt!!!!!

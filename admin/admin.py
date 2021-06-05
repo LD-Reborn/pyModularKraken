@@ -13,18 +13,19 @@ class admin(object):
         safepath = os.path.realpath(basepath + "/../") + "/"
         print(safepath)
         pass
-    
-    def initcore(self, pOutQueue, pInQueue):
-        global outQueue, inQueue
-        outQueue = pOutQueue
-        inQueue = pInQueue
+
+
+    def initcore(self, out_q, in_q):
+        global queue_out, queue_in
+        queue_out = out_q
+        queue_in = in_q
 
     def run(self):
         log("intermetry has started!")
         
         while True:
-            if not inQueue.empty():
-                read = inQueue.get()
+            if not queue_in.empty():
+                read = queue_in.get()
                 print("ADMIN: {}".format(read))
                 originator = read[0]
                 if type(read[1]) == list or type(read[1]) == tuple:
@@ -32,27 +33,27 @@ class admin(object):
                 else:
                     action = read[1]
                 if action == "recvdata":
-                    origDevice = read[1][1]
-                    origModule = read[1][2]
+                    orig_device = read[1][1]
+                    orig_module = read[1][2]
                     try:
                         data = read[1][3].decode("utf-8")
                     except:
                         data = read[1][3]
                     
                     if data[0:11] == "requestfile":
-                        print("admin: incoming file request from {} for file {}".format(origDevice, data[12:]))
+                        print("admin: incoming file request from {} for file {}".format(orig_device, data[12:]))
                         filepath = data[12:]
                         if os.path.commonprefix((os.path.realpath(filepath), safepath)) != safepath:
-                            errout("admin: directory traversal attack prevented: origDevice {}; origModule {}; data {}".format(origDevice, origModule, data))
+                            errout("admin: directory traversal attack prevented: orig_device {}; orig_module {}; data {}".format(orig_device, orig_module, data))
                         elif not os.path.isfile(filepath):
-                            outQueue.put(("conmanager", ("senddata", origDevice, origModule, b'filenotfounderror ' + bytes(filepath, "utf8"))))
+                            queue_out.put(("conmanager", ("senddata", orig_device, orig_module, b'filenotfounderror ' + bytes(filepath, "utf8"))))
                         else:
-                            tempFile = open(filepath, "rb")
-                            tempRead = tempFile.read()
-                            tempFile.close()
-                            outQueue.put(("conmanager", ("senddata", origDevice, origModule, b'updatefile ' + bytes([len(filepath)]) + bytes(filepath, "utf8") + tempRead.__len__().to_bytes(4, 'big') + tempRead)))
+                            temp_file = open(filepath, "rb")
+                            temp_read = temp_file.read()
+                            temp_file.close()
+                            queue_out.put(("conmanager", ("senddata", orig_device, orig_module, b'updatefile ' + bytes([len(filepath)]) + bytes(filepath, "utf8") + temp_read.__len__().to_bytes(4, 'big') + temp_read)))
                     else:
-                        print("Dunno what to do with this packet: {}/{}/{}".format(origDevice, origModule, data))
+                        print("Dunno what to do with this packet: {}/{}/{}".format(orig_device, orig_module, data))
                 elif action == "sentdata":
                     print("Intermetry: unknown action: {}".format(read))
 mainclass = admin()

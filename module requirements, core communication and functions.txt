@@ -10,10 +10,10 @@ Required elements of a module:
 
         #initcore() is called by the main thread to pass communication queues
         # for the future thread to use.
-        def initcore(self, pOutQueue, pInQueue):
-            global outQueue, inQueue
-            outQueue = pOutQueue
-            inQueue = pInQueue
+        def initcore(self, out_q, in_q):
+            global queue_out, queue_in
+            queue_out = out_q
+            queue_in = in_q
 
         def run(self):
             #Place your main execution code here.

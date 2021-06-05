@@ -16,29 +16,29 @@ if __name__ == "__main__":
     config = configparser.ConfigParser()
     basepath = os.path.dirname(os.path.realpath(__file__))
     config.read(basepath + '/config.ini')
-    listmodules = config["modules"]
+    modulelist = config["modules"]
     modules = []
     #initiate modules and deliver queues
-    for module in listmodules:
+    for module in modulelist:
         log(module)
         hImport = imp.load_source(module, basepath + "/" + module + "/" + module + ".py")
         try:
-            moduleclass = hImport.mainclass
+            ModuleClass = hImport.mainclass
             
-            modulequeueIn = queue.Queue()
-            modulequeueOut = queue.Queue()
-            moduleclass.initcore(modulequeueIn, modulequeueOut)
-            modules.append((module, moduleclass, modulequeueIn, modulequeueOut))
+            modulequeue_in = queue.Queue()
+            modulequeue_out = queue.Queue()
+            ModuleClass.initcore(modulequeue_in, modulequeue_out)
+            modules.append((module, ModuleClass, modulequeue_in, modulequeue_out))
         except AttributeError as msg:
             errout("CORE: Error loading module. {}".format(msg))
     for module in modules:
-        hThread = threading.Thread(target=module[1].run)
-        hThread.start()
+        thread = threading.Thread(target=module[1].run)
+        thread.start()
 
     while True:
         time.sleep(0.01)
         for module in modules:
-            #module = (modulename, moduleclass, modulequeueIn, modulequeueOut)
+            #module = (modulename, ModuleClass, modulequeue_in, modulequeue_out)
             if not module[2].empty():
                 read = module[2].get()
                 print("CORE has received: {}".format(read))

@@ -91,3 +91,10 @@ Sat May 29 18:09:36 2021: conmanager CRITICAL startup error: [Errno 98] Address 
 Sat May 29 20:35:32 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
 Sat May 29 20:56:16 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
 Sat May 29 20:57:00 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
+Sat Jun  5 00:08:05 2021: conmanager startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: '192.168.0.26'
+Sat Jun  5 00:08:05 2021: conmanager CRITICAL startup error: '192.168.0.26'
+Sat Jun  5 00:09:20 2021: conmanager startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: '192.168.0.26'
+Sat Jun  5 00:09:20 2021: conmanager CRITICAL startup error: '192.168.0.26'
+Sat Jun  5 00:09:25 2021: conmanager startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: '192.168.0.26'
+Sat Jun  5 00:09:25 2021: conmanager CRITICAL startup error: '192.168.0.26'
+Sat Jun  5 02:53:41 2021: conmanager CRITICAL startup error: [Errno 98] Address already in use
