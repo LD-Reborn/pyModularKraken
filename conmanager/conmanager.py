@@ -19,6 +19,8 @@ class conmanager(object):
         global config, basepath, key_private, key_public, sockets, own_ip, own_name, listensocket, standardport
         global update_lastrequested, privatekey_lastupdated, admin_name, safepath
         try:
+            #init logging.
+            initLog("conmanager")
             #load config info
             config = configparser.ConfigParser()
             basepath = os.path.dirname(os.path.realpath(__file__))
@@ -29,11 +31,11 @@ class conmanager(object):
             if privatekey_file_exists:
                 privatekey_file = open("./conmanager/privatekey", "r")
                 key_private = self.importKey(privatekey_file.read())
-                key_public = key_private.publickey()#self.getKey("publickey")
+                key_public = key_private[0].publickey()#self.getKey("publickey")
             else:
                 privatekey_file = open("./conmanager/privatekey", "w")
                 key_private = RSA.generate(1024)
-                key_public = key_private.publickey()
+                key_public = key_private[0].publickey()
                 privatekey_file.write(str(key_private.exportKey(), "utf8").replace("\n", "\\n"))
 
             privatekey_file.close()
@@ -59,7 +61,7 @@ class conmanager(object):
             try:
                 own_name = config["names"][own_ip]
             except Exception as msg:
-                errout("conmanager startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: {}".format(msg))
+                errout("CONMANAGER: startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: {}".format(msg))
                 raise
             print("conmanager info: own_name: {}".format(own_name))
             #found = False
@@ -70,13 +72,13 @@ class conmanager(object):
             #        found = True
             #print("Debug20210528:01 - 5")
             #if not found: # There has to be a better solution;
-            #    errout("conmanager startup error: Unable to find any name for this machine. Check key authority and/or network settings")
+            #    errout("CONMANAGER: startup error: Unable to find any name for this machine. Check key authority and/or network settings")
 
 
             '''
             Connections contain:
-                Socket, (IP, Port), hPublicKey, name, recvBuffer, stateAuthentication
-                Socket, (IP, Port), hPublicKey, name, recvBuffer
+                Socket, (IP, Port), (publicKeyRSA, publicKeyPKCS1_OAEP), name, recvBuffer, stateAuthentication
+                Socket, (IP, Port), (publicKeyRSA, publicKeyPKCS1_OAEP), name, recvBuffer
 
                 stateAuthentication:
                     -1 = pubkey deviates from database entry; Check error logs for more info!
@@ -101,21 +103,20 @@ class conmanager(object):
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 try:
                     self.connect(sock, (ip, 42069))
-                    print("Conncted to:")
-                    print(sock)
+                    log("conmanager: Conncted to {}".format(sock))
                 except:
-                    print("Unable to connect to:")
-                    print(ip)
+                    log("conmanager: Unable to connect to {}".format(ip))
                     sock.close()
                     sock = False
                 try:
                     temp_key = self.getKey(config["names"][ip])
                 except Exception as msg:
                     temp_key = False
+                    errout("CONMANAGER: Unable to load key for {}: {}. Please check if it is correct.".format(ip, msg))
                 temp_array = [sock, (ip, 42069), temp_key, config["names"][ip], b'']
                 sockets.append(temp_array)
         except Exception as msg: # GOTTA CATCH 'EM ALL
-            errout("conmanager CRITICAL startup error: {}".format(msg))
+            errout("CONMANAGER: CRITICAL startup error: {}".format(msg))
             raise # And release 'em all again :/ # Why? Because it's a critical error. The module didn't properly start.
 
     def initcore(self, out_q, in_q): # Rename initcore to something more meaningfull... Maybe passQueues?
@@ -125,68 +126,76 @@ class conmanager(object):
 
     def run(self):
         global sockets, update_lastrequested
-        log("Conmanager has started!")
+        log("conmanager has started!")
         print("update_lastrequested {}".format((datetime.datetime.now() - update_lastrequested).seconds))
         print("admin_name {}".format(admin_name))
+        
         while True:
+            #print("DEBUG: LOOP")
             time.sleep(0.01) # How to reduce CPU utilization: 1. utilize CPU less. You can thank me later.
             now = datetime.datetime.now()
-            if admin_name and (now - update_lastrequested).seconds > 60: # Feel free to adjust the amound of seconds.
+            if admin_name and (now - update_lastrequested).seconds > 60: # Feel free to adjust the amount of seconds.
                 print("Updating the keychain")
                 queue_out.put(("conmanager", ("senddata", admin_name, "admin", b'requestfile conmanager/keychain.ini'))) # Sending myself mail. Relevant Mr Bean: https://www.youtube.com/watch?v=6Wqn5IaSub8
                 update_lastrequested = now
-            
             if not queue_in.empty():
                 read = queue_in.get()
-                print("CONMANAGER has received: {}".format(read))
+                print("conmanager has received: {}".format(read))
                 originator = read[0]
                 if type(read[1]) == list or type(read[1]) == tuple:
                     action = read[1][0]
                 else:
                     action = read[1]
+                params = read[1] #Yes, when no parameters are passed, params does equal action.
                 if action == "listdevices":
-                    #print("Conmanager: Gonna list the devices!")
+                    #print("conmanager: Gonna list the devices!")
                     temp_return = []
                     for connection in sockets:
                         if connection[0] != False:
                             temp_return.append(connection[3])
                     queue_out.put((originator, ("devicelist", temp_return)))
-                elif action == "senddata":
-                    #print("Conmanager: Gonna send the data!")
+                elif action == "senddata": #Performance issue: Takes 2-6 seconds for total execution
+                    #print("conmanager: Gonna send the data!")
                     for connection in sockets:
-                        if connection[3] == read[1][1] or read[1][1] == "broadcast":
+                        if connection[3] == params[1] or params[1] == "broadcast":
                             #print("Found the connection to send to!")
-                            packet_hasID = len(read[1]) >= 5
-                            if packet_hasID: packet_id = read[1][4]
-                            if connection[0] == False:
-                                #print("No connected socket etc. :{}".format(connection))
-                                #print(connection)
+                            packet_hasID = len(params) >= 5
+                            if packet_hasID: packet_id = params[4]
+                            if connection[0] == False: #If no socket connected towards destination
                                 if packet_hasID:
                                     queue_out.put((originator, ("sentdata", (False, "No socket connected towards destination", connection[1], connection[3]), packet_id)))
                                 else:
                                     queue_out.put((originator, ("sentdata", (False, "No socket connected towards destination", connection[1], connection[3]))))
                                 continue
-                            #print("And it's alive!")
+
+                            if type(connection[2]) is bool:
+                                if packet_hasID:
+                                    queue_out.put((originator, ("sentdata", (False, "Public key not loaded", connection[1], connection[3]), packet_id)))
+                                else:
+                                    queue_out.put((originator, ("sentdata", (False, "Public key not loaded", connection[1], connection[3]))))
+                                continue
+                            #Calculate all byte lengths and convert stuff to bytes to be glued together into a packet.
                             orig_name = bytes(read[0], "utf8")
                             orig_namelen = bytes([len(orig_name)])
-                            target_name = bytes(read[1][2], "utf8")
+                            target_name = bytes(params[2], "utf8")
                             target_namelen = bytes([len(target_name)])
-                            data_len = len(read[1][3]).to_bytes(4, 'big')
-                            data = read[1][3]
+                            data_len = len(params[3]).to_bytes(4, 'big') 
+                            data = params[3]
                             try:
                                 data = orig_namelen + orig_name + target_namelen + target_name + data_len + data
                             except Exception as msg:
                                 queue_out.put((originator, ("sentdata", (False, "data must be bytes"))))
-                                errout("conmanager: Unable to finalize the string to be encrypted and sent: {}".format(msg))
+                                errout("CONMANAGER: Unable to finalize the string to be encrypted and sent: {}".format(msg))
                                 continue
                             try:
                                 while len(data):
-                                    enc = self.encrypt(data[0:64], connection[2]) # Padding and shit fucks up the nice 128 size... 
-                                    # 95 still too long
+                                    #enc = self.encrypt(data[0:64], connection[2]) # Padding and stuff fucks up the nice 128 size...
+                                    enc = self.encrypt(data[0:86], connection[2]) # Padding and stuff fucks up the nice 128 size...
+                                    # 95 still too long # 86 seems to be the maximum size.
                                     # 64 works. I'ma leave it at this for now. ~~Todo
                                     connection[0].sendall(enc)
                                     data = data[64:]
-                                print("Sent data to {}".format(connection))
+                                #print("Sent data to {}".format(connection))
                                 if packet_hasID:
                                     queue_out.put((originator, ("sentdata", (True, False, connection[1], connection[3]), packet_id)))
                             except Exception as msg:
@@ -196,32 +205,32 @@ class conmanager(object):
                                     queue_out.put((originator, ("sentdata", (False, "Unable to send data to destination: {}".format(msg), connection[1], connection[3]), packet_id)))
                                 else:
                                     queue_out.put((originator, ("sentdata", (False, "Unable to send data to destination: {}".format(msg), connection[1], connection[3]))))
-                                
                 elif action == "recvdata":
-                    data = read[1][3]
+                    DEBUG_time = time.time()
+                    data = params[3]
                     if data[0:10] == b"updatefile":
                         #don't forget to check wether it's really coming from someone who is "admin"
-                        print("Ok, I'm going to have to update a file.")
-                        if not (admin_name == read[1][1] and read[1][2] == "admin"):
-                            errout("conmanager: updatefile request sent from unauthorised source: origDevice: {} origModule: {} data: {}".format(read[1][1], read[1][2], data))
+                        #print("Ok, I'm going to have to update a file.")
+                        if not (admin_name == params[1] and params[2] == "admin"):
+                            errout("CONMANAGER: updatefile request sent from unauthorised source: origDevice: {} origModule: {} data: {}".format(params[1], params[2], data))
                             continue
                         file_namelen = data[11]
                         file_path = str(data[12:12 + file_namelen], "utf-8")
                         file_size = int.from_bytes(data[12 + file_namelen: 16 + file_namelen], 'big')
                         file_data = data[16 + file_namelen: 16 + file_namelen + file_size]
 
-                        print("Ok the file has this info: {} {} {}".format(file_namelen, file_path, file_size))
+                        #print("Ok the file has this info: {} {} {}".format(file_namelen, file_path, file_size))
                         
                         if os.path.commonprefix((os.path.realpath(file_path), safepath)) != safepath:
-                            errout("conmanager: directory traversal attack prevented: origDevice {}; origModule {}; data {}".format(read[1][1], read[1][2], data))
+                            errout("CONMANAGER: directory traversal attack prevented: origDevice {}; origModule {}; data {}".format(params[1], params[2], data))
                         
                         if not os.path.isfile(file_path):
-                            print("Great. The file actually exists")
+                            #print("Great. The file actually exists")
                             pass
                         file_handle = open(safepath + file_path, "wb")
                         file_handle.write(file_data)
                         file_handle.close()
-                        print("File written")
+                        #print("File written")
                     elif data[0:10] == b"deletefile":
                         #don't forget to check wether it's really coming from someone who is "admin" ~~Todo
                         pass
@@ -229,10 +238,13 @@ class conmanager(object):
                         print("I don't know what to do with {}".format(data))
                         #don't forget to check wether it's really coming from someone who is "admin" ~~Todo
                         pass
+                    print("DEBUG recvdata: {}".format(time.time() - DEBUG_time))
                 else:
-                    print("Conmanager: Unknown action: {}".format(action))
+                    print("conmanager: Unknown action: {}".format(action))
                 queue_in.task_done()
+                
             try:
+                DEBUG_time = time.time()
                 #listensocket.setblocking(True)
                 accept_socket, accept_address  = listensocket.accept()
                 accept_socket.setblocking(0)
@@ -245,18 +257,20 @@ class conmanager(object):
                         connection[1] = accept_address
                         connection_found = True
                     elif connection[1][0] == accept_address[0] and type(connection[0]) == socket.socket: # if ip matches and is already connected
-                        errout("conmanager: Already connected client tried to connect again. {}".format(accept_address))
+                        errout("CONMANAGER: Already connected client tried to connect again. {}".format(accept_address))
                         if accept_address[1] == standardport:
                             connection[0].close()
                             connection[0] = accept_socket
                             connection[1] = accept_address
                             connection_found = True
                 if not connection_found:
-                    errout("conmanager: Unknown connection. {}, {}".format(accept_address, accept_socket))
+                    errout("CONMANAGER: Unknown connection. {}, {}".format(accept_address, accept_socket))
+                print("DEBUG accept connections: {}".format(time.time() - DEBUG_time))
             except Exception as msg: # Maybe a more explicit exception catch? ~~Todo
                 pass
-            for i in range(len(sockets)):
-                connection = sockets[i] # Remind me tomorrow, when I remember why the fuck I made it this way # I still don't know why and can't yet be bothered to change it.
+            DEBUG_time = time.time()
+            for i in range(len(sockets)): #Performance issue: Can sometimes take 11 seconds.
+                connection = sockets[i] # Remind me tomorrow, when I remember why the fuck I made it this way # I still don't know why and can't be bothered to change it yet.
                 if type(connection[0]) != socket.socket:
                     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     try:
@@ -293,11 +307,11 @@ class conmanager(object):
                         
                         if len(data) < data_len:
                             break
-                        print("recvd something!")
-                        print(sockets[i][4])
+                        #print("recvd something!")
+                        #print(sockets[i][4])
                         queue_out.put((target_modname.decode("utf-8"), ("recvdata", connection[3], orig_modname.decode("utf-8"), data)))
                         sockets[i][4] = sockets[i][4][target_modnamelen + 6 + orig_modnamelen + data_len:]
-                    
+    
     def connect(self, socket, ip):
         try:
             socket.connect(ip)
@@ -310,7 +324,17 @@ class conmanager(object):
             key = bytes(key[2:-2], "utf-8").replace(b'\\n', b'\n')
         else:
             key = bytes(key, "utf-8").replace(b'\\n', b'\n')
-        return RSA.importKey(key)
+        keyRSA = RSA.importKey(key)
+        keyPKCS1_OAEP = PKCS1_OAEP.new(keyRSA)
+        print("DEBUG importKey: imported a key {}".format(keyPKCS1_OAEP))
+        return (keyRSA, keyPKCS1_OAEP)
+
+   #def importKey(self, key): #
+   #     if key[0:2] == "b'":
+   #         key = bytes(key[2:-2], "utf-8").replace(b'\\n', b'\n')
+   #     else:
+   #         key = bytes(key, "utf-8").replace(b'\\n', b'\n')
+   #     return RSA.importKey(key)
 
     def saveIni(self):
         global basepath, config
@@ -327,16 +351,18 @@ class conmanager(object):
     
     def decrypt(self, data):
         global key_private
-        return PKCS1_OAEP.new(key_private).decrypt(data)
+        #return PKCS1_OAEP.new(key_private).decrypt(data)
+        return key_private[1].decrypt(data)
     
     def encrypt(self, data, key):
-        return PKCS1_OAEP.new(key).encrypt(data)
+        #return PKCS1_OAEP.new(key).encrypt(data) # Removed PKCS1_OAEP.new for performance reasons.
+        return key[1].encrypt(data)
 
     def closeListenSocket(self):
         global listensocket
-        print("CONMANAGER [function closeListenSocket]: Closing listen socket.")
+        print("conmanager [function closeListenSocket]: Closing listen socket.")
         listensocket.close()
-        print("CONMANAGER [function closeListenSocket]: Closed listen socket.")
+        print("conmanager [function closeListenSocket]: Closed listen socket.")
     
     config = configparser.ConfigParser()
     basepath = os.path.dirname(os.path.realpath(__file__))
