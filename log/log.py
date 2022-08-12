@@ -7,7 +7,7 @@ def initLog(pModulename):
 def errout(message):
     global modulename
     try:
-        message = "{} @ {}: {}\n".format(time.asctime(), modulename.upper, message)
+        message = "{} @ {}: {}\n".format(time.asctime(), modulename.upper(), message)
     except:
         message = "{}: {}\n".format(time.asctime(), message)
     
@@ -20,7 +20,7 @@ def errout(message):
 def log(message):
     global modulename
     try:
-        message = "{} @ {}: {}\n".format(time.asctime(), modulename.upper, message)
+        message = "{} @ {}: {}\n".format(time.asctime(), modulename.upper(), message)
     except:
         message = "{}: {}\n".format(time.asctime(), message)
     print(message)

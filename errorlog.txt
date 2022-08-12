@@ -101,3 +101,34 @@ Sat Jun  5 02:53:41 2021: conmanager CRITICAL startup error: [Errno 98] Address 
 Fri Aug 12 02:18:26 2022 @ <built-in method upper of str object at 0x7fa1c92b2e30>: CONMANAGER: startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: '192.168.0.101'
 Fri Aug 12 02:18:26 2022 @ <built-in method upper of str object at 0x7fa1c92b2e30>: CONMANAGER: CRITICAL startup error: '192.168.0.101'
 Fri Aug 12 02:19:58 2022 @ <built-in method upper of str object at 0x7f78d5a04370>: CONMANAGER: Unable to load key for 192.168.0.117: Not a valid PEM post boundary. Please check if it is correct.
+Fri Aug 12 02:21:47 2022 @ <built-in method upper of str object at 0x7f95adf98370>: CONMANAGER: Unable to load key for 192.168.0.117: Not a valid PEM post boundary. Please check if it is correct.
+Fri Aug 12 02:21:47 2022 @ <built-in method upper of str object at 0x7f95adf98470>: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
+Fri Aug 12 02:22:17 2022 @ <built-in method upper of str object at 0x7f95adf98470>: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'Public key not loaded', ('192.168.0.117', 57916), 'touchpal'))]
+Fri Aug 12 02:22:47 2022 @ <built-in method upper of str object at 0x7f95adf98470>: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'Public key not loaded', ('192.168.0.117', 57916), 'touchpal'))]
+Fri Aug 12 02:23:17 2022 @ <built-in method upper of str object at 0x7f95adf98470>: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'Public key not loaded', ('192.168.0.117', 57916), 'touchpal'))]
+Fri Aug 12 02:23:47 2022 @ <built-in method upper of str object at 0x7f95adf98470>: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'Public key not loaded', ('192.168.0.117', 57916), 'touchpal'))]
+Fri Aug 12 02:24:17 2022 @ <built-in method upper of str object at 0x7f95adf98470>: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'Public key not loaded', ('192.168.0.117', 57916), 'touchpal'))]
+Fri Aug 12 02:24:33 2022 @ <built-in method upper of str object at 0x7fd4e39cc0b0>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:24:41 2022 @ <built-in method upper of str object at 0x7f40a38502f0>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:24:48 2022 @ <built-in method upper of str object at 0x7fc162e40370>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:24:52 2022 @ <built-in method upper of str object at 0x7f2fb73382f0>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:24:54 2022 @ <built-in method upper of str object at 0x7fbea88e0030>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:24:58 2022 @ <built-in method upper of str object at 0x7faf59e140b0>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:25:00 2022 @ <built-in method upper of str object at 0x7ff58d8d40b0>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:25:02 2022 @ <built-in method upper of str object at 0x7f7efd92c030>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:25:05 2022 @ <built-in method upper of str object at 0x7fea866b0370>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:25:10 2022 @ <built-in method upper of str object at 0x7f7f74a002f0>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:25:15 2022 @ <built-in method upper of str object at 0x7fecdbbdc370>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:25:19 2022 @ <built-in method upper of str object at 0x7f6f70594370>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:25:22 2022 @ <built-in method upper of str object at 0x7f86b70d0030>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:25:25 2022 @ <built-in method upper of str object at 0x7f7ec0d00370>: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:25:33 2022 @ <built-in method upper of str object at 0x7f90f4134370>: CONMANAGER: Unable to load key for 192.168.0.117: Not a valid PEM post boundary. Please check if it is correct.
+Fri Aug 12 02:25:33 2022 @ <built-in method upper of str object at 0x7f90f4134470>: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
+Fri Aug 12 02:28:43 2022 @ CONMANAGER: CONMANAGER: Unable to load key for 192.168.0.117: Not a valid PEM post boundary. Please check if it is correct.
+Fri Aug 12 02:28:44 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
+Fri Aug 12 02:28:50 2022 @ ADMIN: HARDWAREINFO: unable to parse requested hardware info gpuram_total. Error: 'gpuram_total'
+Fri Aug 12 02:28:50 2022 @ ADMIN: HARDWAREINFO: unable to parse requested hardware info gpu_memto. Error: 'gpu_memto'
+Fri Aug 12 02:31:11 2022 @ CONMANAGER: CONMANAGER: Unable to load key for 192.168.0.117: Not a valid PEM post boundary. Please check if it is correct.
+Fri Aug 12 02:31:11 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
+Fri Aug 12 02:31:19 2022 @ ADMIN: HARDWAREINFO: unable to parse requested hardware info gpuram_total. Error: 'gpuram_total'
+Fri Aug 12 02:31:19 2022 @ ADMIN: HARDWAREINFO: unable to parse requested hardware info gpu_memto. Error: 'gpu_memto'
