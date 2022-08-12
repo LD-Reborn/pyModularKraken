@@ -8,10 +8,11 @@ class admin(object):
 
     def __init__(self):
         global conmanager, basepath, safepath
+        initLog("admin")
         conmanager = "conmanager"
         basepath = os.path.dirname(os.path.realpath(__file__))
         safepath = os.path.realpath(basepath + "/../") + "/"
-        print(safepath)
+        #print(safepath)
         pass
 
 
@@ -24,9 +25,10 @@ class admin(object):
         log("intermetry has started!")
         
         while True:
+            time.sleep(0.1)
             if not queue_in.empty():
                 read = queue_in.get()
-                print("ADMIN: {}".format(read))
+                #print("ADMIN: {}".format(read))
                 originator = read[0]
                 if type(read[1]) == list or type(read[1]) == tuple:
                     action = read[1][0]
@@ -41,7 +43,7 @@ class admin(object):
                         data = read[1][3]
                     
                     if data[0:11] == "requestfile":
-                        print("admin: incoming file request from {} for file {}".format(orig_device, data[12:]))
+                        #print("admin: incoming file request from {} for file {}".format(orig_device, data[12:]))
                         filepath = data[12:]
                         if os.path.commonprefix((os.path.realpath(filepath), safepath)) != safepath:
                             errout("admin: directory traversal attack prevented: orig_device {}; orig_module {}; data {}".format(orig_device, orig_module, data))
