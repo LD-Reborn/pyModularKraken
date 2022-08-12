@@ -137,3 +137,12 @@ Fri Aug 12 02:34:05 2022 @ ADMIN: HARDWAREINFO: unable to parse requested hardwa
 Fri Aug 12 02:34:05 2022 @ ADMIN: HARDWAREINFO: unable to parse requested hardware info gpu_memto. Error: 'gpu_memto'
 Fri Aug 12 02:35:50 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
 Fri Aug 12 02:36:20 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
+Fri Aug 12 02:37:11 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
+Fri Aug 12 02:38:35 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
+Fri Aug 12 02:39:09 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:39:21 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:39:30 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:39:32 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:39:37 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:39:40 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Fri Aug 12 02:39:43 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use

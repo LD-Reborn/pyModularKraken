@@ -1093,3 +1093,33 @@ Fri Aug 12 02:35:50 2022 @ INTERMETRY: admin
 Fri Aug 12 02:35:50 2022 @ ADMIN: conmanager has started!
 Fri Aug 12 02:35:50 2022 @ ADMIN: intermetry: running
 Fri Aug 12 02:35:50 2022 @ ADMIN: intermetry has started!
+Fri Aug 12 02:37:11 2022: conmanager
+Fri Aug 12 02:37:11 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.117
+Fri Aug 12 02:37:11 2022 @ CONMANAGER: intermetry
+Fri Aug 12 02:37:11 2022 @ INTERMETRY: admin
+Fri Aug 12 02:37:11 2022 @ ADMIN: conmanager has started!
+Fri Aug 12 02:37:11 2022 @ ADMIN: intermetry: running
+Fri Aug 12 02:37:11 2022 @ ADMIN: intermetry has started!
+Fri Aug 12 02:38:35 2022: conmanager
+Fri Aug 12 02:38:35 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.117
+Fri Aug 12 02:38:35 2022 @ CONMANAGER: intermetry
+Fri Aug 12 02:38:35 2022 @ INTERMETRY: admin
+Fri Aug 12 02:38:35 2022 @ ADMIN: conmanager has started!
+Fri Aug 12 02:38:35 2022 @ ADMIN: intermetry: running
+Fri Aug 12 02:38:35 2022 @ ADMIN: intermetry has started!
+Fri Aug 12 02:39:09 2022: conmanager
+Fri Aug 12 02:39:21 2022: conmanager
+Fri Aug 12 02:39:30 2022: conmanager
+Fri Aug 12 02:39:32 2022: conmanager
+Fri Aug 12 02:39:37 2022: conmanager
+Fri Aug 12 02:39:40 2022: conmanager
+Fri Aug 12 02:39:43 2022: conmanager
+Fri Aug 12 02:39:46 2022: conmanager
+Fri Aug 12 02:39:46 2022 @ CONMANAGER: conmanager: Conncted to <socket.socket fd=4, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.101', 53708), raddr=('192.168.0.117', 42069)>
+Fri Aug 12 02:39:46 2022 @ CONMANAGER: intermetry
+Fri Aug 12 02:39:46 2022 @ INTERMETRY: admin
+Fri Aug 12 02:39:46 2022 @ ADMIN: conmanager has started!
+Fri Aug 12 02:39:46 2022 @ ADMIN: intermetry: running
+Fri Aug 12 02:39:46 2022 @ ADMIN: intermetry has started!
+Fri Aug 12 02:40:05 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal
+Fri Aug 12 02:40:35 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal
