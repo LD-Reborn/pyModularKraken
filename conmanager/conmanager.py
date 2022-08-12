@@ -12,7 +12,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 sys.path.append("..")
 from log.log import *
-#
+
 class conmanager(object):
 
     def __init__(self):
