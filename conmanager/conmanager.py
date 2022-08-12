@@ -189,8 +189,8 @@ class conmanager(object):
                                 continue
                             try:
                                 while len(data):
-                                    #enc = self.encrypt(data[0:64], connection[2]) # Padding and stuff fucks up the nice 128 size...
-                                    enc = self.encrypt(data[0:86], connection[2]) # Padding and stuff fucks up the nice 128 size...
+                                    enc = self.encrypt(data[0:64], connection[2]) # Padding and stuff fucks up the nice 128 size...
+                                    #enc = self.encrypt(data[0:86], connection[2]) # Padding and stuff fucks up the nice 128 size...
                                     # 95 still too long # 86 seems to be the maximum size.
                                     # 64 works. I'ma leave it at this for now. ~~Todo
                                     connection[0].sendall(enc)
@@ -298,13 +298,15 @@ class conmanager(object):
                             break # If no data: exit the while loop
 
                     while len(sockets[i][4]): # Read out recvBuffer
-                        orig_modnamelen = sockets[i][4][0]
-                        orig_modname = (sockets[i][4])[1:orig_modnamelen + 1]
-                        target_modnamelen = sockets[i][4][1 + orig_modnamelen]
-                        target_modname = (sockets[i][4])[2 + orig_modnamelen:target_modnamelen + 2 + orig_modnamelen]
-                        data_len = int.from_bytes(sockets[i][4][target_modnamelen + 2 + orig_modnamelen:target_modnamelen + 6 + orig_modnamelen], 'big')   #~~Todo: Possible bug: b'11' converts to 11, not 12593
-                        data = sockets[i][4][target_modnamelen + 6 + orig_modnamelen:target_modnamelen + 6 + orig_modnamelen + data_len]
-                        
+                        try:
+                            orig_modnamelen = sockets[i][4][0]
+                            orig_modname = (sockets[i][4])[1:orig_modnamelen + 1]
+                            target_modnamelen = sockets[i][4][1 + orig_modnamelen]
+                            target_modname = (sockets[i][4])[2 + orig_modnamelen:target_modnamelen + 2 + orig_modnamelen]
+                            data_len = int.from_bytes(sockets[i][4][target_modnamelen + 2 + orig_modnamelen:target_modnamelen + 6 + orig_modnamelen], 'big')   #~~Todo: Possible bug: b'11' converts to 11, not 12593
+                            data = sockets[i][4][target_modnamelen + 6 + orig_modnamelen:target_modnamelen + 6 + orig_modnamelen + data_len]
+                        except:
+                            break
                         if len(data) < data_len:
                             break
                         #print("recvd something!")

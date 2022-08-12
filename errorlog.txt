@@ -132,3 +132,8 @@ Fri Aug 12 02:31:11 2022 @ CONMANAGER: CONMANAGER: Unable to load key for 192.16
 Fri Aug 12 02:31:11 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
 Fri Aug 12 02:31:19 2022 @ ADMIN: HARDWAREINFO: unable to parse requested hardware info gpuram_total. Error: 'gpuram_total'
 Fri Aug 12 02:31:19 2022 @ ADMIN: HARDWAREINFO: unable to parse requested hardware info gpu_memto. Error: 'gpu_memto'
+Fri Aug 12 02:33:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
+Fri Aug 12 02:34:05 2022 @ ADMIN: HARDWAREINFO: unable to parse requested hardware info gpuram_total. Error: 'gpuram_total'
+Fri Aug 12 02:34:05 2022 @ ADMIN: HARDWAREINFO: unable to parse requested hardware info gpu_memto. Error: 'gpu_memto'
+Fri Aug 12 02:35:50 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
+Fri Aug 12 02:36:20 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.0.117', 42069), 'touchpal'))]
