@@ -17,6 +17,7 @@ Required elements of a module:
 
         def run(self):
             #Place your main execution code here.
+            #But don't forget to use time.sleep in your main while loops, if you don't want to have to debug performance issues.
     
     #The following code line is for creating an instance of your
     #class, so that the core can access all methods from it. It
