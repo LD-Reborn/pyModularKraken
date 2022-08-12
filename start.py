@@ -13,7 +13,7 @@ def test(): # what?
 
 if __name__ == "__main__":
     #import module names from .ini
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(allow_no_value=True)
     basepath = os.path.dirname(os.path.realpath(__file__))
     config.read(basepath + '/config.ini')
     modulelist = config["modules"]
