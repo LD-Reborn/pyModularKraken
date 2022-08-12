@@ -48,5 +48,5 @@ Conmanager:
 
     Schlüsselsignierung einbauen! Beispiel für Angriff: Jemand nutzt den öffentlichen Schlüssel von jemand anderem, um
         in seinem Namen ein Paket zu verschicken. Könnte schlimmstenfalls ein Shutdownbefehl sein, Einleitung einer Datenlöschung,
-        usw.. Ist also sicherheitstechnisch von höchster Priorität!
+        usw.. Ist also sicherheitstechnisch relevant!
     
