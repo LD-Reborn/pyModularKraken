@@ -1,14 +1,28 @@
 import time
 
+def initLog(pModulename):
+    global modulename
+    modulename = pModulename
+
 def errout(message):
-    message = "{}: {}\n".format(time.asctime(), message)
+    global modulename
+    try:
+        message = "{} @ {}: {}\n".format(time.asctime(), modulename.upper, message)
+    except:
+        message = "{}: {}\n".format(time.asctime(), message)
+    
     print(message)
     hFile = open("errorlog.txt", "a")
     hFile.write(message)
     hFile.close()
 
+
 def log(message):
-    message = "{}: {}\n".format(time.asctime(), message)
+    global modulename
+    try:
+        message = "{} @ {}: {}\n".format(time.asctime(), modulename.upper, message)
+    except:
+        message = "{}: {}\n".format(time.asctime(), message)
     print(message)
     hFile = open("log.txt", "a")
     hFile.write(message)

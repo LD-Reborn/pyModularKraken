@@ -3,11 +3,14 @@ import sys
 from time import sleep
 sys.path.append("..")
 from log.log import *
+sys.path.append("intermetry/utility")
+import hardwareinfo as hwinfo
 
 class intermetry(object):
 
     def __init__(self):
         global heartbeat_frequency, heartbeat_next, conmanager, devicelist
+        initLog("intermetry")
         heartbeat_frequency = timedelta(seconds=30)
         heartbeat_next = datetime.now() + heartbeat_frequency
         conmanager = "conmanager"
@@ -23,12 +26,13 @@ class intermetry(object):
         queue_in = in_q
 
     def heartbeat(self):
+        #print("INTERMETRY has broadcast a heartbeat")
         queue_out.put((conmanager, ("senddata", "broadcast", "intermetry", b"heartbeat")))
         queue_out.put((conmanager, ("listdevices")))
 
     def run(self):
         global heartbeat_frequency, heartbeat_next
-        log("intermetry has started!")
+        log("intermetry: running")
         self.heartbeat()
         
         while True:
@@ -39,7 +43,7 @@ class intermetry(object):
             
             if not queue_in.empty():
                 read = queue_in.get()
-                print("INTERMETRY has received: {}".format(read))
+                #print("INTERMETRY has received: {}".format(read))
                 originator = read[0]
                 if type(read[1]) == list or type(read[1]) == tuple:
                     action = read[1][0]
@@ -72,9 +76,17 @@ class intermetry(object):
                         if orig_device == devicelist[i][0]:
                             devicelist[i][1] = datetime.now()
                     if data == "heartbeat":
-                        print("Got a heartbeat from {}".format(orig_device))
+                        log("intermetry: Got a heartbeat from {}".format(orig_device))
+                    elif data[0:12] == "hardwareinfo":
+                    	try:
+                    	    tempStr = data[13:]
+                    	    packetID = tempStr[:tempStr.find(":")]
+                    	    request = tempStr[tempStr.find(":") + 1:]
+                    	    queue_out.put((conmanager, ("senddata", orig_device, orig_module, bytes("hardwareinfo:{}:{}".format(packetID, hwinfo.parseRequest(request)), "utf-8"))))
+                    	except Exception as msg:
+                    	    errout("INTERMETRY: error while processing a hardwaredata packet from {}@{}: {}".format(orig_module, orig_device, msg))
                     else:
-                        print("Dunno what to do with this packet: {}/{}/{}".format(orig_device, orig_module, data))
+                        errout("INTERMETRY: Dunno what to do with this packet: {}/{}/{}".format(orig_device, orig_module, data))
                 elif action == "sentdata":
-                    print("Intermetry: unknown action: {}".format(read))
+                    errout("INTERMETRY: unknown action: {}".format(read))
 mainclass = intermetry()
