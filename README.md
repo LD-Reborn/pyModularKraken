@@ -12,7 +12,7 @@ Everything works as modules.
 The core module is the most important one and is included in start.py for simplicity.
 
 So if you run start.py what happens is:
-1. All modules are loaded based on config.ini entry
+1. All modules are individually loaded based on config.ini entry
 2. Their respective \_\_init\_\_ function gets called.
 3. Communication queues (between module and core) are passed to the module by calling initcore.
 4. The run function is called and executed in its own thread.
