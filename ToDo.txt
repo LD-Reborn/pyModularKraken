@@ -1,4 +1,4 @@
-Keychain:
+conmanager:
 	Gg.:
 		Netzwerk mit Teilnehmern A,B,C.
 		A:
@@ -23,8 +23,8 @@ Keychain:
 			KeychainRemove <--- Nur Admin sollte Informationen anderer Teilnehmer bearbeiten können!
 
 
-Conmanager:
-    "standardport" am besten doch nicht 42069 ?
+conmanager:
+    "standardport" maybe choose something other than 42069?
 
     Paketindizierung und genauere Informationen bei Fehlermeldungen wie "No socket connected towards destination"
     	---> Aktionstyp "senddata" für unindizierte Pakete. Zum Beispiel für 1-Way Pakete wie Statusmeldungen.
@@ -38,4 +38,24 @@ Conmanager:
         Es könnte schlimmstenfalls eine Remote code execution oder ein network takeover passieren,
         Botnet Software ausgeführt werden, Daten gelöscht werden, usw..
         Ist also sicherheitstechnisch von HÖCHSTER relevanz, sobald / bevor wir das Repository öffentlich schalten!
-    
+
+    Privatschlüssel und Öffentlichschlüssel in separate Dateien speichern und nicht in eine .ini!
+    	---> Was ist das richtige Format?
+
+intermetry:
+	-Find more system info points a user may want to monitor and add them into hardwareinfo.py
+
+audiocontrol:
+	-create prototype implementing pulseaudio. (But keep it open for later ALSA et. al.)
+
+hwdisplay:
+	-create functioning prototype.
+
+core:
+	-Implement ability to include modules where folder name and module name don't match.
+		E.g.: hwdisplay\hwdisplay, hwdisplay\hexa, hwdisplay\simpletext, ...
+
+
+Github:
+	-Create tutorials and copy-paste friendly example sections.
+	-Add a GPLv2 or GPLv3 license?
