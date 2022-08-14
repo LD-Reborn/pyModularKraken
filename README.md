@@ -32,21 +32,25 @@ Before I actually get more technical, let's visualize some scenarios.
 		B processes the request and sends an answer back to A.
 		A <--- core <--- B
 
-	2. Module A requests something from module B. (Both are on <b>separate</b> devices.)
+	2. Module A requests something from module B. (Both are on **separate** devices.)
 		The () represent the boundaries of the individual devices.
 		(A ---> core ---> conmanager) ---> (conmanager ---> core ---> B)
 		B processes the request and sends an answer back to A.
 		(A <--- core <--- conmanager) <--- (conmanager <--- core <--- B)
 
-Now that we have visualized those two scenarios, let me repeat them, but with actual packet contents.
-First of all, let's give the modules and devices more realistic names.
-	Module A    is now    ping
-	Module B    is now    pong
-	
-	Device 1    is now    Bob
-	Device 2    is now    Alice
+Now that we have visualized those two scenarios, let me repeat them, but with actual example packet contents.
 
-	1. mymodule requests some info about CPU and RAM from intermetry. (Both on same device.)
-		mymodule ---> core: ("intermetry", "hardwareinfo:1:cpu,cpu_all,ram_percent,ram_total,ram_used")
-		core ---> intermetry: ("mymodule", "hardwareinfo:1:cpu,cpu_all,ram_percent,ram_total,ram_used")
+	1. A sends a request to B. (Both on same device.)
+		A ---> core: ("intermetry", "you alive?")
+		core ---> B: ("mymodule", "you alive?")
 		
+		B ---> core: ("intermetry", "yes.")
+		core ---> A: ("mymodule", "yes.")
+	2. A sends a request to B. (Both on different devices. DeviceA and DeviceB)
+		A ---> core: ("conmanager", ("senddata", "DeviceB", "B", b"Are you alive?"))
+		core ---> conmanager: ("A", ("senddata", "DeviceB", "B", b"Are you alive?"))
+		
+		conmanager ---> conmanager: ENCRYPTED
+		
+		conmanager ---> core: ("B", ("recvdata", "DeviceA", "A", b"Are you alive?"))
+		core ---> B: ("conmanager", ("recvdata", "DeviceA", "A", b"Are you alive?"))
