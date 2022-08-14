@@ -1,5 +1,5 @@
 # pyModularKraken
-## What is pyModularKraken? (Formerly known as pyMoShP or DiShSOAP)
+## What is pyModularKraken? (Formerly called pyMoShP or DiShSOAP)
 
 pyModularKraken is a networking framework that allows you to skip **as many steps** as possible when implementing communication between devices.
 
