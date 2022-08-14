@@ -11,9 +11,9 @@ This project is not a single blob of spaghetti code. It is rather 🌠 a few sma
 Each module has its own tasks / purposes and they all work independently in different threads.
 
 Let me give you a brief explanation to some of the base modules:
-	intermetry: can supply you with system data like CPU, RAM, and GPU utilization, as well as temperature.
-	conmanager: establishes connections between devices and exposes functionality for sending to and receiving data from said devices.
-	core: is the middle man that passes requests between modules, thus allowing for them to communicate with each other.
+	-intermetry: can supply you with system data like CPU, RAM, and GPU utilization, as well as temperature.
+	-conmanager: establishes connections between devices and exposes functionality for sending to and receiving data from said devices.
+	-core: is the middle man that passes requests between modules, thus allowing for them to communicate with each other.
 
 ## How does communication look like?
 Before I actually get more technical, let's go through the possible scenarios.
