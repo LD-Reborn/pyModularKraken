@@ -1,10 +1,10 @@
-# WhateverThisEndsUpBeingCalled
-## What is [Project's name]?
+# pyModularKraken
+## What is pyModularKraken? (Formerly known as pyMoShP or DiShSOAP)
 
-[Project's name] is a networking (?)framework(?) that allows you to skip **as many steps** in programming communication between devices as possible.
+pyModularKraken is a networking framework that allows you to skip **as many steps** as possible when implementing communication between devices.
 
 This allows you to focus on other things like the functions you actually want to implement.
-Meanwhile you get MANY upsides like being able to add devices, modules, etc. and configuring them in close to no-time and with as close of an experience to "copy, paste and hit the ground <s>running</s> coding" as possible!
+Meanwhile you get MANY upsides like being able to add devices, modules, etc. and configuring them in close to no-time and with as close of an experience to "copy, paste and hit the ground ~~running~~ coding" as possible!
 
 ## How does this magic work?
 This project is not a single blob of spaghetti code. It is rather 🌠 a few smaller blobs of spaghetti code 🌠 working together as modules.
