@@ -14,7 +14,7 @@ The core module is the most important one and is included in start.py for simpli
 So if you run start.py what happens is:
 1. All modules are individually loaded based on config.ini entry
 2. Their respective \_\_init\_\_ function gets called.
-3. Queues (for communication between module and core) are passed to the module by calling initcore.
+3. Queues (for communication between module and core) are passed to the module.
 4. The run function is called and executed in its own thread.
 
 The module now runs in its own thread, free to complete its tasks.
