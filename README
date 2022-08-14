@@ -1,12 +1,6 @@
 # WhateverThisEndsUpBeingCalled
 ## What is [Project's name]?
 
-``` python
-def testfunc():
-	print("lol")
-
-```
-
 [Project's name] is a networking (?)framework(?) that allows you to skip <b>as many steps</b> in programming communication between devices as possible.
 
 This allows you to focus on other things like the functions you actually want to implement.
