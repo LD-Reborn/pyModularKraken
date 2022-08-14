@@ -1,52 +1,41 @@
-This is absolutely new!
-Gg.:
-	Netzwerk mit Teilnehmern A,B,C.
-	A:
-		A.priv
-		B.pub
-		C.pub
-	B:
-		B.priv
-		A.pub
-		C.pub
-	C:
-		C.priv
-		A.pub
-		B.pub
+Keychain:
+	Gg.:
+		Netzwerk mit Teilnehmern A,B,C.
+		A:
+			A.priv
+			B.pub
+			C.pub
+		B:
+			B.priv
+			A.pub
+			C.pub
+		C:
+			C.priv
+			A.pub
+			B.pub
 
-Gewünscht:
-	Erweiterung um Teilnehmer D.
-	Befehl zum Hinzufügen eines Teilnehmers geht über Conmanager.
-	Vorgeschlagene Befehle:
-		KeychainAdd <--- NUR FREMDE TEILNEHMER HINZUFÜGEN! KEINE ANDEREN TEILNEHMER BEARBEITEN!!!
-		KeychainQuery
-		(KeychainRemove) <--- Sicherheitsrisiko? JA! Kein Teilnehmer sollte Informationen anderer Teilnehmer bearbeiten können!
+	Gewünscht:
+		Erweiterung um Teilnehmer D.
+		Befehl zum Hinzufügen eines Teilnehmers geht über Conmanager.
+		Vorgeschlagene Befehle:
+			KeychainAdd <--- Nur Admin sollte hinzufügen dürfen!
+			KeychainQuery
+			KeychainRemove <--- Nur Admin sollte Informationen anderer Teilnehmer bearbeiten können!
 
-Update 27.05.2021:
-    Gewünscht:
-            3 Optionen:
-                1. keine Verschlüsselung
-                    Anwendungsfall: VPN ist für alle Teilnehmer eingerichtet; Schlüsselspeicherung etc. nicht notwendig
-                2. Manueller Eintrag aller Teilnehmer
-                    Anwendungsfall: Konzept sieht beschränktes und selten änderndes Netzwerk vor.
-                3. Download aller öffentlichen Schlüssel von Schlüsselautorität
-                    Anwendungsfall: Regelmäßig änderndes Netzwerk / Regelmäßiges Reflashen oder Ersetzen von Teilnehmern / Inkonsistenzen durch DHCP
-                    Anmerkung: Schlüssel müssen nicht jedes Mal neu runtergeladen werden. Hash erzeugen und vergleichen? 
 
 Conmanager:
-    "standardport" am besten doch nicht 42069
-    "Standardport" (siehe Zeilen 59 und 71) konsistent machen und an Konfigurationsdatei binden.
-    119 "except Exception" ---> "data must be bytes" Genauere Exception raussuchen und angeben!
-    	Keine ungenauen "except Exception" dalassen!
-    141 "sendPubKey" Bald nicht mehr notwendig?
+    "standardport" am besten doch nicht 42069 ?
 
     Paketindizierung und genauere Informationen bei Fehlermeldungen wie "No socket connected towards destination"
-    booleanSuccess und errorinfo (beim Pakete versenden) zu Einem verschmelzbar; Redundanz.
-        Umbenennen zu errorinfo. z.B. Kein Fehler = False; Fehler = $Info
-
-    "updatefile" und "deletefile" ---> (zuletzt Zeile 225) überprüfen, ob Befehl von Admin kommt!!!!!
+    	---> Aktionstyp "senddata" für unindizierte Pakete. Zum Beispiel für 1-Way Pakete wie Statusmeldungen.
+    	---> Aktionstyp "senddataI" für indizierte Pakete. Index wird mit übermittelt.
+    		---> Wie wär's mit einer .respond() Funktion für Pakete?
+    			Man bräuchte nicht mehr den ganzen Kram mit orig_device und orig_module angeben.
+    			Pakete zu empfangen wäre dadurch viel einfacher.
 
     Schlüsselsignierung einbauen! Beispiel für Angriff: Jemand nutzt den öffentlichen Schlüssel von jemand anderem, um
-        in seinem Namen ein Paket zu verschicken. Könnte schlimmstenfalls ein Shutdownbefehl sein, Einleitung einer Datenlöschung,
-        usw.. Ist also sicherheitstechnisch relevant!
+        in seinem Namen ein Paket zu verschicken.
+        Es könnte schlimmstenfalls eine Remote code execution oder ein network takeover passieren,
+        Botnet Software ausgeführt werden, Daten gelöscht werden, usw..
+        Ist also sicherheitstechnisch von HÖCHSTER relevanz, sobald / bevor wir das Repository öffentlich schalten!
     
