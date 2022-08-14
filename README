@@ -1,8 +1,10 @@
 # WhateverThisEndsUpBeingCalled
 ## What is [Project's name]?
 
-```
-Testcode
+``` python
+def testfunc():
+	print("lol")
+
 ```
 
 [Project's name] is a networking (?)framework(?) that allows you to skip <b>as many steps</b> in programming communication between devices as possible.
