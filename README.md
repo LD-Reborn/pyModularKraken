@@ -20,9 +20,9 @@ So if you run start.py what happens is:
 The module now runs in its own thread, free to complete its tasks.
 
 Some modules that come pre-packaged for convenience are:
-*intermetry: supplies system data like CPU, RAM, and GPU utilization, as well as temperature.
-*audiocontrol: (WIP) can be used to retrieve volume, mute, and control audio.
-*conmanager: establishes connections between devices and exposes functionality for sending to and receiving data from said devices.
+* intermetry: supplies system data like CPU, RAM, and GPU utilization, as well as temperature.
+* audiocontrol: (WIP) can be used to retrieve volume, mute, and control audio.
+* conmanager: establishes connections between devices and exposes functionality for sending to and receiving data from said devices.
 
 ## How does communication look like?
 Before I actually get more technical, let's visualize some scenarios.
