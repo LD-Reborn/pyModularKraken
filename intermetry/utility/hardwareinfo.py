@@ -83,7 +83,55 @@ def gpu_memusedPercent():
     	returnstring += "{},".format(gpu.memoryUsed / gpu.memoryTotal * 100)
     return returnstring[:-1]
 
+#All nic addresses in format: nic=address,nic2=address,...
+def nic_address(pGetIPv6 = False): #With nic_address(True) you'll get multiple IPv6 addresses per NIC. Not a bug.
+    returnstring = ""
+    nics = psutil.net_if_addrs()
+    for nic in nics:
+        for address in nics[nic]:
+            print("DEBUG")
+            print(nic)
+            print(address)
+            if address.family.value == 2 + 8 * pGetIPv6: #2 = IPv4. 10 = IPv6
+                print("is v4\n")
+                returnstring += "{}={},".format(nic, address.address)
+    return returnstring[:-1]
 
+#All nic TOTAL up/down byte values in format: nic=up/down, nic2=up/down,...
+def nic_io():
+    returnstring = ""
+    nics = psutil.net_io_counters(pernic=True)
+    for nic in nics:
+        returnstring += "{}={}/{},".format(nic, nics[nic].bytes_sent, nics[nic].bytes_recv)
+    return returnstring[:-1]
+
+#All nic linkspeeds in MB/s in format: nic=linkspeed, nic2=linkspeed,...
+#Link speed seems to jump to 65535 if you unplug the cable from respective nic. Developers might have had a few drinks. Relatable.
+def nic_linkspeed():
+    returnstring = ""
+    nics = psutil.net_if_stats()
+    for nic in nics:
+        returnstring += "{}={},".format(nic, nics[nic].speed)
+    return returnstring[:-1]
+
+#All nic mtu in format: nic=mtu, nic2=mtu,...
+def nic_mtu():
+    returnstring = ""
+    nics = psutil.net_if_stats()
+    for nic in nics:
+        returnstring += "{}={},".format(nic, nics[nic].mtu)
+    return returnstring[:-1]
+
+#All nic up status in format: nic=isup, nic2=isup,...
+#Testing has showed that unplugging the cable does make the returned value flip to False. Haven't tested Wifi though.
+def nic_isup():
+    returnstring = ""
+    nics = psutil.net_if_stats()
+    for nic in nics:
+        returnstring += "{}={},".format(nic, nics[nic].isup)
+    return returnstring[:-1]
+
+#Convert [n] bit/s into appropriately prefixed units. I.e. 7649 becomes 7,46 Kbit/see
 def humanreadable(size):
     byteSuffixes = ['bit/s', 'Kbit/s', 'Mbit', 'Gbit', 'Tbit', 'Pbit']
     i = 0
