@@ -146,3 +146,9 @@ Fri Aug 12 02:39:32 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: [Errn
 Fri Aug 12 02:39:37 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
 Fri Aug 12 02:39:40 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
 Fri Aug 12 02:39:43 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: [Errno 98] Address already in use
+Wed Aug 17 14:44:23 2022 @ CONMANAGER: CONMANAGER: startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: '192.168.188.43'
+Wed Aug 17 14:44:23 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: '192.168.188.43'
+Wed Aug 17 14:45:11 2022 @ CONMANAGER: CONMANAGER: startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: '192.168.188.43'
+Wed Aug 17 14:45:11 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: '192.168.188.43'
+Wed Aug 17 14:46:02 2022 @ CONMANAGER: CONMANAGER: startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: '192.168.188.43'
+Wed Aug 17 14:46:02 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: '192.168.188.43'
