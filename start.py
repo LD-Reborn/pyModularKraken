@@ -18,10 +18,17 @@ if __name__ == "__main__":
     config.read(basepath + '/config.ini')
     modulelist = config["modules"]
     modules = []
+    print("DEBUG modulelist: {}".format(modulelist))
     #initiate modules and deliver queues
     for module in modulelist:
+        print("DEBUG: module {}".format(module))
+        print("DEBUG: modulelist[module] {}".format(modulelist[module]))
+        if modulelist[module] == None:
+            modulefolder = module
+        else:
+            modulefolder = modulelist[module]
         log(module)
-        hImport = imp.load_source(module, basepath + "/" + module + "/" + module + ".py")
+        hImport = imp.load_source(module, basepath + "/" + modulefolder + "/" + module + ".py")
         try:
             ModuleClass = hImport.mainclass
             
