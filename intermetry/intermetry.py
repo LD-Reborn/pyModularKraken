@@ -69,7 +69,7 @@ class intermetry(object):
                     orig_module = read[1][2]
                     try:
                         data = read[1][3].decode("utf-8")
-                    except:
+                    excep<t:
                         data = read[1][3]
                     #Update heartbeat timer
                     for i in range(len(devicelist)):
