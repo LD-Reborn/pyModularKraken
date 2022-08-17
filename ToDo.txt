@@ -1,29 +1,4 @@
 conmanager:
-	Gg.:
-		Netzwerk mit Teilnehmern A,B,C.
-		A:
-			A.priv
-			B.pub
-			C.pub
-		B:
-			B.priv
-			A.pub
-			C.pub
-		C:
-			C.priv
-			A.pub
-			B.pub
-
-	Gewünscht:
-		Erweiterung um Teilnehmer D.
-		Befehl zum Hinzufügen eines Teilnehmers geht über Conmanager.
-		Vorgeschlagene Befehle:
-			KeychainAdd <--- Nur Admin sollte hinzufügen dürfen!
-			KeychainQuery
-			KeychainRemove <--- Nur Admin sollte Informationen anderer Teilnehmer bearbeiten können!
-
-
-conmanager:
     "standardport" maybe choose something other than 42069?
 
     Paketindizierung und genauere Informationen bei Fehlermeldungen wie "No socket connected towards destination"
