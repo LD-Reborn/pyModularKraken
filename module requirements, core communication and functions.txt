@@ -17,8 +17,11 @@ Required elements of a module:
 
         def run(self):
             #Place your main execution code here.
-            #But don't forget to use time.sleep in your main while loops, if you don't want to have to debug performance issues.
-    
+            #Remember to use time.sleep in your main while loops to avoid MASSIVE performance issues.
+            while True:
+                time.sleep(0.01)
+                if not queue_in.empty():
+                    read = queue_in.get()
     #The following code line is for creating an instance of your
     #class, so that the core can access all methods from it. It
     #is needed, because I haven't yet found a way to make the
