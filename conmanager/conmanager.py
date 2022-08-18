@@ -8,8 +8,12 @@ import hashlib
 import pathlib
 import atexit
 from typing import AbstractSet # To close the TCP listen socket on exit
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
+from Crypto.PublicKey import RSA        # To generate / import key
+from Crypto.Cipher import PKCS1_OAEP    # To do padding stuff
+from Crypto.Signature import pkcs1_15   # To sign packets
+from Crypto.Hash import SHA256          # To create hashes
+#hash = SHA256.new(data=b'ToBeHashedData')
+#hashvalue = hash.hexdigest()
 sys.path.append("..")
 from log.log import *
 
