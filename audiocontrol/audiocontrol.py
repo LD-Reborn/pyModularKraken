@@ -10,14 +10,21 @@ listsources
 listsinks
     returns: index:'name','description'|index:'name','description'|...
 getdefaultsource
+    returns: id
+setdefaultsource    id
 getdefaultsink
+    returns: id
+setdefaultsink      id
 getvolume           sink/source, id
+    returns: volume_tuple
 setvolume           sink/source, id, volume
 incvolume           sink/source, id, value
 decvolume           sink/source, id, value
 getmute             sink/source, id
+    returns: 0/1
 setmute             sink/source, id, 1/0
 togglemute          sink/source, id
+    returns: new_mutevalue
 """
 
 
@@ -45,5 +52,31 @@ class audiocontrol(object):
                     action = read[1]
                 #use switch?
                 #if action == "devicelist":
-
+                match action:
+                    case "listsources":
+                        pass
+                    case "listsinks":
+                        pass
+                    case "getdefaultsource":
+                        pass
+                    case "getdefaultsink":
+                        pass
+                    case "setdefaultsource":
+                        pass
+                    case "setdefaultsink":
+                        pass
+                    case "getvolume":
+                        pass
+                    case "setvolume":
+                        pass
+                    case "incvolume":
+                        pass
+                    case "decvolume":
+                        pass
+                    case "getmute":
+                        pass
+                    case "setmute":
+                        pass
+                    case "togglemute":
+                        pass
 mainclass = audiocontrol()
