@@ -1,36 +1,66 @@
 conmanager:
-    "standardport" maybe choose something other than 42069?
+    -"standardport" add config.ini setting to change port.
 
-    Paketindizierung und genauere Informationen bei Fehlermeldungen wie "No socket connected towards destination"
-    	---> Aktionstyp "senddata" für unindizierte Pakete. Zum Beispiel für 1-Way Pakete wie Statusmeldungen.
-    	---> Aktionstyp "senddataI" für indizierte Pakete. Index wird mit übermittelt.
-    		---> Wie wär's mit einer .respond() Funktion für Pakete?
-    			Man bräuchte nicht mehr den ganzen Kram mit orig_device und orig_module angeben.
-    			Pakete zu empfangen wäre dadurch viel einfacher.
+	-Packet indexing and improve error message texts like "No socket connected towards destination"
+    	---> action type "senddata" for unindexed packets. Example use: 1-way packets.
+    	---> action type "senddataI" for indexed packets. Index is transmitted too.
+			---> How about a .respond() function for packets? No need for the user to deal with
+				orig_device, orig_module, as well as packet index. Much simpler.
+	
+	-Also accept strings, numbers, etc. as to-be-sent payload. Currently only bytestrings (i.e. b'something like this') are accepted.
+		Anything else results in a crash as of now. Crash = bad
 
-    Schlüsselsignierung einbauen! Beispiel für Angriff: Jemand nutzt den öffentlichen Schlüssel von jemand anderem, um
-        in seinem Namen ein Paket zu verschicken.
-        Es könnte schlimmstenfalls eine Remote code execution oder ein network takeover passieren,
-        Botnet Software ausgeführt werden, Daten gelöscht werden, usw..
-        Ist also sicherheitstechnisch von HÖCHSTER relevanz, sobald / bevor wir das Repository öffentlich schalten!
+    -Signing messages is of highest priority before we make our repo public!
+		A malicious attacker could use person A's public key to send person B a packet in person A's name.
+		E.g.:
+			Eve: "Hi. I'm totally bob. I want you to do [harmful thing]" ---alice.publickey---> alice
+		The worst case scenario would be an attacker being able to
+		do remote code execution and taking over the entire network.
+		And that would be no bueno! Hence highest priority before going public!
 
-    Privatschlüssel und Öffentlichschlüssel in separate Dateien speichern und nicht in eine .ini!
-    	---> Was ist das richtige Format?
+		Isaias: Imports for signing and hashing added. Look into conmanager.py imports for details.
+		---> Simon do you want to work on it?
+
+	-Store private and public keys in separate files in a sub folder. (e.g. keys/bob.pub, keys/bob.priv)
+		
 
 intermetry:
 	-Find more system info points a user may want to monitor and add them into hardwareinfo.py
 
 audiocontrol:
-	-create prototype implementing pulseaudio. (But keep it open for later ALSA et. al.)
+	-create prototype implementing pulseaudio. ---> Isaias
 
 hwdisplay:
-	-create functioning prototype.
+	-create functioning prototype. ---> Isaias
 
 core:
-	-Implement ability to include modules where folder name and module name don't match.
-		E.g.: hwdisplay\hwdisplay, hwdisplay\hexa, hwdisplay\simpletext, ...
+	#-Implement ability to include modules where folder name and module name don't match.
+	#	E.g.: hwdisplay\hwdisplay, hwdisplay\hexa, hwdisplay\simpletext, ...
+	#implemented! ~ Isaias
 
 
 Github:
 	-Create tutorials and copy-paste friendly example sections.
 	-Add a GPLv2 or GPLv3 license?
+
+To-be-implemented future modules:
+	-DEcontrol:
+		Control aspects of the current desktop environment. E.g.:
+			-Focus / Minimize / unminimize / close / maximize / move / resize windows
+			-Move windows between monitors and workspaces
+			-gTile integration for resizing / tiling?
+	-HIDcontrol:
+		Control the system's Human Interface Devices. E.g.:
+			-xinput create and utilize master and slave devices.
+			-issue keyboard inputs
+			-issue mouse movement, clicks, etc.
+			-at some point add Windows compatibility, if Windows has multipointer capabilities
+	-OBScontrol:
+		Control OBS recording and streaming.
+			-Start / stop:
+				*stream
+				*recording
+				*virtual camera
+			-Select scenes
+			-Hide / unhide sources
+			-Statistics like live/recording time, CPU utilization, FPS, bitrates, framedrops, etc.
