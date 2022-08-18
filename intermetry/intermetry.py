@@ -78,13 +78,13 @@ class intermetry(object):
                     if data == "heartbeat":
                         log("intermetry: Got a heartbeat from {}".format(orig_device))
                     elif data[0:12] == "hardwareinfo":
-                    	try:
-                    	    tempStr = data[13:]
-                    	    packetID = tempStr[:tempStr.find(":")]
-                    	    request = tempStr[tempStr.find(":") + 1:]
-                    	    queue_out.put((conmanager, ("senddata", orig_device, orig_module, bytes("hardwareinfo:{}:{}".format(packetID, hwinfo.parseRequest(request)), "utf-8"))))
-                    	except Exception as msg:
-                    	    errout("INTERMETRY: error while processing a hardwaredata packet from {}@{}: {}".format(orig_module, orig_device, msg))
+                        try:
+                            tempStr = data[13:]
+                            packetID = tempStr[:tempStr.find(":")]
+                            request = tempStr[tempStr.find(":") + 1:]
+                            queue_out.put((conmanager, ("senddata", orig_device, orig_module, bytes("hardwareinfo:{}:{}".format(packetID, hwinfo.parseRequest(request)), "utf-8"))))
+                        except Exception as msg:
+                            errout("INTERMETRY: error while processing a hardwaredata packet from {}@{}: {}".format(orig_module, orig_device, msg))
                     else:
                         errout("INTERMETRY: Dunno what to do with this packet: {}/{}/{}".format(orig_device, orig_module, data))
                 elif action == "sentdata":
