@@ -36,12 +36,14 @@ class audiocontrol(object):
     def run(self):
         log("running")
         time.sleep(0.05)
-        originator = read[0]
-        if type(read[1]) == list or type(read[1]) == tuple:
-            action = read[1][0]
-        else:
-            action = read[1]
-        #use switch?
-        #if action == "devicelist":
+        if not queue_in.empty():
+                read = queue_in.get()
+                originator = read[0]
+                if type(read[1]) == list or type(read[1]) == tuple:
+                    action = read[1][0]
+                else:
+                    action = read[1]
+                #use switch?
+                #if action == "devicelist":
 
 mainclass = audiocontrol()
