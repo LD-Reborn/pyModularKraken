@@ -82,6 +82,7 @@ class audiocontrol(object):
     
     def run(self):
         global pulse
+        global respond, parse #For visual studio to shut up about warnings
         log("running")
         time.sleep(0.05)
         if not queue_in.empty():
