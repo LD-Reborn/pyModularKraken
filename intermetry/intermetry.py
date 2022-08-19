@@ -9,11 +9,12 @@ import hardwareinfo as hwinfo
 class intermetry(object):
 
     def __init__(self):
-        global heartbeat_frequency, heartbeat_next, conmanager, devicelist
+        global heartbeat_frequency, heartbeat_next, heartbeats, conmanager, devicelist
         initLog("intermetry")
         heartbeat_frequency = timedelta(seconds=30)
         heartbeat_next = datetime.now() + heartbeat_frequency
         conmanager = "conmanager"
+        heartbeats = []
         '''
         deviceList contains:
             devicename, lastheartbeatDatetime, moduleList
@@ -27,6 +28,7 @@ class intermetry(object):
 
     def heartbeat(self):
         #print("INTERMETRY has broadcast a heartbeat")
+        heartbeat.append()
         queue_out.put((conmanager, ("senddata", "broadcast", "intermetry", b"heartbeat")))
         queue_out.put((conmanager, ("listdevices")))
 
@@ -76,7 +78,7 @@ class intermetry(object):
                         if orig_device == devicelist[i][0]:
                             devicelist[i][1] = datetime.now()
                     if data == "heartbeat":
-                        log("intermetry: Got a heartbeat from {}".format(orig_device))
+                        log("intermetry: Got a heartbeat from {}. {}".format(orig_device, read))
                     elif data[0:12] == "hardwareinfo":
                         try:
                             tempStr = data[13:]
