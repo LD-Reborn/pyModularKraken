@@ -50,10 +50,18 @@ class audiocontrol(object):
             external = True
             orig_device = read[1][1]
             orig_module = read[1][2]
+            try: #Check for packet_id
+                packet_id = read[1][4]
+            except:
+                packet_id = None
         else: #Internal packet
             external = False
             orig_device = None
             orig_module = read[0]
+            try: #Check for packet_id
+                packet_id = read[2]
+            except:
+                packet_id = None
 
         if type(read[1]) == list or type(read[1]) == tuple:
             action = read[1][0]
@@ -68,9 +76,9 @@ class audiocontrol(object):
             #conmanager ---> audiocontrol: ("recvdata", orig_device, orig_modname, data)
             if type(msg) != bytes:
                 msg = bytes(msg, "utf-8")
-            queue_out.put(("conmanager", ("senddata", read.orig_device, read.orig_modname, msg)))
+            queue_out.put(("conmanager", ("senddata", read.orig_device, read.orig_modname, msg, read.packet_id)))
         else: #Internal packet
-            queue_out.put((read.orig_modname, msg)) #Put msg in additional parentheses or not? I'd say no.
+            queue_out.put((read.orig_modname, msg, read.packet_id)) #Put msg in additional parentheses or not? I'd say no.
     
     def run(self):
         global pulse
