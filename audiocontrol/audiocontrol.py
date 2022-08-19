@@ -1,3 +1,4 @@
+from http.client import ResponseNotReady
 from pickletools import bytes1
 from struct import pack
 import pulsectl
@@ -62,19 +63,14 @@ class audiocontrol(object):
             params = []
         return {"external": external, "origdevice": orig_device, "origmodule": orig_module, "action": action, "params": params}
 
-
     def respond(read, msg):
-        if read[0] == "conmanager": #External packet
+        if read.external: #External packet
             #conmanager ---> audiocontrol: ("recvdata", orig_device, orig_modname, data)
-            action = read[1][0]
-            orig_device = read[1][1]
-            orig_modname = read[1][2]
-            data = read[1][2]
             if type(msg) != bytes:
                 msg = bytes(msg, "utf-8")
-            queue_out.put(("conmanager", ("senddata", orig_device, orig_modname, msg)))
+            queue_out.put(("conmanager", ("senddata", read.orig_device, read.orig_modname, msg)))
         else: #Internal packet
-            queue_out.put((read[0], (msg)))
+            queue_out.put((read.orig_modname, msg)) #Put msg in additional parentheses or not? I'd say no.
     
     def run(self):
         global pulse
@@ -106,8 +102,9 @@ class audiocontrol(object):
                         senddata = senddata[:-1]
                         respond(read, senddata)
                     case "getdefaultsource":
-                        defaultsource = pulse.server_info().default_source_name
-
+                        default_source = pulse.server_info().default_source_name
+                        index = pulse.get_source_by_name(default_source)
+                        respond(read, index)
                     case "getdefaultsink":
                         pass
                     case "setdefaultsource":
