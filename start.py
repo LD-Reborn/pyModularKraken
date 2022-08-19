@@ -59,14 +59,13 @@ if __name__ == "__main__":
                                 aModules.append(mod[0])
                             module[3].put(("core", "modulelist", aModules))
                         #elif read[1] == "getmodulelistverbose":
-
                     else:
                         for target in modules:
                             if target[0] == read[0] or (type(read[0]) == list and target[0] in read[0]):
                                 #print("CORE - found!")
                                 #print(target)
-                                read = list(read) # Why? - Sincerely: 3am me.
-                                read[0] = module[0] # Why? - Sincerely: 3am me.
+                                read = list(read)
+                                read[0] = module[0]
                                 target[3].put(read)
                                 break # Do not break if in a list? ~~ToDo
                 module[2].task_done()
