@@ -109,7 +109,7 @@ class audiocontrol(object):
                         defaultsource = pulse.server_info().default_source_name
 
                     case "getdefaultsink":
-                        
+                        pass
                     case "setdefaultsource":
                         pass
                     case "setdefaultsink":
