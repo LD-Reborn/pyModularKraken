@@ -152,3 +152,35 @@ Wed Aug 17 14:45:11 2022 @ CONMANAGER: CONMANAGER: startup error: Unable to find
 Wed Aug 17 14:45:11 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: '192.168.188.43'
 Wed Aug 17 14:46:02 2022 @ CONMANAGER: CONMANAGER: startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: '192.168.188.43'
 Wed Aug 17 14:46:02 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: '192.168.188.43'
+Fri Aug 19 22:44:38 2022 @ CONMANAGER: CONMANAGER: startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: '192.168.188.43'
+Fri Aug 19 22:44:38 2022 @ CONMANAGER: CONMANAGER: CRITICAL startup error: '192.168.188.43'
+Fri Aug 19 22:45:59 2022 @ ADMIN: CORE: Error loading module. module 'hwdisplay' has no attribute 'mainclass'
+Fri Aug 19 22:45:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 42069), 'touchpal'))]
+Fri Aug 19 22:46:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:46:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:47:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:47:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:48:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:48:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:49:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:49:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:50:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:50:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:51:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:51:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:52:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:52:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:53:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:53:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:54:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:54:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:55:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:55:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:56:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:56:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:57:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:57:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:58:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:58:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:59:29 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
+Fri Aug 19 22:59:59 2022 @ ADMIN: INTERMETRY: unknown action: ['conmanager', ('sentdata', (False, 'No socket connected towards destination', ('192.168.188.49', 59064), 'touchpal'))]
