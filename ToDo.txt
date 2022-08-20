@@ -22,7 +22,7 @@ conmanager:
 		---> Simon do you want to work on it?
 
 	-Store private and public keys in separate files in a sub folder. (e.g. keys/bob.pub, keys/bob.priv)
-		
+	-Implement action "getDeviceName". It should return the current device's name
 
 intermetry:
 	-Find more system info points a user may want to monitor and add them into hardwareinfo.py
