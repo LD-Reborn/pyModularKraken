@@ -54,3 +54,6 @@ Now that we have visualized those two scenarios, let me repeat them, but with ac
 		
 		conmanager ---> core: ("B", ("recvdata", "DeviceA", "A", b"Are you alive?"))
 		core ---> B: ("conmanager", ("recvdata", "DeviceA", "A", b"Are you alive?"))
+
+## How do I create my own modules?
+You can find well-documented (todo) templates in the (todo) hello-world modules.
