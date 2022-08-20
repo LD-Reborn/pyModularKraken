@@ -1,5 +1,5 @@
 packet_id = 0
-
+#
 def parse(read):
     if read[0] == "conmanager": #External packet
         #Import the data. 
