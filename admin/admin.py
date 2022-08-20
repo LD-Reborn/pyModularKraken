@@ -57,5 +57,5 @@ class admin(object):
                     else:
                         print("Dunno what to do with this packet: {}/{}/{}".format(orig_device, orig_module, data))
                 elif action == "sentdata":
-                    print("Intermetry: unknown action: {}".format(read))
+                    print("admin: unknown action: {}".format(read))
 mainclass = admin()
