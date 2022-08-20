@@ -10,6 +10,8 @@ conmanager:
 	-Also accept strings, numbers, etc. as to-be-sent payload. Currently only bytestrings (i.e. b'something like this') are accepted.
 		Anything else results in a crash as of now. Crash = bad
 
+	-"Errno 98 address already in use" error. Happens sometimes when you restart start.py.
+
 	#-Store private and public keys in separate files in a sub folder. (e.g. keys/bob.pub, keys/bob.priv)
 	#	Isaias: Done.
 	-Implement action "getDeviceName". It should return the current device's name
