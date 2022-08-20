@@ -376,8 +376,8 @@ class conmanager(object):
                             #print("DEBUG: conmanager: fragmented packet.")
                             #time.sleep(0.1)
                             break
-                        print("recvd something!")
-                        print(sockets[i][4])
+                        #print("recvd something!")
+                        #print(sockets[i][4])
                         hash = SHA256.new(data=data)
                         try:
                             connection[2][2].verify(hash, signature)
