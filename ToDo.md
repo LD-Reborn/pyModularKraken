@@ -1,6 +1,6 @@
 conmanager:
-    -"standardport" add config.ini setting to change port.
 
+    -"standardport" add config.ini setting to change port.
     -Packet indexing and improve error message texts like "No socket connected towards destination"
         ---> action type "senddata" for unindexed packets. Example use: 1-way packets.
         ---> action type "senddataI" for indexed packets. Index is transmitted too.
