@@ -19,7 +19,19 @@ conmanager:
 		And that would be no bueno! Hence highest priority before going public!
 
 		Isaias: Imports for signing and hashing added. Look into conmanager.py imports for details.
-		---> Simon do you want to work on it?
+		#---> Simon do you want to work on it?
+		Update:
+			Signing works. Validation still needs to be implemented.
+	
+	#-Bug: Once in a while a packet will come in, but be entirely nonesense.
+	#	Isaias: Applied solution: Packet seemed fragmented. Implemented check for fragmentation.
+	#		Long-term testing seems necessary. But as of now, not reproducable in 15 minute runs.
+	#		Fragmentation filter gets hit though. So I consider it fixed.
+		
+	
+	#-RSA 1024 bit ---> 4096 bit.
+	#	Isaias:
+	#	Implemented and works.
 
 	-Store private and public keys in separate files in a sub folder. (e.g. keys/bob.pub, keys/bob.priv)
 	-Implement action "getDeviceName". It should return the current device's name
