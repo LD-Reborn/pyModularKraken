@@ -11,9 +11,22 @@ from typing import AbstractSet # To close the TCP listen socket on exit
 from Crypto.PublicKey import RSA        # To generate / import key
 from Crypto.Cipher import PKCS1_OAEP    # To do padding stuff
 from Crypto.Signature import pkcs1_15   # To sign packets
-from Crypto.Hash import SHA256          # To create hashes
+from Crypto.Hash import SHA256          # To create hashes 
+#key = RSA.generate(4096)
+#pen = pkcs1_15.new(key)
 #hash = SHA256.new(data=b'ToBeHashedData')
 #hashvalue = hash.hexdigest()
+#signature = pen.sign(hash)
+#
+#
+#publickey = key.publickey()
+#publicpen = pkcs1_15.new(publickey)
+#try:
+#   publicpen.verify(hash, signature)
+#except:
+#   print("invalid signature!")
+#
+
 sys.path.append("..")
 from log.log import *
 
