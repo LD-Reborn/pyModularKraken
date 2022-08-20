@@ -53,7 +53,7 @@ class audiocontrol(object):
                 read = queue_in.get()
                 #External packet: ("conmanager", ("recvdata", ))
                 #Internal packet:
-                read = parse(read)
+                read = utils.parse(read)
                 if type(read[1]) == list or type(read[1]) == tuple:
                     action = read[1][0]
                 else:
@@ -66,18 +66,18 @@ class audiocontrol(object):
                         for source in sources:
                             senddata += "{}:'{}','{}','{}','{}','{}'|".format(source.index, source.description, source.mute, source.channels, source.volumes)
                         senddata = senddata[:-1]
-                        respond(read, senddata)
+                        utils.respond(read, senddata)
                     case "listsinks":
                         sinks = pulse.sink_list()
                         senddata = ""
                         for sink in sinks:
                             senddata += "{}:'{}','{}','{}','{}','{}'|".format(sink.index, sink.description, sink.mute, sink.channels, sink.volumes)
                         senddata = senddata[:-1]
-                        respond(read, senddata)
+                        utils.respond(read, senddata)
                     case "getdefaultsource":
                         default_source = pulse.server_info().default_source_name
                         index = pulse.get_source_by_name(default_source)
-                        respond(read, index)
+                        utils.respond(read, index)
                     case "getdefaultsink":
                         pass
                     case "setdefaultsource":
