@@ -5,7 +5,7 @@ import pulsectl
 import sys
 sys.path.append("..")
 from log.log import *
-from conmanager.utils import *
+from conmanager import utils
 
 """
 Commands:
