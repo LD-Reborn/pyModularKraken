@@ -45,6 +45,13 @@ class conmanager(object):
             config.read(basepath + '/keychain.ini') # Why was this missing? # And why is a duplicate of it at the very bottom? Also why does it stop working if I remove the duplicate?
             safepath = os.path.realpath(basepath + "/../") + "/"
 
+            # get own IP
+            tempsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            tempsock.connect(("8.8.8.8", 80))
+            own_ip = tempsock.getsockname()[0]
+            tempsock.close()
+            print("conmanager info: own_ip: {}".format(own_ip))
+
             # find own name
             try:
                 own_name = config["names"][own_ip]
@@ -78,12 +85,7 @@ class conmanager(object):
             
             standardport = 42069 # Can I haz customisation? ó.ò  Ò.Ó NO! (Maybe later.)
 
-            # get own IP
-            tempsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            tempsock.connect(("8.8.8.8", 80))
-            own_ip = tempsock.getsockname()[0]
-            tempsock.close()
-            print("conmanager info: own_ip: {}".format(own_ip))
+            
             
             
             #found = False
@@ -169,6 +171,12 @@ class conmanager(object):
                 else:
                     action = read[1]
                 params = read[1] #Yes, when no parameters are passed, params does equal action.
+                #params:
+                #[0] = action (not important)
+                #[1] = target_device
+                #[2] = target_module
+                #[3] = data
+                #[4] = packet_id
                 if action == "listdevices":
                     #print("conmanager: Gonna list the devices!")
                     temp_return = []
@@ -176,13 +184,17 @@ class conmanager(object):
                         if connection[0] != False:
                             temp_return.append(connection[3])
                     queue_out.put((originator, ("devicelist", temp_return)))
-                elif action == "senddata": #Performance issue: Takes 2-6 seconds for total execution
+                elif action == "senddata":
                     #print("conmanager: Gonna send the data!")
                     for connection in sockets:
+                        #connection: [socket, (ip, 42069), (key_RSA, key_PKCS1OAEP, key_PKCS1_15), device_name, recvbuffer]
                         if connection[3] == params[1] or params[1] == "broadcast":
                             #print("Found the connection to send to!")
                             packet_hasID = len(params) >= 5
-                            if packet_hasID: packet_id = params[4]
+                            if packet_hasID:
+                                packet_id = params[4]
+                            else:
+                                packet_id = 0
                             if connection[0] == False: #If no socket connected towards destination
                                 if packet_hasID:
                                     queue_out.put((originator, ("sentdata", (False, "No socket connected towards destination", connection[1], connection[3]), packet_id)))
@@ -197,26 +209,36 @@ class conmanager(object):
                                     queue_out.put((originator, ("sentdata", (False, "Public key not loaded", connection[1], connection[3]))))
                                 continue
                             #Calculate all byte lengths and convert stuff to bytes to be glued together into a packet.
+                            if type(packet_id) != bytes:
+                                packet_id = packet_id.to_bytes(4, 'big') # max packet_id = 4294967295. Good enough for 136,099300834 years @ 1 packet/s.
                             orig_name = bytes(read[0], "utf8")
                             orig_namelen = bytes([len(orig_name)])
                             target_name = bytes(params[2], "utf8")
                             target_namelen = bytes([len(target_name)])
-                            data_len = len(params[3]).to_bytes(4, 'big') 
+                            data_len = len(params[3]).to_bytes(4, 'big')
                             data = params[3]
+                            #Sign data
+                            hash = SHA256.new(data=data)
+                            signature = key_private[2].sign(hash)
+                            signature_len = len(signature).to_bytes(2, 'big')
+                            #print("DEBUG: conmanager: signature: {}. signature_len: {}".format(hash, connection[2]))
+                            #Compile packet
                             try:
-                                data = orig_namelen + orig_name + target_namelen + target_name + data_len + data
+                                packet = packet_id + orig_namelen + orig_name + target_namelen + target_name + signature_len + signature + data_len + data
                             except Exception as msg:
                                 queue_out.put((originator, ("sentdata", (False, "data must be bytes"))))
                                 errout("CONMANAGER: Unable to finalize the string to be encrypted and sent: {}".format(msg))
                                 continue
+                            #print("DEBUG: conmanager: packet: {}".format(packet))
                             try:
-                                while len(data):
-                                    enc = self.encrypt(data[0:64], connection[2]) # Padding and stuff fucks up the nice 128 size...
-                                    #enc = self.encrypt(data[0:86], connection[2]) # Padding and stuff fucks up the nice 128 size...
+                                packet_size = 128
+                                while len(packet):
+                                    enc = self.encrypt(packet[0:packet_size], connection[2]) # Padding and stuff fucks up the nice 128 size...
+                                    #enc = self.encrypt(packet[0:86], connection[2]) # Padding and stuff fucks up the nice 128 size...
                                     # 95 still too long # 86 seems to be the maximum size.
                                     # 64 works. I'ma leave it at this for now. ~~Todo
                                     connection[0].sendall(enc)
-                                    data = data[64:]
+                                    packet = packet[packet_size:]
                                 #print("Sent data to {}".format(connection))
                                 if packet_hasID:
                                     queue_out.put((originator, ("sentdata", (True, False, connection[1], connection[3]), packet_id)))
@@ -262,7 +284,7 @@ class conmanager(object):
                         pass
                     print("DEBUG recvdata: {}".format(time.time() - DEBUG_time))
                 else:
-                    print("conmanager: Unknown action: {}".format(action))
+                    print("conmanager: Unknown action: {}. Debug: {}".format(action, read))
                 queue_in.task_done()
                 
             try:
@@ -291,7 +313,7 @@ class conmanager(object):
             except Exception as msg: # Maybe a more explicit exception catch? ~~Todo
                 pass
             DEBUG_time = time.time()
-            for i in range(len(sockets)): #Performance issue: Can sometimes take 11 seconds.
+            for i in range(len(sockets)):
                 connection = sockets[i] # Remind me tomorrow, when I remember why the fuck I made it this way # I still don't know why and can't be bothered to change it yet.
                 if type(connection[0]) != socket.socket:
                     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -307,7 +329,7 @@ class conmanager(object):
                         # (Would be interested to try out the attack's effectiveness.)
                         # Possible fix: timeout?
                         try:
-                            temp_recv = connection[0].recv(128)
+                            temp_recv = connection[0].recv(512)
                             if not len(temp_recv): # Caution: This is not here for the reason you think! See comment on "BaseException" for clarity.
                                 raise socket.timeout
                             
@@ -321,20 +343,50 @@ class conmanager(object):
 
                     while len(sockets[i][4]): # Read out recvBuffer
                         try:
-                            orig_modnamelen = sockets[i][4][0]
-                            orig_modname = (sockets[i][4])[1:orig_modnamelen + 1]
-                            target_modnamelen = sockets[i][4][1 + orig_modnamelen]
-                            target_modname = (sockets[i][4])[2 + orig_modnamelen:target_modnamelen + 2 + orig_modnamelen]
-                            data_len = int.from_bytes(sockets[i][4][target_modnamelen + 2 + orig_modnamelen:target_modnamelen + 6 + orig_modnamelen], 'big')   #~~Todo: Possible bug: b'11' converts to 11, not 12593
-                            data = sockets[i][4][target_modnamelen + 6 + orig_modnamelen:target_modnamelen + 6 + orig_modnamelen + data_len]
-                        except:
+                            #packet = packet_id + orig_namelen + orig_name + target_namelen + target_name + signature_len + signature + data_len + data
+                            #       4 byte, 1 byte, oname, 1 byte, tname, 1 byte, signature, 4 byte, data
+                            #example packet: b'1234\x04name\x05tname\x00\x09signature\x00\x00\x00\x04data'
+                            #print("DEBUG: conmanager: sockets[i][4]: {}".format(sockets[i][4]))
+                            #print("DEBUG: conmanager: -----")
+                            packet_id = sockets[i][4][0:4]
+                            #print(packet_id)
+                            orig_modnamelen = sockets[i][4][4]
+                            #print(orig_modnamelen)
+                            orig_modname = (sockets[i][4])[5:orig_modnamelen + 5]
+                            #print(orig_modname)
+                            target_modnamelen = sockets[i][4][5 + orig_modnamelen]
+                            #print(target_modnamelen)
+                            target_modname = (sockets[i][4])[6 + orig_modnamelen:target_modnamelen + 6 + orig_modnamelen]
+                            #print(target_modname)
+                            signature_len = int.from_bytes((sockets[i][4])[target_modnamelen + 6 + orig_modnamelen: target_modnamelen + 8 + orig_modnamelen], 'big')
+                            #print(signature_len)
+                            signature = (sockets[i][4])[target_modnamelen + 8 + orig_modnamelen: target_modnamelen + 8 + orig_modnamelen + signature_len]
+                            #print(signature)
+                            data_len = int.from_bytes(sockets[i][4][target_modnamelen + 8 + orig_modnamelen + signature_len:target_modnamelen + 12 + orig_modnamelen + signature_len], 'big')   #~~Todo: Possible bug: b'11' converts to 11, not 12593
+                            #print(data_len)
+                            data = sockets[i][4][target_modnamelen + 12 + orig_modnamelen + signature_len:target_modnamelen + 12 + orig_modnamelen + data_len + signature_len]
+                            #print(data)
+                            #print("-----")
+                            #print("DEBUG: conmanager: packet_id: {}\norig_modnamelen:{}\norig_modname:{}\ntarget_modnamelen:{}\ntarget_modname:{}\nsignature_len:{}\nsignature:{}\ndata_len:{}\ndata:{}".format(packet_id, orig_modnamelen, orig_modname, target_modnamelen, target_modname, signature_len, signature, data_len, data))
+                        except Exception as msg:
+                            errout("CONMANAGER: unable to receive packet: {}".format(msg))
                             break
-                        if len(data) < data_len:
+                        if len(data) < data_len or len(signature) < signature_len or len(target_modname) < target_modnamelen or len(orig_modname) < orig_modnamelen:
+                            #if the packet is fragmented, do not proceed!
+                            #print("DEBUG: conmanager: fragmented packet.")
+                            #time.sleep(0.1)
                             break
-                        #print("recvd something!")
-                        #print(sockets[i][4])
-                        queue_out.put((target_modname.decode("utf-8"), ("recvdata", connection[3], orig_modname.decode("utf-8"), data)))
-                        sockets[i][4] = sockets[i][4][target_modnamelen + 6 + orig_modnamelen + data_len:]
+                        print("recvd something!")
+                        print(sockets[i][4])
+                        hash = SHA256.new(data=data)
+                        try:
+                            connection[2][2].verify(hash, signature)
+                            print("DEBUG: conmanager: signature verified!")
+                            queue_out.put((target_modname.decode("utf-8"), ("recvdata", connection[3], orig_modname.decode("utf-8"), data)))
+                        except Exception as msg:
+                            errout("CONMANAGER: {}. target_modname: {}, orig_modname: {}, orig_device: {}, data: {}".format(msg, target_modname, orig_modname, connection[3], data))
+                        sockets[i][4] = sockets[i][4][target_modnamelen + 12 + orig_modnamelen + data_len + signature_len:]
+
     
     def connect(self, socket, ip):
         try:
@@ -351,7 +403,7 @@ class conmanager(object):
         keyRSA = RSA.importKey(key)
         keyPKCS1_OAEP = PKCS1_OAEP.new(keyRSA)
         print("DEBUG importKey: imported a key {}".format(keyPKCS1_OAEP))
-        return (keyRSA, keyPKCS1_OAEP)
+        return (keyRSA, keyPKCS1_OAEP, pkcs1_15.new(keyRSA))
 
    #def importKey(self, key): #
    #     if key[0:2] == "b'":

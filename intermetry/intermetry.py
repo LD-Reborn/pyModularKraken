@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta
 import sys
 from time import sleep
-sys.path.append("..")
+sys.path.append("intermetry/utility")
+import hardwareinfo as hwinfo
+sys.path.append("../..")
 from log.log import *
-from intermetry.utility import hardwareinfo as hwinfo
+
 
 class intermetry(object):
 
@@ -13,7 +15,6 @@ class intermetry(object):
         heartbeat_frequency = timedelta(seconds=30)
         heartbeat_next = datetime.now() + heartbeat_frequency
         conmanager = "conmanager"
-        heartbeats = []
         '''
         deviceList contains:
             devicename, lastheartbeatDatetime, moduleList
@@ -26,9 +27,7 @@ class intermetry(object):
         queue_in = in_q
 
     def heartbeat(self):
-        global heartbeat
         #print("INTERMETRY has broadcast a heartbeat")
-        heartbeat.append()
         queue_out.put((conmanager, ("senddata", "broadcast", "intermetry", b"heartbeat")))
         queue_out.put((conmanager, ("listdevices")))
 
