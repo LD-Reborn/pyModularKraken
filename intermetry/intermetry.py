@@ -3,8 +3,7 @@ import sys
 from time import sleep
 sys.path.append("..")
 from log.log import *
-sys.path.append("intermetry/utility")
-import hardwareinfo as hwinfo
+from intermetry.utility import hardwareinfo as hwinfo
 
 class intermetry(object):
 
