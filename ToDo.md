@@ -67,7 +67,8 @@ Github:
         -E.g.: move hwdisplay, audiocontrol, DEcontrol, and OBScontrol into repository "modularkraken_hwdisplay"
         -Then add example modules (possibly with gui, but most important of all: easy to understand) and private keys for testing purposes.
             Also make a video on YouTube. (Leave it private for as long as the repository is private too.)
-
+	-add example-modules. E.g. "hello-world bob" and "hello-world alice"
+		-Supposed to be well-documented and easy to copy-&paste.
     
 
 To-be-implemented future modules:
