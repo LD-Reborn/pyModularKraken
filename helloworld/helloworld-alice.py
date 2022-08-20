@@ -15,8 +15,8 @@ class intermetrymaster(object):
         inQueue = pInQueue
 
     def run(self):
-        log("intermetry has started!")
-        outQueue.put(("conmanager", ("senddata", "broadcast", "intermetry", b"This is a message from intermetry in PersonalCommander")))
+        log("alice started!")
+        outQueue.put(("conmanager", ("senddata", "broadcast", "bob", b"This is a message from alice")))
         
         while True:
             if not inQueue.empty():
