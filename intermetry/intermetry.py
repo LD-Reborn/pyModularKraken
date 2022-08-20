@@ -27,6 +27,7 @@ class intermetry(object):
         queue_in = in_q
 
     def heartbeat(self):
+        global heartbeat
         #print("INTERMETRY has broadcast a heartbeat")
         heartbeat.append()
         queue_out.put((conmanager, ("senddata", "broadcast", "intermetry", b"heartbeat")))
