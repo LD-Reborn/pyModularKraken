@@ -3,7 +3,7 @@ import sys
 sys.path.append("..")
 from log.log import *
 
-class intermetrymaster(object):
+class helloworld_alice(object):
 
     def __init__(self):
         #print("Intermetry is still empty...")
@@ -22,4 +22,4 @@ class intermetrymaster(object):
             if not inQueue.empty():
                 read = inQueue.get()
                 print("INTERMETRY: {}".format(read))    
-mainclass = intermetry()
+mainclass = helloworld_alice()
