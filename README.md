@@ -57,4 +57,3 @@ Now that we have visualized those two scenarios, let me repeat them, but with ac
 
 ## How do I create my own modules?
 You can find well-documented (todo) templates in the (todo) hello-world modules.
- 
