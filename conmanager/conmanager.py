@@ -38,20 +38,31 @@ class conmanager(object):
         try:
             #init logging.
             initLog("conmanager")
+            
             #load config info
             config = configparser.ConfigParser()
             basepath = os.path.dirname(os.path.realpath(__file__))
             config.read(basepath + '/keychain.ini') # Why was this missing? # And why is a duplicate of it at the very bottom? Also why does it stop working if I remove the duplicate?
             safepath = os.path.realpath(basepath + "/../") + "/"
-            #load keychain
-            privatekey_file_exists = os.path.isfile("./conmanager/privatekey")
+
+            # find own name
+            try:
+                own_name = config["names"][own_ip]
+            except Exception as msg:
+                errout("CONMANAGER: startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: {}".format(msg))
+                raise
+            print("conmanager info: own_name: {}".format(own_name))
+
+            #load private key
+            privatekey_path = "./conmanager/keys/{}.priv".format(own_name)
+            privatekey_file_exists = os.path.isfile(privatekey_path)
             if privatekey_file_exists:
-                privatekey_file = open("./conmanager/privatekey", "r")
+                privatekey_file = open(privatekey_path, "r")
                 key_private = self.importKey(privatekey_file.read())
                 key_public = key_private[0].publickey()#self.getKey("publickey")
             else:
-                privatekey_file = open("./conmanager/privatekey", "w")
-                key_private = RSA.generate(1024)
+                privatekey_file = open(privatekey_path, "w")
+                key_private = RSA.generate(4096)
                 key_public = key_private[0].publickey()
                 privatekey_file.write(str(key_private.exportKey(), "utf8").replace("\n", "\\n"))
 
@@ -59,7 +70,7 @@ class conmanager(object):
 
             
             update_lastrequested = datetime.datetime.fromtimestamp(pathlib.Path(basepath + "/keychain.ini").stat().st_mtime)
-            privatekey_lastupdated = datetime.datetime.fromtimestamp(pathlib.Path(basepath + "/privatekey").stat().st_mtime)
+            privatekey_lastupdated = datetime.datetime.fromtimestamp(pathlib.Path(privatekey_path).stat().st_mtime)
             try:
                 admin_name = config["config"]["admin"]
             except KeyError:
@@ -74,13 +85,7 @@ class conmanager(object):
             tempsock.close()
             print("conmanager info: own_ip: {}".format(own_ip))
             
-            # find own name
-            try:
-                own_name = config["names"][own_ip]
-            except Exception as msg:
-                errout("CONMANAGER: startup error: Unable to find any name for this machine. Check key authority and/or device's ip settings. Full error: {}".format(msg))
-                raise
-            print("conmanager info: own_name: {}".format(own_name))
+            
             #found = False
             #for index, ip in enumerate(config["names"]):
             #    print("Debug20210528:01 - 4.2: {} and {}".format(index, ip))
@@ -361,9 +366,12 @@ class conmanager(object):
         with temp_file as configfile:
             config.write(configfile)
 
-    def getKey(self, ip):
+    def getKey(self, name):
         global config
-        return self.importKey(self.config['keychain'][ip])
+        publickey_file = open("./conmanager/keys/{}.pub".format(name), "r")
+        key = self.importKey(publickey_file.read())
+        publickey_file.close()
+        return key
     
     def exportKey(self, key):
         return key.exportKey()
