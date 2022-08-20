@@ -40,22 +40,27 @@ conmanager:
 
 
 intermetry:
-    -Find more system info points a user may want to monitor and add them into hardwareinfo.py
+    
+	-Find more system info points a user may want to monitor and add them into hardwareinfo.py
 
 audiocontrol:
-    -create prototype implementing pulseaudio. ---> Isaias
+    
+	-create prototype implementing pulseaudio. ---> Isaias
 
 hwdisplay:
-    -create functioning prototype. ---> Isaias
+    
+	-create functioning prototype. ---> Isaias
 
 core:
-    #-Implement ability to include modules where folder name and module name don't match.
+    
+	#-Implement ability to include modules where folder name and module name don't match.
     #    E.g.: hwdisplay\hwdisplay, hwdisplay\hexa, hwdisplay\simpletext, ...
     #implemented! ~ Isaias
 
 
 Github:
-    -Create tutorials and copy-paste friendly example sections.
+    
+	-Create tutorials and copy-paste friendly example sections.
     -Add a GPLv2 or GPLv3 license?
     -Clean up top folder. Remove deprecated modules and folders like intermetrymaster and "signing test DELME"
     -Add separate repos for different modules?
@@ -66,7 +71,8 @@ Github:
     
 
 To-be-implemented future modules:
-    -DEcontrol:
+    
+	-DEcontrol:
         Control aspects of the current desktop environment. E.g.:
             -Focus / Minimize / unminimize / close / maximize / move / resize windows
             -Move windows between monitors and workspaces
