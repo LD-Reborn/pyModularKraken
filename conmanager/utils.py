@@ -1,3 +1,5 @@
+packet_id = 0
+
 def parse(read):
     if read[0] == "conmanager": #External packet
         #Import the data. 
@@ -38,7 +40,11 @@ def respond(read, msg):
 
 def send(target_device, target_module, msg):
     global queue_out
-    if target_device == None: #internal
-
-    else: #external
-        
+    packet_id += 1
+    if target_device == None: #External packet
+        #conmanager ---> audiocontrol: ("recvdata", orig_device, orig_modname, data)
+        if type(msg) != bytes:
+            msg = bytes(msg, "utf-8")
+        queue_out.put(("conmanager", ("senddata", target_device, target_module, msg, packet_id.to_bytes(4, byteorder = 'big'))))
+    else: #Internal packet
+        queue_out.put((target_module, msg, packet_id))
