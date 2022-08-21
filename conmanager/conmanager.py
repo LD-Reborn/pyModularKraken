@@ -42,7 +42,7 @@ class conmanager(object):
             #load config info
             config = configparser.ConfigParser()
             basepath = os.path.dirname(os.path.realpath(__file__))
-            config.read(basepath + '/keychain.ini') # Why was this missing? # And why is a duplicate of it at the very bottom? Also why does it stop working if I remove the duplicate?
+            config.read(basepath + '/config.ini') # Why was this missing? # And why is a duplicate of it at the very bottom? Also why does it stop working if I remove the duplicate?
             safepath = os.path.realpath(basepath + "/../") + "/"
 
             # get own IP
@@ -83,7 +83,7 @@ class conmanager(object):
             except KeyError:
                 admin_name = False
             
-            standardport = 42069 # Can I haz customisation? ó.ò  Ò.Ó NO! (Maybe later.)
+            standardport = config["config"]["port"] # Can I haz customisation? ó.ò  Ò.Ó NO! (Maybe later.)
 
             
             
@@ -445,7 +445,7 @@ class conmanager(object):
     
     config = configparser.ConfigParser()
     basepath = os.path.dirname(os.path.realpath(__file__))
-    config.read(basepath + '/keychain.ini')
+    config.read(basepath + '/config.ini')
     
        
 mainclass = conmanager()
