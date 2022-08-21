@@ -1,6 +1,6 @@
 conmanager:
 
-    -"standardport" add config.ini setting to change port.
+
     -Packet indexing and improve error message texts like "No socket connected towards destination"
         ---> action type "senddata" for unindexed packets. Example use: 1-way packets.
         ---> action type "senddataI" for indexed packets. Index is transmitted too.
@@ -11,6 +11,9 @@ conmanager:
         Anything else results in a crash as of now. Crash = bad
 
     -"Errno 98 address already in use" error. Happens sometimes when you restart start.py.
+
+    #-"standardport" add config.ini setting to change port.
+    #   Isaias: Implemented!
 
     #-Store private and public keys in separate files in a sub folder. (e.g. keys/bob.pub, keys/bob.priv)
     #    Isaias: Done.
