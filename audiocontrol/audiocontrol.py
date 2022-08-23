@@ -1,6 +1,3 @@
-from http.client import ResponseNotReady
-from pickletools import bytes1
-from struct import pack
 import pulsectl
 import sys
 sys.path.append("..")
