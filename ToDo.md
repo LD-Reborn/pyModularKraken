@@ -61,10 +61,11 @@ core:
     #implemented! ~ Isaias
 
 
-Github:
+Github / general:
     
 	-Create tutorials and copy-paste friendly example sections.
-    -Add a GPLv2 or GPLv3 license?
+    #-Add a GPLv2 or GPLv3 license?
+    #   Isaias: Implemented GPLv3!
     -Clean up top folder. Remove deprecated modules and folders like intermetrymaster and "signing test DELME"
     -Add separate repos for different modules?
         -E.g.: move hwdisplay, audiocontrol, DEcontrol, and OBScontrol into repository "modularkraken_hwdisplay"
