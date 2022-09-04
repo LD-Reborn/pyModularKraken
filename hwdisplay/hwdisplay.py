@@ -2,6 +2,13 @@ import sys
 import time
 from datetime import datetime, timedelta
 
+#NO!    #dependency: pip3 install tkhtmlview
+#       #from tkhtmlview import HTMLLabel
+#incompatible with python3.10;  #dependency: pip install cefpython3==66.0
+#                               #from cefpython3 import cefpython as cef
+#dependency: pip install tkinterhtml
+#from tkinterhtml import HTMLFrame
+
 sys.path.append("..")
 import importlib
 import threading
