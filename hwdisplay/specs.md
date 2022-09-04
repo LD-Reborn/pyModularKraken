@@ -3,6 +3,8 @@
 
 ## example config
 example hexa.config:
+
+
     [main]
     load=hexa.py
     width=1024
@@ -48,4 +50,3 @@ example hexa.config:
 
     [obscontrol]
     notext=type:label|text="Nothing to see here in the obscontrol page",x=250,y=50
-    
