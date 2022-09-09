@@ -1793,3 +1793,109 @@ Sat Aug 20 22:16:14 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['c
 Sat Aug 20 22:16:44 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat')]
 Sat Aug 20 22:17:14 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat')]
 Sat Aug 20 22:17:44 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat')]
+Sun Sep  4 17:01:16 2022: conmanager
+Sun Sep  4 17:03:47 2022: conmanager
+Sun Sep  4 17:04:49 2022: conmanager
+Sun Sep  4 17:09:02 2022: conmanager
+Sun Sep  4 17:09:05 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:09:05 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:09:05 2022 @ INTERMETRY: admin
+Sun Sep  4 17:09:05 2022 @ ADMIN: hwdisplay
+Sun Sep  4 17:22:45 2022: conmanager
+Sun Sep  4 17:22:48 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:22:48 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:22:48 2022 @ INTERMETRY: admin
+Sun Sep  4 17:22:48 2022 @ ADMIN: hwdisplay
+Sun Sep  4 17:23:33 2022: conmanager
+Sun Sep  4 17:23:37 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:23:37 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:23:37 2022 @ INTERMETRY: admin
+Sun Sep  4 17:23:37 2022 @ ADMIN: hwdisplay
+Sun Sep  4 17:23:48 2022: conmanager
+Sun Sep  4 17:23:52 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:23:52 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:23:52 2022 @ INTERMETRY: admin
+Sun Sep  4 17:23:52 2022 @ ADMIN: hwdisplay
+Sun Sep  4 17:42:03 2022: conmanager
+Sun Sep  4 17:42:07 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:42:07 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:42:07 2022 @ INTERMETRY: admin
+Sun Sep  4 17:42:07 2022 @ ADMIN: hwdisplay
+Sun Sep  4 17:43:03 2022: conmanager
+Sun Sep  4 17:43:06 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:43:07 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:43:07 2022 @ INTERMETRY: admin
+Sun Sep  4 17:43:07 2022 @ ADMIN: hwdisplay
+Sun Sep  4 17:43:26 2022: conmanager
+Sun Sep  4 17:43:30 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:43:30 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:43:30 2022 @ INTERMETRY: admin
+Sun Sep  4 17:43:30 2022 @ ADMIN: hwdisplay
+Sun Sep  4 17:43:30 2022 @ HWDISPLAY: hwdisplay: OK
+Sun Sep  4 17:43:30 2022 @ HWDISPLAY: intermetry: running
+Sun Sep  4 17:43:30 2022 @ HWDISPLAY: conmanager has started!
+Sun Sep  4 17:43:49 2022 @ HWDISPLAY: intermetry has started!
+Sun Sep  4 17:44:01 2022: conmanager
+Sun Sep  4 17:44:04 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:44:04 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:44:04 2022 @ INTERMETRY: admin
+Sun Sep  4 17:44:04 2022 @ ADMIN: hwdisplay
+Sun Sep  4 17:44:04 2022 @ HWDISPLAY: hwdisplay: OK
+Sun Sep  4 17:44:04 2022 @ HWDISPLAY: conmanager has started!
+Sun Sep  4 17:44:16 2022: conmanager
+Sun Sep  4 17:44:19 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:44:19 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:44:19 2022 @ INTERMETRY: admin
+Sun Sep  4 17:44:19 2022 @ ADMIN: hwdisplay
+Sun Sep  4 17:44:19 2022 @ HWDISPLAY: hwdisplay: OK
+Sun Sep  4 17:44:19 2022 @ HWDISPLAY: conmanager has started!
+Sun Sep  4 17:44:19 2022 @ HWDISPLAY: intermetry: running
+Sun Sep  4 17:44:19 2022 @ HWDISPLAY: intermetry has started!
+Sun Sep  4 17:44:56 2022: conmanager
+Sun Sep  4 17:44:59 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:44:59 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:44:59 2022 @ INTERMETRY: admin
+Sun Sep  4 17:44:59 2022 @ ADMIN: hwdisplay
+Sun Sep  4 17:44:59 2022 @ HWDISPLAY: hwdisplay: OK
+Sun Sep  4 17:44:59 2022 @ HWDISPLAY: conmanager has started!
+Sun Sep  4 17:44:59 2022 @ HWDISPLAY: intermetry has started!
+Sun Sep  4 17:44:59 2022 @ HWDISPLAY: intermetry: running
+Sun Sep  4 17:59:44 2022: conmanager
+Sun Sep  4 17:59:47 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:59:48 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:59:48 2022 @ INTERMETRY: admin
+Sun Sep  4 17:59:48 2022 @ ADMIN: hwdisplay
+Sun Sep  4 17:59:55 2022: conmanager
+Sun Sep  4 17:59:58 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 17:59:58 2022 @ CONMANAGER: intermetry
+Sun Sep  4 17:59:58 2022 @ INTERMETRY: admin
+Sun Sep  4 17:59:58 2022 @ ADMIN: hwdisplay
+Sun Sep  4 18:01:27 2022: conmanager
+Sun Sep  4 18:01:30 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 18:01:31 2022 @ CONMANAGER: intermetry
+Sun Sep  4 18:01:31 2022 @ INTERMETRY: admin
+Sun Sep  4 18:01:31 2022 @ ADMIN: hwdisplay
+Sun Sep  4 18:01:43 2022: conmanager
+Sun Sep  4 18:01:47 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 18:01:47 2022 @ CONMANAGER: intermetry
+Sun Sep  4 18:01:47 2022 @ INTERMETRY: admin
+Sun Sep  4 18:01:47 2022 @ ADMIN: hwdisplay
+Sun Sep  4 18:02:56 2022: conmanager
+Sun Sep  4 18:02:59 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 18:02:59 2022 @ CONMANAGER: intermetry
+Sun Sep  4 18:02:59 2022 @ INTERMETRY: admin
+Sun Sep  4 18:02:59 2022 @ ADMIN: hwdisplay
+Sun Sep  4 18:15:38 2022: conmanager
+Sun Sep  4 18:15:42 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 18:15:42 2022 @ CONMANAGER: intermetry
+Sun Sep  4 18:15:42 2022 @ INTERMETRY: admin
+Sun Sep  4 18:15:42 2022 @ ADMIN: hwdisplay
+Sun Sep  4 18:15:54 2022: conmanager
+Sun Sep  4 18:15:58 2022 @ CONMANAGER: conmanager: Unable to connect to 192.168.0.105
+Sun Sep  4 18:15:58 2022 @ CONMANAGER: intermetry
+Sun Sep  4 18:15:58 2022 @ INTERMETRY: admin
+Sun Sep  4 18:15:58 2022 @ ADMIN: hwdisplay
+Sun Sep  4 18:15:58 2022 @ HWDISPLAY: hwdisplay: OK
+Sun Sep  4 18:15:58 2022 @ HWDISPLAY: conmanager has started!
+Sun Sep  4 18:15:58 2022 @ HWDISPLAY: intermetry: running
+Sun Sep  4 18:15:58 2022 @ HWDISPLAY: intermetry has started!
