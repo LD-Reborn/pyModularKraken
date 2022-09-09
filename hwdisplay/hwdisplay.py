@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 from datetime import datetime, timedelta
@@ -46,47 +47,53 @@ class hwdisplay(object):
         
         global VERSION, MONITOR, config, window, window_x, window_y, window_w, window_h, canvas
         VERSION = "v0.1"
-        
-        config = ConfigParser()
-        config.read("config.ini")
-        
-        COLOR_BG = config.get("colors", "bg")
-        COLOR_FG = config.get("colors", "fg")
-        COLOR_BUTTONBG = config.get("colors", "buttonbg").split(",")
-        COLOR_BUTTONFG = config.get("colors", "buttonfg").split(",")
-        try:
-            MONITOR = config.get("displays", "monitor")
-            #find correct monitor
-            for m in get_monitors():
-                if m.name == MONITOR:
-                    window_x = m.x
-                    window_y = m.y
-                    window_w = m.width
-                    window_h = m.height
-                    break
-        except:
-            MONITOR = None
-            window_x = config.get("displays", "x")
-            window_y = config.get("displays", "y")
-            window_w = config.get("displays", "w")
-            window_h = config.get("displays", "h")
+        basepath = os.path.dirname(os.path.realpath(__file__))
+        config = ConfigParser(allow_no_value=True)
+        config.read(basepath + '/config.ini')
+        displays = []
+        for display in config["displays"]:
+            tempDisplay = {}
+            tempDisplay[]
+            tempDisplay.config = ConfigParser()
+            displays.append(display)
+        #
+        #COLOR_BG = config.get("colors", "bg")
+        #COLOR_FG = config.get("colors", "fg")
+        #COLOR_BUTTONBG = config.get("colors", "buttonbg").split(",")
+        #COLOR_BUTTONFG = config.get("colors", "buttonfg").split(",")
+        #try:
+        #    MONITOR = config.get("displays", "monitor")
+        #    #find correct monitor
+        #    for m in get_monitors():
+        #        if m.name == MONITOR:
+        #            window_x = m.x
+        #            window_y = m.y
+        #            window_w = m.width
+        #            window_h = m.height
+        #            break
+        #except:
+        #    MONITOR = None
+        #    window_x = config.get("displays", "x")
+        #    window_y = config.get("displays", "y")
+        #    window_w = config.get("displays", "w")
+        #    window_h = config.get("displays", "h")
 
         # creating window
-        window = tk.Tk()
+        #window = tk.Tk()
         
         # setting attribute
-        window.geometry("%dx%d+%d+%d" % (window_w, window_h, window_x, window_y))
-        window.config(bg=COLOR_BG)
-        window.attributes('-fullscreen', True)
-        window.wm_attributes("-topmost", True)
-        window.title("utilTouchbar {}".format(VERSION))
+        #window.geometry("%dx%d+%d+%d" % (window_w, window_h, window_x, window_y))
+        #window.config(bg=COLOR_BG)
+        #window.attributes('-fullscreen', True)
+        #window.wm_attributes("-topmost", True)
+        #window.title("utilTouchbar {}".format(VERSION))
         
         #window_bg = PhotoImage(file=config_bg)
         #label = tk.Label(window, image=window_bg)
         #label.pack()
-        canvas = Canvas(window, width=window_w, height=window_h, bg=COLOR_BG, highlightthickness=0)
+        #canvas = Canvas(window, width=window_w, height=window_h, bg=COLOR_BG, highlightthickness=0)
         #canvas.create_text(300, 50, text="Test 123", fill="green", font=('Helvetica 15 bold'))
-        canvas.pack()
+        #canvas.pack()
         log("hwdisplay: OK")
     
     def initcore(self, pOutQueue, pInQueue):
@@ -98,12 +105,13 @@ class hwdisplay(object):
         pass
 
     def run(self):
-        updateThread = RepeatEvery(0.5, self.update, (window, canvas))
-        updateThread.start()
+        pass
+        #updateThread = RepeatEvery(0.5, self.update, (window, canvas))
+        #updateThread.start()
         
-        window.mainloop()
+        #window.mainloop()
         
-        updateThread.stop()
+        #updateThread.stop()
         
         #global packetID
         #log("hwdisplay: running")
