@@ -76,7 +76,7 @@ class conmanager(object):
             privatekey_file.close()
 
             
-            update_lastrequested = datetime.datetime.fromtimestamp(pathlib.Path(basepath + "/keychain.ini").stat().st_mtime)
+            update_lastrequested = datetime.datetime.now() #datetime.datetime.fromtimestamp(pathlib.Path(basepath + "/keychain.ini").stat().st_mtime)
             privatekey_lastupdated = datetime.datetime.fromtimestamp(pathlib.Path(privatekey_path).stat().st_mtime)
             try:
                 admin_name = config["config"]["admin"]
@@ -114,7 +114,7 @@ class conmanager(object):
             sockets = []
             #initialize server socket
             listensocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            listensocket.bind(('', standardport))
+            listensocket.bind(('', int(standardport)))
             listensocket.listen(10)
             listensocket.setblocking(0) # Idk. Felt cute. Might rewrite later IN A WAY A SANE BEING WOULD ACTUALLY DO IT! (i.e. no busy-idle, etc.)
             listensocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)#debug #? To debug what? TELL ME, PAST SELF!!!
