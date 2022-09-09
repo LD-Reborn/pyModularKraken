@@ -6,6 +6,8 @@ example hexa.config:
 
 
     [main]
+    x=0
+    y=0
     width=1024
     height=600
     load=hexa.py
