@@ -1,5 +1,19 @@
 # specifications
 
+## formatting
+GUI files are only accepted in XML format.
+
+
+## Useful Tags
+head:
+    Place info like window position and size, controller script, colors and font here.
+
+body:
+    This is where your GUI stuff goes into.
+
+pagecontroller:
+    A page selector that is placed on the GUI. Should contain <page></page> elements.
+
 
 ## example xml
 example hexa.xml:
