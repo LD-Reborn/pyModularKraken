@@ -5,14 +5,28 @@ GUI files are only accepted in XML format.
 
 
 ## Useful Tags
-head:
-    Place info like window position and size, controller script, colors and font here.
+`<head>`:
+    Place general configuration about your GUI. Things like position, size, controller script, colors and font.
 
-body:
-    This is where your GUI stuff goes into.
+`<body>`:
+    This is where you place all of your elements.
 
-pagecontroller:
-    A page selector that is placed on the GUI. Should contain <page></page> elements.
+`<pagecontroller>`:
+    A page controller / selector is a type of list dedicated to house `<page>` elements, which - when clicked - select a page.
+
+`<page>`:
+    Define a page. Give it a name, make it the default page, give it some custom properties. See examples for more.
+
+`<variable>`:
+    Define a variable. Give it a name and specify a `function` to be executed `every` interval.
+
+`<label>`:
+    Label element. Can contain static text or reference a `variable`. Supports `onclick`.
+
+`<image>`:
+    Image element. Insert an image to be shown. Supports `onclick`.
+
+
 
 
 ## example xml
@@ -54,8 +68,8 @@ example hexa.xml:
         <label page="Info" x=650 y=80 variable="rampercent"/>
 
         <label page="Info" x=850 y=50 text="NIC"/>
-        <image page="Info" x=850 y=60 image="assets/hexa.png">
-        <variable page="Info" name="nic" function="hexa.nice" every="0.5">
+        <image page="Info" x=850 y=60 image="assets/hexa.png" onclick="hexa.nicswitch">
+        <variable page="Info" name="nic" function="hexa.nic" every="0.5">
         <label page="Info" x=850 y=80 variable="nic"/>
 
         <label page="Info" x=350 y=250 text="TEMP_CPU"/>
