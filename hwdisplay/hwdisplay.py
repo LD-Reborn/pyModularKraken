@@ -1,6 +1,8 @@
+from email.errors import FirstHeaderLineIsContinuationDefect
 import os
 import sys
 import time
+import xml.dom.minidom
 from datetime import datetime, timedelta
 
 #NO!    #dependency: pip3 install tkhtmlview
@@ -40,6 +42,21 @@ class RepeatEvery(threading.Thread):
 
 class hwdisplay(object):
 
+    def findNode(pNode, pName):
+        for child in pNode.childNodes:
+            if child.nodeName == pName:
+                    return child
+    
+    def getValues(pNode):
+
+    def initDisplay(display):
+        display["window"] = tk.Tk()
+        display["head"] = {}
+        for element in self.findNode(display["collection"], "head").childNodes:
+            if not element == None:
+                display["head"][element] = 
+        display["window"].geometry("%dx%d+%d+%d" % (window_w, window_h, window_x, window_y))
+
     def __init__(self):
         initLog("hwdisplay")
         global packetID
@@ -53,8 +70,9 @@ class hwdisplay(object):
         displays = []
         for display in config["displays"]:
             tempDisplay = {}
-            tempDisplay[]
-            tempDisplay.config = ConfigParser()
+            tempDisplay["basepath"] = basepath + '/' + display
+            tempDisplay["DOMTree"] = xml.dom.minidom.parse(tempDisplay["basepath"] + '/' + display + '.xml')
+            tempDisplay["collection"] = tempDisplay["DOMTree"].documentElement
             displays.append(display)
         #
         #COLOR_BG = config.get("colors", "bg")
