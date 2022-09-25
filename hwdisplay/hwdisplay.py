@@ -1,9 +1,13 @@
 from email.errors import FirstHeaderLineIsContinuationDefect
+from http.client import SWITCHING_PROTOCOLS
 import os
 import sys
 import time
+from uuid import getnode
 import xml.dom.minidom
 from datetime import datetime, timedelta
+
+from symbol import try_stmt
 
 #NO!    #dependency: pip3 install tkhtmlview
 #       #from tkhtmlview import HTMLLabel
@@ -42,20 +46,88 @@ class RepeatEvery(threading.Thread):
 
 class hwdisplay(object):
 
-    def findNode(pNode, pName):
-        for child in pNode.childNodes:
-            if child.nodeName == pName:
-                    return child
+    #def findNode(self, pNode, pName):
+    #    for child in pNode.childNodes:
+    #        if child.nodeName == pName:
+    #                return child
     
-    def getValues(pNode):
+    def getNode(self, pNode, pName):
+        for child in pNode["childNodes"]:
+            if child["name"] == pName:
+                return child
 
-    def initDisplay(display):
-        display["window"] = tk.Tk()
-        display["head"] = {}
-        for element in self.findNode(display["collection"], "head").childNodes:
-            if not element == None:
-                display["head"][element] = 
-        display["window"].geometry("%dx%d+%d+%d" % (window_w, window_h, window_x, window_y))
+    def getValues(self, pNode):
+        retValues = {"attributes": {}, "childNodes": []}
+        for element in pNode.childNodes:
+            if element == None:
+                continue
+            #Problem: Text between tags is its own element. even "\n\n   "... FML. <tag>text<tag2>moretext</tag2>evenmoretext</tag>
+            retValues["childNodes"].append(self.getValues(pNode))
+        for attribute in pNode.attributes.values():
+            retValues["attributes"][attribute.name] = attribute.value
+        try:
+            retValues["name"] = retValues["attributes"]["name"]
+        except:
+            retValues["name"] = pNode.nodeName
+        try:
+            retValues["attributes"]["page"]
+        except:
+            retValues["attributes"]["page"] = None
+        retValues["tagName"] = pNode.tagName
+        retValues["nodeValue"] = pNode.nodeValue
+        retValues["self"] = pNode
+        return retValues
+    
+    def loadElement(self, pGui, pElement):
+        match pElement["tagName"]:
+            case "pagecontroller":
+                pass #Todo
+            case "label":
+                pass #Todo
+            case "image":
+                pass #Todo
+            case "variable":
+                pass #Todo
+            case "canvas":
+                pass #Todo
+
+
+    def loadPage(self, pDisplay, pPage):
+        elementtypes = {""}
+        for element in pDisplay["body"]["childNodes"]:
+            if element["attributes"]["page"] == pPage or element["attributes"]["page"] == None:
+                self.loadElement(self, pDisplay["window"], element)
+
+    def getCurrentPage(self, display):
+        if display["pages"] == {}:
+            display["pages"]["current"] = None
+            for element in display["body"]["childNodes"]:
+                if element["tagName"] == "pagecontroller":
+                    try:
+                        display["pages"]["current"] = element["attributes"]["default"]
+                    except:
+                        pass
+                    for page in element["childNodes"]:
+                        display["pages"][page["name"]] = [] # Will store elements like labels, images, etc. thus empty for now.
+        try:
+            return display["pages"]["current"]
+        except KeyError:
+            raise Exception("Formatting error: Please make sure you have a page controller containing pages")
+
+    def initDisplay(self, pDisplay):
+        pDisplay["collection"] = self.getValues(pDisplay["collection"])
+        pDisplay["window"] = tk.Tk()
+        pDisplay["head"] = self.getNode(self, pDisplay["collection"], "head")
+        pDisplay["body"] = self.getnode(self, pDisplay["collection"], "body")
+        pDisplay["pages"] = {}
+        for element in pDisplay["head"]["childNodes"]:
+            pDisplay["head"][element["name"]] = element["childNodes"][0]["nodeValue"] #To get text from <tag>text</tag>, get it's 0-th child's (aka. text node) value
+        pDisplay["window"].geometry("%dx%d+%d+%d" % (pDisplay["head"]["width"], pDisplay["head"]["height"], pDisplay["head"]["x"], pDisplay["head"]["y"]))
+        #todo: .config(bg=backgroundcolor)
+        #todo: Attributes like: .attributes('-fullscreen', True) or .wm_attributes('-topmost', True)
+        #todo: .title("user selected title")
+        self.loadPage(self, pDisplay self.getCurrentPage(self, pDisplay))
+        
 
     def __init__(self):
         initLog("hwdisplay")

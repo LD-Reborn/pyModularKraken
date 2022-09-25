@@ -1,5 +1,4 @@
 <html>
-
     <head>
         <x>0</x>
         <y>0</y>
@@ -11,14 +10,13 @@
         <fg>#ffffff</fg>
         <font>("Arial", 25)</font>
     </head>
-
     <body>
-        <pagecontroller x="0" y="0" width="100" height="600">
-            <page>Info</page>
-            <page>Audio</page>
-            <page>Desktop</page>
-            <page>HID</page>
-            <page>OBS</page>
+        <pagecontroller default="info" x="0" y="0" width="100" height="600">
+            <page name="info">Info</page>
+            <page name="audio">Audio</page>
+            <page name="desktop">Desktop</page>
+            <page name="hid">HID</page>
+            <page name="obs">OBS</page>
         </pagecontroller>
         
         <label page="Info" x="250" y="50" text="CPU"/>
