@@ -45,42 +45,42 @@ def ram_used():
 def gpu_name():
     returnstring = ""
     for gpu in GPUtil.getGPUs():
-    	returnstring += "{},".format(gpu.name)
+        returnstring += "{},".format(gpu.name)
     return returnstring[:-1]
 
 #GPU temperature in °C
 def gpu_temp():
     returnstring = ""
     for gpu in GPUtil.getGPUs():
-    	returnstring += "{},".format(gpu.temperature)
+        returnstring += "{},".format(gpu.temperature)
     return returnstring[:-1]
 
 #GPU compute utilization in percent
 def gpu_utilization():
     returnstring = ""
     for gpu in GPUtil.getGPUs():
-    	returnstring += "{},".format(gpu.load * 100)
+        returnstring += "{},".format(gpu.load * 100)
     return returnstring[:-1]
 
 #Used GPU memory in MB
 def gpu_memused():
     returnstring = ""
     for gpu in GPUtil.getGPUs():
-    	returnstring += "{},".format(gpu.memoryUsed)
+        returnstring += "{},".format(gpu.memoryUsed)
     return returnstring[:-1]
 
 #Total GPU memory in MB
 def gpu_memtotal():
     returnstring = ""
     for gpu in GPUtil.getGPUs():
-    	returnstring += "{},".format(gpu.memoryTotal)
+        returnstring += "{},".format(gpu.memoryTotal)
     return returnstring[:-1]
 
 #Used GPU memory in percent
 def gpu_memusedPercent():
     returnstring = ""
     for gpu in GPUtil.getGPUs():
-    	returnstring += "{},".format(gpu.memoryUsed / gpu.memoryTotal * 100)
+        returnstring += "{},".format(gpu.memoryUsed / gpu.memoryTotal * 100)
     return returnstring[:-1]
 
 #All nic addresses in format: nic=address,nic2=address,...
