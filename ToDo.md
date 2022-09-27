@@ -12,13 +12,15 @@ conmanager:
 
     -"Errno 98 address already in use" error. Happens sometimes when you restart start.py.
 
-    -Connection to self. Or at least if target_device == own_name then just internally forward it to the respective queue.
+    #-Connection to self. Or at least if target_device == own_name then just internally forward it to the respective #queue.
+    # Isaias: Implemented internal forwarding.
 
     #-"standardport" add config.ini setting to change port.
     #   Isaias: Implemented!
 
     #-Store private and public keys in separate files in a sub folder. (e.g. keys/bob.pub, keys/bob.priv)
     #    Isaias: Done.
+    
     -Implement action "getDeviceName". It should return the current device's name
 
     #-Signing messages is of highest priority before we make our repo public!
@@ -54,7 +56,13 @@ audiocontrol:
 
 hwdisplay:
     
-	-Communication between controller and core ---> Isaias
+	#-Communication between controller and core ---> Isaias
+    #   Isaias: For now implemented with hwdisplay as a proxy between core and controller.
+    #       Packets are forwarded based on packetID.
+    #       Once core gets a function to register modules and hand over queues, I will change it.
+
+    -Communication between controller and core: register controllers as own modules and hand over communication queues!
+
     -Functioning prototype ---> Isaias
 
 core:
@@ -102,3 +110,5 @@ To-be-implemented future modules:
             -Select scenes
             -Hide / unhide sources
             -Statistics like live/recording time, CPU utilization, FPS, bitrates, framedrops, etc.
+    -Twitch:
+        View Twitch chat, show (and record) statistics, maybe some light moderation? I.e. muting people, etc.?
