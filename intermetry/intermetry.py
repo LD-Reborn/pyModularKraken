@@ -70,7 +70,7 @@ class intermetry(object):
                     orig_module = read[1][2]
                     try:
                         data = read[1][3].decode("utf-8")
-                    except:
+                    except Exception as e:
                         data = read[1][3]
                     #Update heartbeat timer
                     for i in range(len(devicelist)):
@@ -80,10 +80,9 @@ class intermetry(object):
                         log("intermetry: Got a heartbeat from {}. {}".format(orig_device, read))
                     elif data[0:12] == "hardwareinfo":
                         try:
-                            tempStr = data[13:]
-                            packetID = tempStr[:tempStr.find(":")]
-                            request = tempStr[tempStr.find(":") + 1:]
-                            queue_out.put((conmanager, ("senddata", orig_device, orig_module, bytes("hardwareinfo:{}:{}".format(packetID, hwinfo.parseRequest(request)), "utf-8"))))
+                            request = data[13:]
+                            packetID = read[1][4]
+                            queue_out.put((conmanager, ("senddata", orig_device, orig_module, bytes("hardwareinfo:{}".format(hwinfo.parseRequest(request)), "utf-8"), packetID)))
                         except Exception as msg:
                             errout("INTERMETRY: error while processing a hardwaredata packet from {}@{}: {}".format(orig_module, orig_device, msg))
                     else:
