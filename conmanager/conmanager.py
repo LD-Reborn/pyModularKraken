@@ -185,70 +185,77 @@ class conmanager(object):
                             temp_return.append(connection[3])
                     queue_out.put((originator, ("devicelist", temp_return)))
                 elif action == "senddata":
-                    #print("conmanager: Gonna send the data!")
-                    for connection in sockets:
-                        #connection: [socket, (ip, 42069), (key_RSA, key_PKCS1OAEP, key_PKCS1_15), device_name, recvbuffer]
-                        if connection[3] == params[1] or params[1] == "broadcast":
-                            #print("Found the connection to send to!")
-                            packet_hasID = len(params) >= 5
-                            if packet_hasID:
-                                packet_id = params[4]
-                            else:
-                                packet_id = 0
-                            if connection[0] == False: #If no socket connected towards destination
-                                if packet_hasID:
-                                    queue_out.put((originator, ("sentdata", (False, "No socket connected towards destination", connection[1], connection[3]), packet_id)))
-                                else:
-                                    queue_out.put((originator, ("sentdata", (False, "No socket connected towards destination", connection[1], connection[3]))))
-                                continue
+                    packet_hasID = len(params) >= 5
+                    if packet_hasID:
+                        packet_id = params[4]
+                    else:
+                        packet_id = 0
 
-                            if type(connection[2]) is bool:
-                                if packet_hasID:
-                                    queue_out.put((originator, ("sentdata", (False, "Public key not loaded", connection[1], connection[3]), packet_id)))
-                                else:
-                                    queue_out.put((originator, ("sentdata", (False, "Public key not loaded", connection[1], connection[3]))))
-                                continue
-                            #Calculate all byte lengths and convert stuff to bytes to be glued together into a packet.
-                            if type(packet_id) != bytes:
-                                packet_id = packet_id.to_bytes(4, 'big') # max packet_id = 4294967295. Good enough for 136,099300834 years @ 1 packet/s.
-                            orig_name = bytes(read[0], "utf8")
-                            orig_namelen = bytes([len(orig_name)])
-                            target_name = bytes(params[2], "utf8")
-                            target_namelen = bytes([len(target_name)])
-                            data_len = len(params[3]).to_bytes(4, 'big')
-                            data = params[3]
-                            #Sign data
-                            hash = SHA256.new(data=data)
-                            signature = key_private[2].sign(hash)
-                            signature_len = len(signature).to_bytes(2, 'big')
-                            #print("DEBUG: conmanager: signature: {}. signature_len: {}".format(hash, connection[2]))
-                            #Compile packet
-                            try:
-                                packet = packet_id + orig_namelen + orig_name + target_namelen + target_name + signature_len + signature + data_len + data
-                            except Exception as msg:
-                                queue_out.put((originator, ("sentdata", (False, "data must be bytes"))))
-                                errout("CONMANAGER: Unable to finalize the string to be encrypted and sent: {}".format(msg))
-                                continue
-                            #print("DEBUG: conmanager: packet: {}".format(packet))
-                            try:
-                                packet_size = 128
-                                while len(packet):
-                                    enc = self.encrypt(packet[0:packet_size], connection[2]) # Padding and stuff fucks up the nice 128 size...
-                                    #enc = self.encrypt(packet[0:86], connection[2]) # Padding and stuff fucks up the nice 128 size...
-                                    # 95 still too long # 86 seems to be the maximum size.
-                                    # 64 works. I'ma leave it at this for now. ~~Todo
-                                    connection[0].sendall(enc)
-                                    packet = packet[packet_size:]
-                                #print("Sent data to {}".format(connection))
-                                if packet_hasID:
-                                    queue_out.put((originator, ("sentdata", (True, False, connection[1], connection[3]), packet_id)))
-                            except Exception as msg:
-                                #print("Some error happened while sending data:")
-                                #print(connection[2])
-                                if packet_hasID:
-                                    queue_out.put((originator, ("sentdata", (False, "Unable to send data to destination: {}".format(msg), connection[1], connection[3]), packet_id)))
-                                else:
-                                    queue_out.put((originator, ("sentdata", (False, "Unable to send data to destination: {}".format(msg), connection[1], connection[3]))))
+                    if params[1] == own_name: # If data is to be sent to oneself, just handle it internally.
+                        print("DEBUG@conmanager {}".format(params))
+                        queue_out.put((params[2], ("recvdata", own_name, read[0], params[3], params[4])))
+                        if packet_hasID:
+                                    queue_out.put((originator, ("sentdata", (True, False, own_ip, own_name), packet_id)))
+                    else:
+                        for connection in sockets:
+                            #connection: [socket, (ip, 42069), (key_RSA, key_PKCS1OAEP, key_PKCS1_15), device_name, recvbuffer]
+                            if connection[3] == params[1] or params[1] == "broadcast":
+                                #print("Found the connection to send to!")
+                                
+                                if connection[0] == False: #If no socket connected towards destination
+                                    if packet_hasID:
+                                        queue_out.put((originator, ("sentdata", (False, "No socket connected towards destination", connection[1], connection[3]), packet_id)))
+                                    else:
+                                        queue_out.put((originator, ("sentdata", (False, "No socket connected towards destination", connection[1], connection[3]))))
+                                    continue
+
+                                if type(connection[2]) is bool:
+                                    if packet_hasID:
+                                        queue_out.put((originator, ("sentdata", (False, "Public key not loaded", connection[1], connection[3]), packet_id)))
+                                    else:
+                                        queue_out.put((originator, ("sentdata", (False, "Public key not loaded", connection[1], connection[3]))))
+                                    continue
+                                #Calculate all byte lengths and convert stuff to bytes to be glued together into a packet.
+                                if type(packet_id) != bytes:
+                                    packet_id = packet_id.to_bytes(4, 'big') # max packet_id = 4294967295. Good enough for 136,099300834 years @ 1 packet/s.
+                                orig_name = bytes(read[0], "utf8")
+                                orig_namelen = bytes([len(orig_name)])
+                                target_name = bytes(params[2], "utf8")
+                                target_namelen = bytes([len(target_name)])
+                                data_len = len(params[3]).to_bytes(4, 'big')
+                                data = params[3]
+                                #Sign data
+                                hash = SHA256.new(data=data)
+                                signature = key_private[2].sign(hash)
+                                signature_len = len(signature).to_bytes(2, 'big')
+                                #print("DEBUG: conmanager: signature: {}. signature_len: {}".format(hash, connection[2]))
+                                #Compile packet
+                                try:
+                                    packet = packet_id + orig_namelen + orig_name + target_namelen + target_name + signature_len + signature + data_len + data
+                                except Exception as msg:
+                                    queue_out.put((originator, ("sentdata", (False, "data must be bytes"))))
+                                    errout("CONMANAGER: Unable to finalize the string to be encrypted and sent: {}".format(msg))
+                                    continue
+                                #print("DEBUG: conmanager: packet: {}".format(packet))
+                                try:
+                                    packet_size = 128
+                                    while len(packet):
+                                        enc = self.encrypt(packet[0:packet_size], connection[2]) # Padding and stuff fucks up the nice 128 size...
+                                        #enc = self.encrypt(packet[0:86], connection[2]) # Padding and stuff fucks up the nice 128 size...
+                                        # 95 still too long # 86 seems to be the maximum size.
+                                        # 64 works. I'ma leave it at this for now. ~~Todo
+                                        connection[0].sendall(enc)
+                                        packet = packet[packet_size:]
+                                    #print("Sent data to {}".format(connection))
+                                    if packet_hasID:
+                                        queue_out.put((originator, ("sentdata", (True, False, connection[1], connection[3]), packet_id)))
+                                except Exception as msg:
+                                    #print("Some error happened while sending data:")
+                                    #print(connection[2])
+                                    if packet_hasID:
+                                        queue_out.put((originator, ("sentdata", (False, "Unable to send data to destination: {}".format(msg), connection[1], connection[3]), packet_id)))
+                                    else:
+                                        queue_out.put((originator, ("sentdata", (False, "Unable to send data to destination: {}".format(msg), connection[1], connection[3]))))
                 elif action == "recvdata":
                     DEBUG_time = time.time()
                     data = params[3]
@@ -334,7 +341,7 @@ class conmanager(object):
                                 raise socket.timeout
                             
                             sockets[i][4] = sockets[i][4] + self.decrypt(temp_recv)
-                        except socket.timeout:
+                        except socket.timeout: # todo: place try and except outside of loop to get rid of the break statements. Could also look cleaner.
                             print("SOCKET TIMED OUT!!!")
                             sockets[i][0] = False
                             break
@@ -382,7 +389,7 @@ class conmanager(object):
                         try:
                             connection[2][2].verify(hash, signature)
                             print("DEBUG: conmanager: signature verified!")
-                            queue_out.put((target_modname.decode("utf-8"), ("recvdata", connection[3], orig_modname.decode("utf-8"), data)))
+                            queue_out.put((target_modname.decode("utf-8"), ("recvdata", connection[3], orig_modname.decode("utf-8"), data, packet_id)))
                         except Exception as msg:
                             errout("CONMANAGER: {}. target_modname: {}, orig_modname: {}, orig_device: {}, data: {}".format(msg, target_modname, orig_modname, connection[3], data))
                         sockets[i][4] = sockets[i][4][target_modnamelen + 12 + orig_modnamelen + data_len + signature_len:]
