@@ -6,7 +6,7 @@ sys.path.append("../..")
 from log.log import *
 
 def parseRequest(pText):
-    funcmap = {"cpu": cpu, "cpu_all": cpu_all, "cpu_numcores": cpu_numcores, "ram_percent": ram_percent, "ram_total": ram_total, "ram_used": ram_used, "gpu_name": gpu_name, "gpu_temp": gpu_temp, "gpu_utilization": gpu_utilization, "gpu_memused": gpu_memused, "gpu_memtotal": gpu_memtotal, "gpu_memusedPercent": gpu_memusedPercent}
+    funcmap = {"cpu": cpu, "cpu_all": cpu_all, "cpu_numcores": cpu_numcores, "ram_percent": ram_percent, "ram_total": ram_total, "ram_used": ram_used, "gpu_name": gpu_name, "gpu_temp": gpu_temp, "gpu_utilization": gpu_utilization, "gpu_memused": gpu_memused, "gpu_memtotal": gpu_memtotal, "gpu_memusedPercent": gpu_memusedPercent, "nic_address": nic_address, "nic_io": nic_io, "nic_linkspeed": nic_linkspeed, "nic_mtu": nic_mtu, "nic_isup": nic_isup}
     requests = pText.split(",")
     returnstring = ""
     for request in requests:
