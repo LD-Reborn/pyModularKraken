@@ -89,11 +89,11 @@ def nic_address(pGetIPv6 = False): #With nic_address(True) you'll get multiple I
     nics = psutil.net_if_addrs()
     for nic in nics:
         for address in nics[nic]:
-            print("DEBUG")
-            print(nic)
-            print(address)
+            #print("DEBUG")
+            #print(nic)
+            #print(address)
             if address.family.value == 2 + 8 * pGetIPv6: #2 = IPv4. 10 = IPv6
-                print("is v4\n")
+                #print("is v4\n")
                 returnstring += "{}={},".format(nic, address.address)
     return returnstring[:-1]
 
