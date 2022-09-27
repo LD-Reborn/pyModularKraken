@@ -12,6 +12,8 @@ conmanager:
 
     -"Errno 98 address already in use" error. Happens sometimes when you restart start.py.
 
+    -Connection to self. Or at least if target_device == own_name then just internally forward it to the respective queue.
+
     #-"standardport" add config.ini setting to change port.
     #   Isaias: Implemented!
 
@@ -52,13 +54,16 @@ audiocontrol:
 
 hwdisplay:
     
-	-create functioning prototype. ---> Isaias
+	-Communication between controller and core ---> Isaias
+    -Functioning prototype ---> Isaias
 
 core:
     
 	#-Implement ability to include modules where folder name and module name don't match.
     #    E.g.: hwdisplay\hwdisplay, hwdisplay\hexa, hwdisplay\simpletext, ...
     #implemented! ~ Isaias
+    
+    -Implement function to add modules. (Set name, generate queue pair, and forward to requesting module)
 
 
 Github / general:
