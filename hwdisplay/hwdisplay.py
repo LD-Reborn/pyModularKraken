@@ -89,9 +89,9 @@ class windowmanager(object):
     
     def hasAttribute(self, pElement, pAttribute):
         try:
-            print("DEBUG@hasAttribute: try")
-            print("DEBUG@hasAttribute: pElement {}".format(pElement))
-            print("DEBUG@hasAttribute: attributes {}".format(pElement["attributes"]))
+            #print("DEBUG@hasAttribute: try")
+            #print("DEBUG@hasAttribute: pElement {}".format(pElement))
+            #print("DEBUG@hasAttribute: attributes {}".format(pElement["attributes"]))
 
             pElement["attributes"][pAttribute]
             return True
@@ -100,15 +100,15 @@ class windowmanager(object):
 
     
     def loadElement(self, pDisplay, pElement):
-        print("DEBUG@loadElement: entry pElement {}".format(pElement))
+        #print("DEBUG@loadElement: entry pElement {}".format(pElement))
 
         element = {}
         match pElement["nodeName"]:
             case "pagecontroller":
-                print("DEBUG@loadElement: pagecontroller {}|{}".format(pDisplay["window"], pElement))
+                #print("DEBUG@loadElement: pagecontroller {}|{}".format(pDisplay["window"], pElement))
                 pass #Todo
             case "label":
-                print("DEBUG@loadElement: label")
+                #print("DEBUG@loadElement: label")
                 element["type"] = "label"
                 x = pElement["attributes"]["x"]
                 y = pElement["attributes"]["y"]
@@ -118,29 +118,29 @@ class windowmanager(object):
                     except:
                         text = pElement["attributes"]["text"]
                     element["handle"] = tk.Label(pDisplay["window"], text = text)
-                    print("DEBUG@loadElement: label text {} x {} y {}".format(text, x, y))
+                    #print("DEBUG@loadElement: label text {} x {} y {}".format(text, x, y))
                 except: #if has variable="variablename"
                     textvariable = pDisplay["variables"][pElement["attributes"]["variable"]]["variable"]
                     element["handle"] = tk.Label(pDisplay["window"], textvariable = textvariable)
-                    print("DEBUG@loadElement: label textvariable {} x {} y {}".format(textvariable.get(), x, y))
+                    #print("DEBUG@loadElement: label textvariable {} x {} y {}".format(textvariable.get(), x, y))
                 
                 
                 #element["handle"].pack()
                 element["handle"].place(x = x, y = y)
-                print("DEBUG@loadElement: label placed {} x {} y {}".format(element["handle"].place_info(), element["handle"].winfo_x, element["handle"].winfo_y))
+                #print("DEBUG@loadElement: label placed {} x {} y {}".format(element["handle"].place_info(), element["handle"].winfo_x, element["handle"].winfo_y))
             case "image":
-                print("DEBUG@loadElement: image")
+                #print("DEBUG@loadElement: image")
                 element["type"] = "label"
                 x = pElement["attributes"]["x"]
                 y = pElement["attributes"]["y"]
                 path = "{}/{}".format(pDisplay["fullbasepath"], pElement["attributes"]["image"])
-                print("DEBUG@loadElement: image path {}".format(path))
+                #print("DEBUG@loadElement: image path {}".format(path))
                 element["image"] = ImageTk.PhotoImage(file = path)
                 element["handle"] = tk.Label(pDisplay["window"], image = element["image"])
                 element["handle"].place(x = x, y = y)
 
             case "variable":
-                print("DEBUG@loadElement: variable")
+                #print("DEBUG@loadElement: variable")
                 temp = {}
                 temp["variable"] = StringVar(pDisplay["window"])
                 temp["variable"].set("DEBUGSTRING") #DEBUG #todo
@@ -157,47 +157,47 @@ class windowmanager(object):
                 print("something else. {}".format(pElement))
             
         try: #postconfig
-            print("DEBUG@loadElement: try")
+            #print("DEBUG@loadElement: try")
             if self.hasAttribute(pElement, "color"):
-                print("DEBUG@loadElement: color")
+                #print("DEBUG@loadElement: color")
                 element["handle"].config(fg = pElement["attributes"]["color"])
             elif self.hasAttribute(pElement, "colour"):
-                print("DEBUG@loadElement: colour")
+                #print("DEBUG@loadElement: colour")
                 element["handle"].config(fg = pElement["attributes"]["colour"])
             elif self.hasAttribute(pElement, "fg"):
-                print("DEBUG@loadElement: fg")
+                #print("DEBUG@loadElement: fg")
                 element["handle"].config(fg = pElement["attributes"]["fg"])
             else:
                 element["handle"].config(fg = pDisplay["head"]["fg"])
             if self.hasAttribute(pElement, "bgcolor"):
-                print("DEBUG@loadElement: bgcolor")
+                #print("DEBUG@loadElement: bgcolor")
                 element["handle"].config(bg = pElement["attributes"]["bgcolor"])
             elif self.hasAttribute(pElement, "bgcolour"):
-                print("DEBUG@loadElement: bgcolour")
+                #print("DEBUG@loadElement: bgcolour")
                 element["handle"].config(bg = pElement["attributes"]["bgcolour"])
             elif self.hasAttribute(pElement, "bg"):
-                print("DEBUG@loadElement: bg")
+                #print("DEBUG@loadElement: bg")
                 element["handle"].config(bg = pElement["attributes"]["bg"])
             else:
                 element["handle"].config(bg = pDisplay["head"]["bg"])
         except Exception as e:
-            print("DEBUG@loadElement: ERROR {}".format(e))
+            #print("DEBUG@loadElement: ERROR {}".format(e))
             pass
         return element
-        print("DEBUG@loadElement: end")
+        #print("DEBUG@loadElement: end")
 
 
     def loadPage(self, pDisplay, pPage):
-        print("DEBUG@loadPage: entry pPage: {}".format(pPage))
+        #print("DEBUG@loadPage: entry pPage: {}".format(pPage))
         elementtypes = {""}
         for element in pDisplay["body"]["childNodes"]:
             if element["nodeName"] != "#text" and (element["attributes"]["page"] == pPage or element["attributes"]["page"] == None):
                 loadedElement = self.loadElement(pDisplay, element)
                 pDisplay["pages"][pPage].append(loadedElement)
-        print("DEBUG@loadPage: end")
+        #print("DEBUG@loadPage: end")
 
     def getCurrentPage(self, display):
-        print("DEBUG@getCurrentPage: entry")
+        #print("DEBUG@getCurrentPage: entry")
         if display["pages"] == {}:
             display["pages"]["current"] = None
             for element in display["body"]["childNodes"]:
@@ -214,10 +214,10 @@ class windowmanager(object):
             raise Exception("Formatting error: Please make sure you have a page controller containing pages")
 
     def initDisplay(self, pDisplay):
-        print("DEBUG@initDisplay: entry")
+        #print("DEBUG@initDisplay: entry")
         pDisplay["collection"] = self.getValues(pDisplay["collection"])
         pDisplay["window"] = tk.Tk()
-        print("DEBUG@initDisplay: window {}".format(pDisplay["window"].winfo_geometry()))
+        #print("DEBUG@initDisplay: window {}".format(pDisplay["window"].winfo_geometry()))
         pDisplay["head"] = self.getNode(pDisplay["collection"], "head")
         pDisplay["body"] = self.getNode(pDisplay["collection"], "body")
         pDisplay["variables"] = {}
@@ -261,9 +261,9 @@ class windowmanager(object):
 #        print("DEBUG@initDisplay: window {}".format(pDisplay["window"].winfo_geometry()))
 
         pDisplay["window"].update()
-        print("DEBUG@initDisplay: before loadPage")
+        #print("DEBUG@initDisplay: before loadPage")
         self.loadPage(pDisplay, self.getCurrentPage(pDisplay))
-        print("DEBUG@initDisplay: after loadPage")
+        #print("DEBUG@initDisplay: after loadPage")
         pDisplay["loaded"] = 1
         pDisplay["window"].mainloop()
 
@@ -281,7 +281,6 @@ class hwdisplay(object):
         config.read(basepath + '/config.ini')
         displays = []
         for display in config["displays"]:
-            print("DEBUG@__init__: display {}".format(display))
             tempDisplay = {}
             tempDisplay["fullbasepath"] = basepath + '/' + display
             tempDisplay["basepath"] = display
@@ -295,45 +294,6 @@ class hwdisplay(object):
             while tempDisplay["loaded"] < 1:
                 time.sleep(0.1)
             displays.append(tempDisplay)
-            print("DEBUG@__init__: display END")
-        #
-        #COLOR_BG = config.get("colors", "bg")
-        #COLOR_FG = config.get("colors", "fg")
-        #COLOR_BUTTONBG = config.get("colors", "buttonbg").split(",")
-        #COLOR_BUTTONFG = config.get("colors", "buttonfg").split(",")
-        #try:
-        #    MONITOR = config.get("displays", "monitor")
-        #    #find correct monitor
-        #    for m in get_monitors():
-        #        if m.name == MONITOR:
-        #            window_x = m.x
-        #            window_y = m.y
-        #            window_w = m.width
-        #            window_h = m.height
-        #            break
-        #except:
-        #    MONITOR = None
-        #    window_x = config.get("displays", "x")
-        #    window_y = config.get("displays", "y")
-        #    window_w = config.get("displays", "w")
-        #    window_h = config.get("displays", "h")
-
-        # creating window
-        #window = tk.Tk()
-        
-        # setting attribute
-        #window.geometry("%dx%d+%d+%d" % (window_w, window_h, window_x, window_y))
-        #window.config(bg=COLOR_BG)
-        #window.attributes('-fullscreen', True)
-        #window.wm_attributes("-topmost", True)
-        #window.title("utilTouchbar {}".format(VERSION))
-        
-        #window_bg = PhotoImage(file=config_bg)
-        #label = tk.Label(window, image=window_bg)
-        #label.pack()
-        #canvas = Canvas(window, width=window_w, height=window_h, bg=COLOR_BG, highlightthickness=0)
-        #canvas.create_text(300, 50, text="Test 123", fill="green", font=('Helvetica 15 bold'))
-        #canvas.pack()
         log("hwdisplay: OK")
     
     def initcore(self, pOutQueue, pInQueue):
@@ -348,32 +308,13 @@ class hwdisplay(object):
         while True:
             time.sleep(0.01)
             if not inQueue.empty(): # Intermetry ---> core ---> hwdisplay ---> ALL displays. (Need implementation to add additional module slots into core module)
-                read = inQueue.read()
+                read = inQueue.get()
                 for display in displays:
                     display["controllerIn"].put(read)
             for display in displays:
                 if not display["controllerOut"].empty():
                     read = display["controllerOut"].get()
-                    #read = {dstModule: "destination module", dstDevice: "destination device", data: "data"}
-                    outQueue.put(("conmanager", ("senddata", read["dstDevice"], read["dstModule"], bytes(read["data"], "utf-8"))))
+                    #read = {dstModule: "destination module", dstDevice: "destination device", data: "data", packetID: "4 bytes"}
+                    outQueue.put(("conmanager", ("senddata", read["dstDevice"], read["dstModule"], read["data"], read["packetID"])))
 
-
-        #updateThread = RepeatEvery(0.5, self.update, (window, canvas))
-        #updateThread.start()
-        
-        #window.mainloop()
-        
-        #updateThread.stop()
-        
-        #global packetID
-        #log("hwdisplay: running")
-        #while (True):
-        #    time.sleep(5)
-        #    packetID += 1
-        #    outQueue.put(("conmanager", ("senddata", "ifd", "intermetry", bytes("hardwareinfo:{}:cpu,cpu_all,ram_percent,ram_total,ram_used,gpu_name,gpu_temp,gpu_utilization,gpu_memused,gpu_memtotal,gpu_memusedPercent".format(packetID), "utf-8"))))
-        #
-        #while True:
-        #    if not inQueue.empty():
-        #        read = inQueue.get()
-        #        print("INTERMETRY: {}".format(read))    
 mainclass = hwdisplay()
