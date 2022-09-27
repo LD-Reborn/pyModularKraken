@@ -1,13 +1,7 @@
-from email import header
-from email.errors import FirstHeaderLineIsContinuationDefect
-from http.client import SWITCHING_PROTOCOLS
-from importlib.resources import path
-from multiprocessing.connection import PipeConnection
 import os
 import sys
 import time
 import queue
-from uuid import getnode
 import xml.dom.minidom
 from datetime import datetime, timedelta
 #dependency PIL?
@@ -238,7 +232,7 @@ class windowmanager(object):
         pDisplay["controller"] = importlib.import_module("{}.{}".format(pDisplay["basepath"], pDisplay["head"]["controller"]).replace("/", "."))
         pDisplay["controllerIn"] = queue.Queue()
         pDisplay["controllerOut"] = queue.Queue()
-        pDisplay["controller"].initController(pDisplay["controllerIn"], pDisplay["controllerOut"])
+        pDisplay["controller"].initController(pDisplay["controllerIn"], pDisplay["controllerOut"], pDisplay, pDisplay["head"]["target"])
 #        print("DEBUG@initDisplay: window generation:")
 #        print("{}x{}+{}+{}".format(pDisplay["head"]["width"], pDisplay["head"]["height"], pDisplay["head"]["x"], pDisplay["head"]["y"]))
         pDisplay["window"].wm_geometry("{}x{}+{}+{}".format(pDisplay["head"]["width"], pDisplay["head"]["height"], pDisplay["head"]["x"], pDisplay["head"]["y"]))
@@ -298,6 +292,8 @@ class hwdisplay(object):
             tempDisplay["mainloop"] = threading.Thread(target=wm.initDisplay, args=(tempDisplay,))
             tempDisplay["mainloop"].start()
 #            tempDisplay["window"].mainloop()
+            while tempDisplay["loaded"] < 1:
+                time.sleep(0.1)
             displays.append(tempDisplay)
             print("DEBUG@__init__: display END")
         #
@@ -351,12 +347,16 @@ class hwdisplay(object):
     def run(self):
         while True:
             time.sleep(0.01)
-            if not inQueue.empty(): # Intermetry ---> core ---> hwdisplay [todo: ---> displays]
-                pass
+            if not inQueue.empty(): # Intermetry ---> core ---> hwdisplay ---> ALL displays. (Need implementation to add additional module slots into core module)
+                read = inQueue.read()
+                for display in displays:
+                    display["controllerIn"].put(read)
             for display in displays:
                 if not display["controllerOut"].empty():
                     read = display["controllerOut"].get()
-                    
+                    #read = {dstModule: "destination module", dstDevice: "destination device", data: "data"}
+                    outQueue.put(("conmanager", ("senddata", read["dstDevice"], read["dstModule"], bytes(read["data"], "utf-8"))))
+
 
         #updateThread = RepeatEvery(0.5, self.update, (window, canvas))
         #updateThread.start()
