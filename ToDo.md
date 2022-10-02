@@ -76,6 +76,7 @@ core:
 
 Github / general:
     
+    -Make guided install script that generates private and public keys, and configures all the config files.
 	-Create tutorials and copy-paste friendly example sections.
     #-Add a GPLv2 or GPLv3 license?
     #   Isaias: Implemented GPLv3!
