@@ -3,6 +3,7 @@ import sys
 import os
 sys.path.append("..")
 from log.log import *
+import random
 
 class admin(object):
 
@@ -48,12 +49,12 @@ class admin(object):
                         if os.path.commonprefix((os.path.realpath(filepath), safepath)) != safepath:
                             errout("admin: directory traversal attack prevented: orig_device {}; orig_module {}; data {}".format(orig_device, orig_module, data))
                         elif not os.path.isfile(filepath):
-                            queue_out.put(("conmanager", ("senddata", orig_device, orig_module, b'filenotfounderror ' + bytes(filepath, "utf8"))))
+                            queue_out.put(("conmanager", ("senddata", orig_device, orig_module, b'filenotfounderror ' + bytes(filepath, "utf8"), random.randbytes(4))))
                         else:
                             temp_file = open(filepath, "rb")
                             temp_read = temp_file.read()
                             temp_file.close()
-                            queue_out.put(("conmanager", ("senddata", orig_device, orig_module, b'updatefile ' + bytes([len(filepath)]) + bytes(filepath, "utf8") + temp_read.__len__().to_bytes(4, 'big') + temp_read)))
+                            queue_out.put(("conmanager", ("senddata", orig_device, orig_module, b'updatefile ' + bytes([len(filepath)]) + bytes(filepath, "utf8") + temp_read.__len__().to_bytes(4, 'big') + temp_read, random.randbytes(4))))
                     else:
                         print("Dunno what to do with this packet: {}/{}/{}".format(orig_device, orig_module, data))
                 elif action == "sentdata":
