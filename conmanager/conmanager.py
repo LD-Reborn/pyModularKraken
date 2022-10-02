@@ -153,10 +153,15 @@ class conmanager(object):
         log("conmanager has started!")
         print("update_lastrequested {}".format((datetime.datetime.now() - update_lastrequested).seconds))
         print("admin_name {}".format(admin_name))
+        debug_time_init = time.time()
+        debug_counter_packetssent = 0
+        debug_counter_encryptactions = 0
         
         while True:
+            #print("DEBUG@conmanager: packetssent {} and encryptactions {}".format(debug_counter_packetssent, debug_counter_encryptactions))
             #print("DEBUG: LOOP")
             time.sleep(0.01) # How to reduce CPU utilization: 1. utilize CPU less. You can thank me later.
+            timeTotal = time.time()
             now = datetime.datetime.now()
             if admin_name and (now - update_lastrequested).seconds > 60: # Feel free to adjust the amount of seconds.
                 print("Updating the keychain")
@@ -185,22 +190,29 @@ class conmanager(object):
                             temp_return.append(connection[3])
                     queue_out.put((originator, ("devicelist", temp_return)))
                 elif action == "senddata":
+                    timeSend1 = time.time()
                     packet_hasID = len(params) >= 5
                     if packet_hasID:
                         packet_id = params[4]
+                        print("DEBUG@conmanager: packetid length: {}|{}".format(len(packet_id), packet_id))
                     else:
                         packet_id = 0
-
+                        #errout("ERROR@conmanager: no packetid given with packet. Packet dropped. {}".format(params))
+                        #continue
+                        print("DEBUG@conmanager: no packetid given with packet. {}".format(params))
+                    
                     if params[1] == own_name: # If data is to be sent to oneself, just handle it internally.
-                        print("DEBUG@conmanager {}".format(params))
-                        queue_out.put((params[2], ("recvdata", own_name, read[0], params[3], params[4])))
+                        print("DEBUG@conmanager internal packet {}".format(params))
+                        queue_out.put((params[2], ("recvdata", own_name, read[0], params[3], packet_id)))
                         if packet_hasID:
                                     queue_out.put((originator, ("sentdata", (True, False, own_ip, own_name), packet_id)))
                     else:
+                        print("DEBUG@conmanager external packet {}".format(params))
                         for connection in sockets:
                             #connection: [socket, (ip, 42069), (key_RSA, key_PKCS1OAEP, key_PKCS1_15), device_name, recvbuffer]
                             if connection[3] == params[1] or params[1] == "broadcast":
                                 #print("Found the connection to send to!")
+                                #print("DEBUG@conmanager found connection to send to: {}".format(connection[3]))
                                 
                                 if connection[0] == False: #If no socket connected towards destination
                                     if packet_hasID:
@@ -224,6 +236,8 @@ class conmanager(object):
                                 target_namelen = bytes([len(target_name)])
                                 data_len = len(params[3]).to_bytes(4, 'big')
                                 data = params[3]
+                                if type(data) == str:
+                                    data = data.encode("utf-8")
                                 #Sign data
                                 hash = SHA256.new(data=data)
                                 signature = key_private[2].sign(hash)
@@ -232,20 +246,30 @@ class conmanager(object):
                                 #Compile packet
                                 try:
                                     packet = packet_id + orig_namelen + orig_name + target_namelen + target_name + signature_len + signature + data_len + data
+                                    #print("DEBUG@conmanager whole packet: {}".format(packet_id + orig_namelen + orig_name + target_namelen + target_name + signature_len + signature + data_len + data))
                                 except Exception as msg:
                                     queue_out.put((originator, ("sentdata", (False, "data must be bytes"))))
                                     errout("CONMANAGER: Unable to finalize the string to be encrypted and sent: {}".format(msg))
                                     continue
                                 #print("DEBUG: conmanager: packet: {}".format(packet))
                                 try:
-                                    packet_size = 128
+                                    timeEncrypt = time.time()
+                                    #print("DEBUG@conmanager senddata (encrypt and send) packet size: {}".format(len(packet)))
+                                    packet_size = 470 # 470 is the most that seems to work on 4096 bit RSA.
+                                    #print("\n\nDEBUG@conmanager timing test")
                                     while len(packet):
+                                        time1 = time.time()
                                         enc = self.encrypt(packet[0:packet_size], connection[2]) # Padding and stuff fucks up the nice 128 size...
+                                        debug_counter_encryptactions += 1
                                         #enc = self.encrypt(packet[0:86], connection[2]) # Padding and stuff fucks up the nice 128 size...
                                         # 95 still too long # 86 seems to be the maximum size.
                                         # 64 works. I'ma leave it at this for now. ~~Todo
+                                        time2 = time.time()
                                         connection[0].sendall(enc)
+                                        #print("DEBUG@conmanager encrypt and send timing: {} and {}.\n---> packet: {}\n---> key: ".format(time2 - time1, time.time() - time2, packet[0:packet_size], connection[2]))
                                         packet = packet[packet_size:]
+                                    debug_counter_packetssent += 1
+                                    print("DEBUG@conmanager senddata (encrypt and send) timing: {}".format(time.time() - timeEncrypt))
                                     #print("Sent data to {}".format(connection))
                                     if packet_hasID:
                                         queue_out.put((originator, ("sentdata", (True, False, connection[1], connection[3]), packet_id)))
@@ -256,6 +280,7 @@ class conmanager(object):
                                         queue_out.put((originator, ("sentdata", (False, "Unable to send data to destination: {}".format(msg), connection[1], connection[3]), packet_id)))
                                     else:
                                         queue_out.put((originator, ("sentdata", (False, "Unable to send data to destination: {}".format(msg), connection[1], connection[3]))))
+                    print("DEBUG@conmanager senddata timing: {}".format(time.time() - timeSend1))
                 elif action == "recvdata":
                     DEBUG_time = time.time()
                     data = params[3]
@@ -331,7 +356,9 @@ class conmanager(object):
                         sock.close()
                     pass
                 else:
+                    timeRecv1 = time.time()
                     while True: # (Try to) fill up the recvBuffer with received data. (No reading out yet. Only filling up.)
+                        #time.sleep(0.1) # todo DEBUG this is here just to test CPU utilization
                         # Negative implication of the while loop: flooding client with data could (1.) "trap" client in loop, and (2.) possibly cause RAM to overflow, crashing the client?
                         # (Would be interested to try out the attack's effectiveness.)
                         # Possible fix: timeout?
@@ -347,7 +374,6 @@ class conmanager(object):
                             break
                         except BaseException as msg: # This here is triggered when no data on connection[0] socket. [Errno 11] Resource temporarily unavailable
                             break # If no data: exit the while loop
-
                     while len(sockets[i][4]): # Read out recvBuffer
                         try:
                             #packet = packet_id + orig_namelen + orig_name + target_namelen + target_name + signature_len + signature + data_len + data
@@ -388,11 +414,14 @@ class conmanager(object):
                         hash = SHA256.new(data=data)
                         try:
                             connection[2][2].verify(hash, signature)
-                            print("DEBUG: conmanager: signature verified!")
+                            #print("DEBUG: conmanager: signature verified!")
                             queue_out.put((target_modname.decode("utf-8"), ("recvdata", connection[3], orig_modname.decode("utf-8"), data, packet_id)))
                         except Exception as msg:
                             errout("CONMANAGER: {}. target_modname: {}, orig_modname: {}, orig_device: {}, data: {}".format(msg, target_modname, orig_modname, connection[3], data))
                         sockets[i][4] = sockets[i][4][target_modnamelen + 12 + orig_modnamelen + data_len + signature_len:]
+                    #print("DEBUG@conmanager receive timing: {}".format(time.time() - timeRecv1))
+            #print("DEBUG@conmanager receive timing TOTAL: {}".format(time.time() - DEBUG_time))
+            #print("DEBUG@conmanager timing TOTAL: {}".format(time.time() - timeTotal))
 
     
     def connect(self, socket, ip):
