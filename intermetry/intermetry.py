@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import sys
+import time
 from time import sleep
 sys.path.append("intermetry/utility")
 import hardwareinfo as hwinfo
@@ -37,6 +38,7 @@ class intermetry(object):
         self.heartbeat()
         
         while True:
+            time1 = time.time()
             time.sleep(0.01)
             if heartbeat_next <= datetime.now():
                 heartbeat_next = datetime.now() + heartbeat_frequency
@@ -82,11 +84,16 @@ class intermetry(object):
                         try:
                             request = data[13:]
                             packetID = read[1][4]
-                            queue_out.put((conmanager, ("senddata", orig_device, orig_module, bytes("hardwareinfo:{}".format(hwinfo.parseRequest(request)), "utf-8"), packetID)))
+                            debug_timer_parserequest = time.time()
+                            parsedRequest = hwinfo.parseRequest(request)
+                            debug_timer_queueout = time.time()
+                            queue_out.put((conmanager, ("senddata", orig_device, orig_module, bytes("hardwareinfo:{}".format(parsedRequest), "utf-8"), packetID)))
+                            print("DEBUG@intermetry parse request {} and queueout {}".format(debug_timer_queueout - debug_timer_parserequest, time.time() - debug_timer_queueout))
                         except Exception as msg:
                             errout("INTERMETRY: error while processing a hardwaredata packet from {}@{}: {}".format(orig_module, orig_device, msg))
                     else:
                         errout("INTERMETRY: Dunno what to do with this packet: {}/{}/{}".format(orig_device, orig_module, data))
                 elif action == "sentdata":
                     errout("INTERMETRY: unknown action: {}".format(read))
+            #print("DEBUG@intermetry loop time: {}".format(time.time() - time1))
 mainclass = intermetry()
