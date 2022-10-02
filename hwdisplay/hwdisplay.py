@@ -4,7 +4,7 @@ import time
 import queue
 import xml.dom.minidom
 from datetime import datetime, timedelta
-#dependency PIL?
+#dependency PIL? If "cannot import name 'imageTk' from 'PIL'"--->sudo apt install python3-pil.imagetk
 from PIL import ImageTk, Image
 
 
@@ -103,59 +103,91 @@ class windowmanager(object):
         #print("DEBUG@loadElement: entry pElement {}".format(pElement))
 
         element = {}
-        match pElement["nodeName"]:
-            case "pagecontroller":
-                #print("DEBUG@loadElement: pagecontroller {}|{}".format(pDisplay["window"], pElement))
-                pass #Todo
-            case "label":
-                #print("DEBUG@loadElement: label")
-                element["type"] = "label"
-                x = pElement["attributes"]["x"]
-                y = pElement["attributes"]["y"]
-                try:
+        #match pElement["nodeName"]: # Match-case requires at least Python 3.10.
+        if pElement["nodeName"] == "pagecontroller":
+            #print("DEBUG@loadElement: pagecontroller {}|{}".format(pDisplay["window"], pElement))
+            try: # Try to set "current page" to the default="%pagename%" attribute
+                pDisplay["pages"]["current"] = pElement["attributes"]["default"]
+            except:
+                pass
+            x = int(pElement["attributes"]["x"])
+            y = int(pElement["attributes"]["y"])
+            w = int(pElement["attributes"]["width"])
+            h = int(pElement["attributes"]["height"])
+            element["handle"] = []
+            tmpPages = []
+            for page in pElement["childNodes"]:
+                if page["nodeName"] == "page":
+#                    print("DEBUG@hwdisplay: load pages: page {}".format(page))
+                    print("DEBUG@hwdisplay: load pages: page name {}".format(page["name"]))
+                    button = tk.Button(pDisplay["window"], text=page["childNodes"][0]["nodeValue"], command = lambda pPage=page["name"]: self.loadPage(pDisplay, pPage))
+                    tmpPages.append([page, button])
+                    element["handle"].append(button)
+            pageCount = len(tmpPages)
+            for i in range(pageCount):
+                button = tmpPages[i][1]
+                page = tmpPages[i][0]                
+                print("DEBUG@hwdisplay: load pages step 2: page name {}".format(page["name"]))
+                button.place(x = x, y = (i / pageCount) * h, width = w, height = h / pageCount)
+                if type(pDisplay["pages"].get(page["name"])) == None: # If there is no page for <page name="%NAME%">...
+                    pDisplay["pages"][page["name"]] = [button]
                     try:
-                        text = pElement["childNodes"][0]["nodeValue"]
+                        pElement["attributes"]["page"] # If pagecontroller has a page="%pagename%" attribute, make it deletable.
+                        pDisplay["loadedElements"].append(button)
                     except:
-                        text = pElement["attributes"]["text"]
-                    element["handle"] = tk.Label(pDisplay["window"], text = text)
-                    #print("DEBUG@loadElement: label text {} x {} y {}".format(text, x, y))
-                except: #if has variable="variablename"
-                    textvariable = pDisplay["variables"][pElement["attributes"]["variable"]]["variable"]
-                    element["handle"] = tk.Label(pDisplay["window"], textvariable = textvariable)
-                    #print("DEBUG@loadElement: label textvariable {} x {} y {}".format(textvariable.get(), x, y))
-                
-                
-                #element["handle"].pack()
-                element["handle"].place(x = x, y = y)
-                #print("DEBUG@loadElement: label placed {} x {} y {}".format(element["handle"].place_info(), element["handle"].winfo_x, element["handle"].winfo_y))
-            case "image":
-                #print("DEBUG@loadElement: image")
-                element["type"] = "label"
-                x = pElement["attributes"]["x"]
-                y = pElement["attributes"]["y"]
-                path = "{}/{}".format(pDisplay["fullbasepath"], pElement["attributes"]["image"])
-                #print("DEBUG@loadElement: image path {}".format(path))
-                element["image"] = ImageTk.PhotoImage(file = path)
-                element["handle"] = tk.Label(pDisplay["window"], image = element["image"])
-                element["handle"].place(x = x, y = y)
-
-            case "variable":
-                #print("DEBUG@loadElement: variable")
-                temp = {}
-                temp["variable"] = StringVar(pDisplay["window"])
-                temp["variable"].set("DEBUGSTRING") #DEBUG #todo
-                temp["every"] = pElement["attributes"]["every"]
-                temp["function"] = eval('pDisplay["controller"].{}'.format(pElement["attributes"]["function"]))
-#                print("DEBUG@loadElement: variablefunction {}".format(temp["function"](temp["variable"])))
-                temp["repeatEvery"] = RepeatEvery(float(temp["every"]), temp["function"], temp["variable"])
-                temp["repeatEvery"].start()
-                pDisplay["variables"][pElement["name"]] = temp
-            case "canvas":
-                print("DEBUG@loadElement: canvas")
-                pass #Todo
-            case _:
-                print("something else. {}".format(pElement))
+                        pass
             
+        elif pElement["nodeName"] == "label":
+            #print("DEBUG@loadElement: label")
+            element["type"] = "label"
+            x = pElement["attributes"]["x"]
+            y = pElement["attributes"]["y"]
+            try:
+                try:
+                    text = pElement["childNodes"][0]["nodeValue"]
+                except:
+                    text = pElement["attributes"]["text"]
+                element["handle"] = tk.Label(pDisplay["window"], text = text)
+                #print("DEBUG@loadElement: label text {} x {} y {}".format(text, x, y))
+            except: #if has variable="variablename"
+                textvariable = pDisplay["variables"][pElement["attributes"]["variable"]]["variable"]
+                element["handle"] = tk.Label(pDisplay["window"], textvariable = textvariable)
+                #print("DEBUG@loadElement: label textvariable {} x {} y {}".format(textvariable.get(), x, y))
+            
+            
+            #element["handle"].pack()
+            element["handle"].place(x = x, y = y)
+            #print("DEBUG@loadElement: label placed {} x {} y {}".format(element["handle"].place_info(), element["handle"].winfo_x, element["handle"].winfo_y))
+        elif pElement["nodeName"] == "image":
+            #print("DEBUG@loadElement: image")
+            element["type"] = "label"
+            x = pElement["attributes"]["x"]
+            y = pElement["attributes"]["y"]
+            path = "{}/{}".format(pDisplay["fullbasepath"], pElement["attributes"]["image"])
+            #print("DEBUG@loadElement: image path {}".format(path))
+            element["image"] = ImageTk.PhotoImage(file = path)
+            element["handle"] = tk.Label(pDisplay["window"], image = element["image"])
+            element["handle"].place(x = x, y = y)
+        elif pElement["nodeName"] == "variable":
+            #print("DEBUG@loadElement: variable")
+            element["variable"] = StringVar(pDisplay["window"])
+            #element["variable"].set("DEBUGSTRING") #DEBUG
+            element["every"] = pElement["attributes"]["every"]
+            element["function"] = eval('pDisplay["controller"].{}'.format(pElement["attributes"]["function"]))
+#                print("DEBUG@loadElement: variablefunction {}".format(temp["function"](temp["variable"])))
+            element["repeatEvery"] = RepeatEvery(float(element["every"]), element["function"], element["variable"])
+            element["repeatEvery"].start()
+            pDisplay["variables"][pElement["name"]] = element
+            
+        elif pElement["nodeName"] == "canvas":
+            print("DEBUG@loadElement: canvas")
+            pass #Todo
+        else:
+            print("something else. {}".format(pElement))
+        try:
+            pDisplay["loadedElements"].append(element)
+        except:
+            pass
         try: #postconfig
             #print("DEBUG@loadElement: try")
             if self.hasAttribute(pElement, "color"):
@@ -180,15 +212,42 @@ class windowmanager(object):
                 element["handle"].config(bg = pElement["attributes"]["bg"])
             else:
                 element["handle"].config(bg = pDisplay["head"]["bg"])
+            if self.hasAttribute(pElement, "font"):
+                element["handle"].config(font = pElement["attributes"]["font"])
+            #if self.hasAttribute(pElement, "justify"):
+            #    element["handle"].config(justify = pElement["attributes"]["justify"])
+            
         except Exception as e:
-            #print("DEBUG@loadElement: ERROR {}".format(e))
+            print("DEBUG@loadElement: ERROR '{}' with element {}".format(e, element))
             pass
         return element
         #print("DEBUG@loadElement: end")
 
 
     def loadPage(self, pDisplay, pPage):
-        #print("DEBUG@loadPage: entry pPage: {}".format(pPage))
+        print("DEBUG@loadPage: entry pPage: {}".format(pPage))
+        #Unload the previous page. I.e. destroy all loaded elements.
+        for element in pDisplay["loadedElements"]:
+            print("DEBUG@hwdisplay: loadPage element: {}".format(element))
+            try:
+                if type(element["handle"]) == list:
+                    for actualelement in element["handle"]:
+                        print("DEBUG@hwdisplay: loadPage .destroy actualelement {}".format(actualelement))
+                        #print("DEBUG@hwdisplay: loadPage .destroy actualelement handle {}".format(dict(actualelement["handle"])))
+                        actualelement.destroy()
+                else:
+                    print("DEBUG@hwdisplay: loadPage .destroy element {}".format(element))
+                    #print("DEBUG@hwdisplay: loadPage .destroy element handle {}".format(dict(element["handle"])))
+                    element["handle"].destroy()
+            except:
+                print("DEBUG@hwdisplay: loadPage except part")
+                print("DEBUG@hwdisplay: loadPage except part: element {}".format(element))
+                try: #If it is a <variable> with repeatevery="%interval%": stop it.
+                    element["repeatEvery"].stop()
+                except:
+                    pass
+        pDisplay["loadedElements"] = []
+
         elementtypes = {""}
         for element in pDisplay["body"]["childNodes"]:
             if element["nodeName"] != "#text" and (element["attributes"]["page"] == pPage or element["attributes"]["page"] == None):
@@ -221,10 +280,14 @@ class windowmanager(object):
         pDisplay["head"] = self.getNode(pDisplay["collection"], "head")
         pDisplay["body"] = self.getNode(pDisplay["collection"], "body")
         pDisplay["variables"] = {}
-        pDisplay["pages"] = {}
+        pDisplay["pages"] = {} # idk I think I should just make this an array.
+        pDisplay["loadedElements"] = []
         for element in pDisplay["head"]["childNodes"]:
             if element["name"] != "#text":
-                pDisplay["head"][element["name"]] = element["childNodes"][0]["nodeValue"] #To get text from <tag>text</tag>, get it's 0-th child's (aka. text node) value
+                try:
+                    pDisplay["head"][element["name"]] = element["childNodes"][0]["nodeValue"] #To get text from <tag>text</tag>, get it's 0-th child's (aka. text node) value
+                except:
+                    pDisplay["head"][element["name"]] = None
 #        print("DEBUG@initDisplay: basepath {}".format(pDisplay["basepath"]))
 #        print("DEBUG@initDisplay: controller {}".format(pDisplay["head"]["controller"]))
 #        print("DEBUG@initDisplay: full path {}".format("{}.{}".format(pDisplay["basepath"], pDisplay["head"]["controller"]).replace("/", ".")))
@@ -315,6 +378,9 @@ class hwdisplay(object):
                 if not display["controllerOut"].empty():
                     read = display["controllerOut"].get()
                     #read = {dstModule: "destination module", dstDevice: "destination device", data: "data", packetID: "4 bytes"}
+                    print("DEBUG@hwdisplay: send data {}".format(("conmanager", ("senddata", read["dstDevice"], read["dstModule"], read["data"], read["packetID"]))))
+                    #DEBUG@hwdisplay: send data ('conmanager', ('senddata', 'ifd', 'intermetry', 'hardwareinfo:cpu,cpu_all,ram_percent,ram_total,gpu_utilization,gpu_memused,gpu_memusedPercent,gpu_temp,nic_address,nic_io,nic_linkspeed,nic_mtu,nic_isup', b'U\xb6H\xfb\x8d\x8c\xedS'))
+                    #   ('conmanager', ('senddata', 'ifd', 'intermetry', 'hardwareinfo:cpu,[...],nic_isup', b'U\xb6H\xfb\x8d\x8c\xedS'))
                     outQueue.put(("conmanager", ("senddata", read["dstDevice"], read["dstModule"], read["data"], read["packetID"])))
 
 mainclass = hwdisplay()
