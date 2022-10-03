@@ -106,10 +106,10 @@ class windowmanager(object):
         #match pElement["nodeName"]: # Match-case requires at least Python 3.10.
         if pElement["nodeName"] == "pagecontroller":
             #print("DEBUG@loadElement: pagecontroller {}|{}".format(pDisplay["window"], pElement))
-            try: # Try to set "current page" to the default="%pagename%" attribute
-                pDisplay["pages"]["current"] = pElement["attributes"]["default"]
-            except:
-                pass
+            #try: # Try to set "current page" to the default="%pagename%" attribute # Update: This ALWAYS resets ["pages"]["current"] when loading pages, overriding the correct value.
+            #    pDisplay["pages"]["current"] = pElement["attributes"]["default"]
+            #except:
+            #    pass
             x = int(pElement["attributes"]["x"])
             y = int(pElement["attributes"]["y"])
             w = int(pElement["attributes"]["width"])
@@ -178,7 +178,12 @@ class windowmanager(object):
             element["repeatEvery"] = RepeatEvery(float(element["every"]), element["function"], element["variable"])
             element["repeatEvery"].start()
             pDisplay["variables"][pElement["name"]] = element
-            
+        elif pElement["nodeName"] == "page":
+            print("DEBUG@hwdisplay load page {} == {}".format(pElement["attributes"]["name"], self.getCurrentPage(pDisplay)))
+            if pElement["attributes"]["name"] == self.getCurrentPage(pDisplay):
+                for node in pElement["childNodes"]:
+                    if node["nodeName"] != "#text":
+                        self.loadElement(pDisplay, node)
         elif pElement["nodeName"] == "canvas":
             print("DEBUG@loadElement: canvas")
             pass #Todo
@@ -218,7 +223,7 @@ class windowmanager(object):
             #    element["handle"].config(justify = pElement["attributes"]["justify"])
             
         except Exception as e:
-            print("DEBUG@loadElement: ERROR '{}' with element {}".format(e, element))
+            #print("DEBUG@loadElement: ERROR '{}' with element {}".format(e, element))
             pass
         return element
         #print("DEBUG@loadElement: end")
@@ -226,38 +231,42 @@ class windowmanager(object):
 
     def loadPage(self, pDisplay, pPage):
         print("DEBUG@loadPage: entry pPage: {}".format(pPage))
+        print("DEBUG@loadPage: old page: {}".format(pDisplay["pages"]))
         #Unload the previous page. I.e. destroy all loaded elements.
         for element in pDisplay["loadedElements"]:
-            print("DEBUG@hwdisplay: loadPage element: {}".format(element))
+            #print("DEBUG@hwdisplay: loadPage element: {}".format(element))
             try:
                 if type(element["handle"]) == list:
                     for actualelement in element["handle"]:
-                        print("DEBUG@hwdisplay: loadPage .destroy actualelement {}".format(actualelement))
+                        #print("DEBUG@hwdisplay: loadPage .destroy actualelement {}".format(actualelement))
                         #print("DEBUG@hwdisplay: loadPage .destroy actualelement handle {}".format(dict(actualelement["handle"])))
                         actualelement.destroy()
                 else:
-                    print("DEBUG@hwdisplay: loadPage .destroy element {}".format(element))
+                    #print("DEBUG@hwdisplay: loadPage .destroy element {}".format(element))
                     #print("DEBUG@hwdisplay: loadPage .destroy element handle {}".format(dict(element["handle"])))
                     element["handle"].destroy()
             except:
-                print("DEBUG@hwdisplay: loadPage except part")
-                print("DEBUG@hwdisplay: loadPage except part: element {}".format(element))
+                #print("DEBUG@hwdisplay: loadPage except part")
+                #print("DEBUG@hwdisplay: loadPage except part: element {}".format(element))
                 try: #If it is a <variable> with repeatevery="%interval%": stop it.
                     element["repeatEvery"].stop()
                 except:
                     pass
         pDisplay["loadedElements"] = []
-
+        pDisplay["pages"]["current"] = pPage
+        print("DEBUG@loadPage: new page: {}".format(pDisplay["pages"]))
         elementtypes = {""}
         for element in pDisplay["body"]["childNodes"]:
             if element["nodeName"] != "#text" and (element["attributes"]["page"] == pPage or element["attributes"]["page"] == None):
                 loadedElement = self.loadElement(pDisplay, element)
-                pDisplay["pages"][pPage].append(loadedElement)
+                #pDisplay["pages"][pPage].append(loadedElement)
         #print("DEBUG@loadPage: end")
+        
 
     def getCurrentPage(self, display):
-        #print("DEBUG@getCurrentPage: entry")
-        if display["pages"] == {}:
+        print("DEBUG@getCurrentPage: pages {}".format(display["pages"]))
+        if display["pages"] == {}: # If pages haven't been documented yet, 
+            print("DEBUG@hwdisplay getCurrentPage no pages")
             display["pages"]["current"] = None
             for element in display["body"]["childNodes"]:
                 if element["nodeName"] == "pagecontroller":
@@ -268,6 +277,7 @@ class windowmanager(object):
                     for page in element["childNodes"]:
                         display["pages"][page["name"]] = [] # Will store elements like labels, images, etc. thus empty for now.
         try:
+            print("DEBUG@hwdisplay getCurrentPage current page {}".format(display["pages"]))
             return display["pages"]["current"]
         except KeyError:
             raise Exception("Formatting error: Please make sure you have a page controller containing pages")
