@@ -26,7 +26,7 @@ def addDatapoint(pName, pValue):
 def requestalldata(pVar):
 	time1 = time.time()
 	print("debug@requestalldata: entry")
-	global inQueue, outQueue, display, target, packets, cpu, cpu_all, ram_percent, ram_total, gpu_utilization, gpu_memused, gpu_memusedPercent, gpu_temp, nic_address, nic_io, nic_linkspeed, nic_mtu, nic_isup
+	global inQueue, outQueue, display, target, packets, sensors_temperatures, sensors_fans, cpu, cpu_all, ram_percent, ram_total, gpu_utilization, gpu_memused, gpu_memusedPercent, gpu_memtotal, gpu_temp, nic_address, nic_io, nic_linkspeed, nic_mtu, nic_isup
 	#cpu = None # Define early to prevent access on undefined variable.
 	#cpu_all = []
 	#ram_percent = None
@@ -43,11 +43,12 @@ def requestalldata(pVar):
 	#read = {dstModule: "destination module", dstDevice: "destination device", data: "data"}
 	id = random.randbytes(4)
 	#Currently implemented:
+	#	"sensors_temperatures" "sensors_fans" 
 	#	"cpu" "cpu_all" "cpu_numcores"
 	#	"ram_percent" "ram_total" "ram_used"
 	#	"gpu_name" "gpu_temp" "gpu_utilization" "gpu_memused" "gpu_memtotal" "gpu_memusedPercent"
     #	"nic_address" "nic_io" "nic_linkspeed" "nic_mtu" "nic_isup"
-	request = "cpu,cpu_all,ram_percent,ram_total,gpu_utilization,gpu_memused,gpu_memusedPercent,gpu_temp,nic_address,nic_io,nic_linkspeed,nic_mtu,nic_isup"
+	request = "cpu,cpu_all,ram_percent,ram_total,gpu_utilization,gpu_memused,gpu_memusedPercent,gpu_memtotal,gpu_temp,nic_address,nic_io,nic_linkspeed,nic_mtu,nic_isup,sensors_temperatures,sensors_fans"
 	#request = "cpu,cpu_all,ram_percent,ram_total,gpu_utilization"
 	packets.append(id)
 	# outQueue.put makes CPU utilization on all cores rise to 25% if start.py is run in VS code. In terminal this does not happen. WTF?
@@ -74,12 +75,15 @@ def requestalldata(pVar):
 				gpu_utilization = data[4]
 				gpu_memused = data[5]
 				gpu_memusedPercent = data[6]
-				gpu_temp = data[7]
-				nic_address = data[8]
-				nic_io = data[9]
-				nic_linkspeed = data[10]
-				nic_mtu = data[11]
-				nic_isup = data[12]
+				gpu_memtotal = data[7]
+				gpu_temp = data[8]
+				nic_address = data[9]
+				nic_io = data[10]
+				nic_linkspeed = data[11]
+				nic_mtu = data[12]
+				nic_isup = data[13]
+				sensors_temperatures = data[14]
+				sensors_fans = data[15]
 				addDatapoint("cpu", cpu)
 				addDatapoint("gpu", gpu_utilization)
 				addDatapoint("ram", ram_percent)
@@ -107,10 +111,6 @@ def makeGraph(pData, pHeight):
 			if temp > nth:
 				returnString += usageramps[7]
 			elif temp >= 0:
-				print("test:")
-				print(temp)
-				print(nth)
-				print(int(temp / (nth / 7)))
 				returnString += usageramps[int(temp / (nth / 7))]
 			else:
 				returnString += " "
@@ -162,13 +162,13 @@ def gpuPercent(pVar):
 	pVar.set(setString)
 
 def gpuMemused(pVar):
-	global gpu_memused, gpu_memusedPercent
+	global gpu_memused, gpu_memtotal
 	try:
 		gpu_memused
-		gpu_memusedPercent
+		gpu_memtotal
 	except:
 		return False
-	pVar.set("Mem: {:.1f}MB = {:.1f}%".format(float(gpu_memused), float(gpu_memusedPercent)))
+	pVar.set("{:d} / {:d} MB".format(int(float(gpu_memused)), int(float(gpu_memtotal))))
 
 def gpuTemp(pVar):
 	global gpu_temp
@@ -207,11 +207,66 @@ def ramPercentGraph(pVar):
 	graph = makeGraph(datapoints["ram"][-15:], 4)
 	pVar.set(graph)
 
-def nic(pVar):
+def nic1Data(pVar, pNic = "enp5s0"):
+	#request = "cpu,cpu_all,ram_percent,ram_total,gpu_utilization,gpu_memused,gpu_memusedPercent,gpu_memtotal,gpu_temp,nic_address,nic_io,nic_linkspeed,nic_mtu,nic_isup"
+	try: # Make sure variable is initialized. Otherwise expect uncaught exception.
+		nic_address, nic_io, nic_mtu, nic_isup, nic_linkspeed
+	except:
+		return False
+	try: # Try to extract enp5s0's address from string containing %nicname%=%nicaddress%,%nicname%=%nicaddress,[...]
+		address = nic_address.split("{}=".format(pNic))[1].split(",")[0]
+	except: # If it can't be found, set it to NaN
+		address = "unknown"
+	try: # same procedure but with nic_mtu
+		mtu = nic_mtu.split("{}=".format(pNic))[1].split(",")[0]
+	except: # If it can't be found, set it to NaN
+		mtu = "NaN"
+	try: # same procedure but with nic_linkspeed
+		linkspeed = humanreadable(float(nic_linkspeed.split("{}=".format(pNic))[1].split(",")[0]) * 1000000)
+	except: # If it can't be found, set it to NaN
+		linkspeed = "NaN"
+	try: # same procedure but with nic_isup
+		isup = nic_isup.split("{}=".format(pNic))[1].split(",")[0]
+	except: # If it can't be found, set it to NaN
+		isup = "False"
+	pVar.set("{}\n{} @ {}".format(address, linkspeed, mtu))
+
+def nic1io(pVar, pNic = "enp5s0"):
+	#request = "cpu,cpu_all,ram_percent,ram_total,gpu_utilization,gpu_memused,gpu_memusedPercent,gpu_memtotal,gpu_temp,nic_address,nic_io,nic_linkspeed,nic_mtu,nic_isup"
+	try: # Make sure variable is initialized. Otherwise expect uncaught exception.
+		nic_io
+	except:
+		return False
+	try:
+		io_last2 = datapoints["nic_io"][-1].split("{}=".format(pNic))[1].split(",")[0]
+		io_last1 = datapoints["nic_io"][-2].split("{}=".format(pNic))[1].split(",")[0]
+		up = humanreadable(float(io_last2.split("/")[0]) - float(io_last1.split("/")[0]))
+		down = humanreadable(float(io_last2.split("/")[1]) - float(io_last1.split("/")[1]))
+		if len(up) < 13: # When it changes length, the whole label shifts. So bump it to a certain length.
+			up = " " * (13 - len(up)) + up
+		if len(down) < 13:
+			down = " " * (13 - len(down)) + down
+	except: # If it can't be found, set it to NaN
+		up = "NaN"
+		down = "NaN"
+	pVar.set("{}▵\n{}▿".format(up, down))
 	print("debug@cpupercent: NIY")
 
+def nic2Data(pVar):
+	nic1Data(pVar, "enp6s0")
+
+def nic2io(pVar):
+	nic1io(pVar, "enp6s0")
+
 def tcpu(pVar):
-	print("debug@cpupercent: NIY")
+	global sensors_temperatures
+	try:
+		sensors_temperatures
+	except:
+		return False
+	#pVar.set("{}°C".format(sensors_temperatures))
+	
+	print("debug@tcpu: {}".format(sensors_temperatures))
 
 def tgpu(pVar):
 	print("debug@cpupercent: NIY")
@@ -220,3 +275,23 @@ def tsys(pVar):
 	print("debug@cpupercent: NIY")
 
 
+
+#Convert [n] bit/s into appropriately prefixed units. I.e. 7649 becomes 7,46 Kbit/see
+def humanreadable(size):
+    byteSuffixes = ['bit/s', 'Kbit/s', 'Mbit', 'Gbit', 'Tbit', 'Pbit']
+    i = 0
+    while size >= 1000 and i < len(byteSuffixes) - 1:
+        size /= 1000
+        i += 1
+    f = ('%.2f' % size).rstrip('0').rstrip('.')
+    return '{} {}'.format(f, byteSuffixes[i])
+
+#Convert [n] bit/s into appropriately prefixed units. I.e. 7649 becomes 7,46 Kbit/see
+def humanreadable1024(size):
+    byteSuffixes = ['bit/s', 'KiBit/s', 'MiBit', 'GiBit', 'TiBit', 'PiBit']
+    i = 0
+    while size >= 1024 and i < len(byteSuffixes) - 1:
+        size /= 1024
+        i += 1
+    f = ('%.2f' % size).rstrip('0').rstrip('.')
+    return '{} {}'.format(f, byteSuffixes[i])
