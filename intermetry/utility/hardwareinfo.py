@@ -8,7 +8,7 @@ import time # for debugging
 
 def parseRequest(pText):
     global gpus
-    funcmap = {"sensors_temperatures", "sensors_fans", "cpu": cpu, "cpu_all": cpu_all, "cpu_numcores": cpu_numcores, "ram_percent": ram_percent, "ram_total": ram_total, "ram_used": ram_used, "gpu_name": gpu_name, "gpu_temp": gpu_temp, "gpu_utilization": gpu_utilization, "gpu_memused": gpu_memused, "gpu_memtotal": gpu_memtotal, "gpu_memusedPercent": gpu_memusedPercent, "nic_address": nic_address, "nic_io": nic_io, "nic_linkspeed": nic_linkspeed, "nic_mtu": nic_mtu, "nic_isup": nic_isup}
+    funcmap = {"sensors_temperatures": sensors_temperatures, "sensors_fans": sensors_fans, "cpu": cpu, "cpu_all": cpu_all, "cpu_numcores": cpu_numcores, "ram_percent": ram_percent, "ram_total": ram_total, "ram_used": ram_used, "gpu_name": gpu_name, "gpu_temp": gpu_temp, "gpu_utilization": gpu_utilization, "gpu_memused": gpu_memused, "gpu_memtotal": gpu_memtotal, "gpu_memusedPercent": gpu_memusedPercent, "nic_address": nic_address, "nic_io": nic_io, "nic_linkspeed": nic_linkspeed, "nic_mtu": nic_mtu, "nic_isup": nic_isup}
     requests = pText.split(",")
     returnstring = ""
     if pText.find("gpu") > -1: # performance optimization
