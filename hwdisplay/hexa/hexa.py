@@ -99,7 +99,7 @@ def requestalldata(pVar):
 def makeGraph(pData, pHeight):
 	width = len(pData)
 	if width == 0:
-		return False
+		return ""
 	dividers=["▏", "▔", "▕", "▁"]
 	nth = 100 / pHeight
 	returnString = "{}\n".format(dividers[3] * (width + 2))
