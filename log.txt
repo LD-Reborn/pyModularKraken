@@ -6203,3 +6203,75 @@ Mon Oct  3 03:15:23 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['c
 Mon Oct  3 03:15:53 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
 Mon Oct  3 03:16:23 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
 Mon Oct  3 03:16:53 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:34:39 2022: conmanager
+Sat Oct  8 22:34:40 2022 @ CONMANAGER: conmanager: Conncted to <socket.socket fd=5, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.101', 60866), raddr=('192.168.0.117', 42069)>
+Sat Oct  8 22:34:40 2022 @ CONMANAGER: intermetry
+Sat Oct  8 22:34:40 2022 @ INTERMETRY: admin
+Sat Oct  8 22:34:40 2022 @ ADMIN: conmanager has started!
+Sat Oct  8 22:34:40 2022 @ ADMIN: intermetry: running
+Sat Oct  8 22:34:40 2022 @ ADMIN: intermetry has started!
+Sat Oct  8 22:35:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:35:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:36:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:36:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:37:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:37:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:38:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:38:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:39:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:39:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:40:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:40:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:41:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:41:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:42:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:42:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:43:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:43:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:44:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:44:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:45:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:45:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:46:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:46:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:47:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:47:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:48:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:48:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:49:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:49:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:50:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:50:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:51:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:51:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:52:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:52:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:53:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:53:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:54:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:54:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:55:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:55:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:56:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:56:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:57:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:57:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:58:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:58:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:59:00 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Oct  8 22:59:30 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Nov 12 19:05:53 2022: conmanager
+Sat Nov 12 19:05:54 2022 @ CONMANAGER: conmanager: Conncted to <socket.socket fd=5, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.101', 40386), raddr=('192.168.0.117', 42069)>
+Sat Nov 12 19:05:54 2022 @ CONMANAGER: intermetry
+Sat Nov 12 19:05:54 2022 @ INTERMETRY: admin
+Sat Nov 12 19:05:54 2022 @ ADMIN: intermetry: running
+Sat Nov 12 19:05:54 2022 @ ADMIN: conmanager has started!
+Sat Nov 12 19:05:54 2022 @ ADMIN: intermetry has started!
+Sat Nov 12 19:06:13 2022 @ ADMIN: intermetry: Got a heartbeat from touchpal. ['conmanager', ('recvdata', 'touchpal', 'intermetry', b'heartbeat', b'\x00\x00\x00\x00')]
+Sat Nov 12 19:06:30 2022: conmanager
+Sat Nov 12 19:06:30 2022 @ CONMANAGER: conmanager: Conncted to <socket.socket fd=5, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('192.168.0.101', 42108), raddr=('192.168.0.117', 42069)>
+Sat Nov 12 19:06:31 2022 @ CONMANAGER: intermetry
+Sat Nov 12 19:06:31 2022 @ INTERMETRY: admin
+Sat Nov 12 19:06:31 2022 @ ADMIN: intermetry has started!
+Sat Nov 12 19:06:31 2022 @ ADMIN: conmanager has started!
+Sat Nov 12 19:06:31 2022 @ ADMIN: intermetry: running
