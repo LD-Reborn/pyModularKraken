@@ -4,30 +4,33 @@ import GPUtil
 import sys
 import os
 sys.path.append("../..")
-from log.log import *
+#from log.log import *
 import time # for debugging
 
 def parseRequest(pText):
     global gpus
-    funcmap = {"sensors_temperatures": sensors_temperatures, "sensors_fans": sensors_fans, "cpu": cpu, "cpu_all": cpu_all, "cpu_numcores": cpu_numcores, "ram_percent": ram_percent, "ram_total": ram_total, "ram_used": ram_used, "gpu_name": gpu_name, "gpu_temp": gpu_temp, "gpu_utilization": gpu_utilization, "gpu_memused": gpu_memused, "gpu_memtotal": gpu_memtotal, "gpu_memusedPercent": gpu_memusedPercent, "nic_address": nic_address, "nic_io": nic_io, "nic_linkspeed": nic_linkspeed, "nic_mtu": nic_mtu, "nic_isup": nic_isup}
+    funcmap = {"sensors": sensors, "gpu": gpu, "cpu": cpu, "cpu_all": cpu_all, "cpu_numcores": cpu_numcores, "ram_percent": ram_percent, "ram_total": ram_total, "ram_used": ram_used, "nic_address": nic_address, "nic_io": nic_io, "nic_linkspeed": nic_linkspeed, "nic_mtu": nic_mtu, "nic_isup": nic_isup}
+
     # old request style:
     #   cpu,cpu_all,cpu_numcores,sensors_fans,gpu_name,gpu_temp,gpu_utilization...
     #   
     # 
     # new request style:
-    #   cpu|cpu_all|cpu_numcores|sensors_fans|gpu.0.name|gpu.0.temp|gpu.0.utilization
+    #   cpu|cpu_all|cpu_numcores|sensors_fans|hwmon.1.temp1|gpu.0.name|gpu.0.temp|gpu.0.utilization
+    # 
+    # Requesting "hwmon" gives the entire array/hashmap with all 'sensorgroups'.
+    # "hwmon.1" gives all sensors from sensorgroup /sys/class/hwmon/hwmon1.
+    # "hwmon.1.temp1" would give you just that sensor's data.
     # 
     # sensors_fans and gpu_temp will be replaced by hwmon readouts!
     #
-    requests = pText.split(",")
+    requests = pText.split("|")
     returnstring = ""
-    if pText.find("gpu") > -1: # performance optimization
-        #gpus = GPUtil.getGPUs() # Takes around 0.1 seconds to execute and causes lag spikes in Minecraft. Also Nvidia only.
-        gpus = getGPUs() # YEE HAW own implementation it is! +100% supported vendors; (hopefully) -95% lag
     for request in requests:
         time1 = time.time()
         try:
-            returnstring += "{}|".format(funcmap[request]())
+            split = request.split("|")
+            returnstring += "{}|".format(funcmap[split[0]](split[1:]))
         except Exception as msg:
             errout("HARDWAREINFO: unable to parse requested hardware info {}. Error: {}".format(request, msg))
         print("DEBUG@hardwareinfo request time {} for request {}".format(time.time() - time1, request))
@@ -40,7 +43,6 @@ def sensors_temperatures():
 #All fanspeed values from psutil
 def sensors_fans():
     return psutil.sensors_fans()
-
 
 #CPU usage in percent
 def cpu():
@@ -67,67 +69,112 @@ def ram_used():
     return psutil.virtual_memory().used
 
 #read all sensors
-def sensors_read():
+def sensors(*args):
+    try:
+        if args[0][0].isdecimal(): # e.g. "hwmon.1", "hwmon.3.temp1", ...
+           filter_groupid = int(args[0])
+           filter_type = None
+        else: # e.g. "hwmon.fans", "hwmon.temp", ...
+            filter_groupid = None
+            filter_type = args[0]
+    except:
+        filter_groupid = None
+        filter_type = None
+    
+    try:
+        if filter_groupid:
+            filter_sensorlabel = args[0][1]
+    except:
+        filter_sensorlabel = None
+
     try: # Check for the presence of hwmon. This should expose various types of data like fan RPM, fan PWM 0-255, and temperatures.
         directory = os.listdir("/sys/class/hwmon")
     except:
         return False
     readout = []
     for sensorgroup in directory:
-        sensors = {}
-        #gpu["fan"] = {}
-        #gpu["power"] = {}
-        #gpu["frequency"] = {}
-        #gpu["temperature"] = {}
+        if filter_groupid != None and sensorgroup != "hwmon{}".format(filter_groupid):
+            continue
+        sensors = {"group": sensorgroup, "content": []}
+        loadParam("/sys/class/hwmon/{}/name".format(sensorgroup), "grouplabel", sensors)
+        print("DEBUG: {}".format(sensorgroup))
         dircontent = os.listdir("/sys/class/hwmon/{}".format(sensorgroup))
         for element in dircontent:
+            try: # check for label and type filter
+                if filter_type != None and not element.startswith(filter_type):
+                    continue
+                if filter_sensorlabel != None and not element.startswith(filter_sensorlabel):
+                    continue
+            except:
+                pass
+            # For amdgpu documentation on HWMON interfaces check: https://docs.kernel.org/gpu/amdgpu/thermal.html
             if element[0:3] == "fan" and element[-6:] == "_input": # check if element == fan*_input
                 fanID = element[3:].split("_")[0]
+                params = {"id": fanID, "type": "fan"}
                 # fanX_enable ---> indicates whether the fan is spinning
                 # fanX_input = fanX_target --> contains fan RPM
                 # fanX_min
                 # fanX_max
-                fan_enable = __readfile("/sys/class/hwmon/{}/fan{}_enable".format(sensorgroup, fanID))
-                fan_rpm = __readfile("/sys/class/hwmon/{}/fan{}_input".format(sensorgroup, fanID))
-                fan_min = __readfile("/sys/class/hwmon/{}/fan{}_min".format(sensorgroup, fanID))
-                fan_max = __readfile("/sys/class/hwmon/{}/fan{}_max".format(sensorgroup, fanID))
-                sensors.append({"label": None, "type": "fan", "id": fanID, "fan_enable": fan_enable, "fan_rpm": fan_rpm, "fan_min": fan_min, "fan_max": fan_max})
+                loadParam("/sys/class/hwmon/{}/fan{}_enable".format(sensorgroup, fanID), "label", params)
+                loadParam("/sys/class/hwmon/{}/fan{}_input".format(sensorgroup, fanID), "value", params)
+                loadParam("/sys/class/hwmon/{}/fan{}_min".format(sensorgroup, fanID), "min", params)
+                loadParam("/sys/class/hwmon/{}/fan{}_max".format(sensorgroup, fanID), "max", params)
             elif element[0:4] == "freq" and element[-6:] == "_label": # check if element == freq*_label
                 freqID = element[4:].split("_")[0]
+                params = {"id": freqID, "type": "freq"}
                 # freqX_label
                 # freqX_input ---> contains value of frequency
-                freqLabel = __readfile("/sys/class/hwmon/{}/freq{}_label".format(sensorgroup, freqID))
-                freq_value = __readfile("/sys/class/hwmon/{}/freq{}_input".format(sensorgroup, freqID))
-                sensors.append({"label": freqLabel, "type": "freq", "id": freqID, "freq": freq_value})
+                loadParam("/sys/class/hwmon/{}/freq{}_label".format(sensorgroup, freqID), "label", params)
+                loadParam("/sys/class/hwmon/{}/freq{}_input".format(sensorgroup, freqID), "value", params)
             elif element[0:5] == "power" and element[-6:] == "_label": # check if element == power*_label
                 powerID = element[5:].split("_")[0]
+                params = {"id": powerID, "type": "power"}
                 # powerX_label
-                # powerX_average ---> contains power draw
+                # powerX_average ---> contains power draw; for amdgpu: in microWatts (e.g. 36000000 means 36 Watt)
                 # powerX_cap ---> for overclocking only.
                 # powerX_cap_default ---> for overclocking only.
                 # powerX_cap_max ---> for overclocking only.
                 # powerX_cap_min ---> for overclocking only.
-                powerLabel = __readfile("/sys/class/hwmon/{}/power{}_label".format(sensorgroup, freqID))
-                power_value = __readfile("/sys/class/hwmon/{}/power{}_average".format(sensorgroup, freqID))
-                power_cap = __readfile("/sys/class/hwmon/{}/power{}_cap".format(sensorgroup, freqID))
-                power_cap_default = __readfile("/sys/class/hwmon/{}/power{}_cap_default".format(sensorgroup, freqID))
-                power_cap_max = __readfile("/sys/class/hwmon/{}/power{}_cap_max".format(sensorgroup, freqID))
-                power_cap_min = __readfile("/sys/class/hwmon/{}/power{}_cap_min".format(sensorgroup, freqID))
-                sensors.append({"label": powerLabel, "type": "power", "id": powerID, "power_value": power_value, "power_cap": power_cap, "power_cap_default": power_cap_default, "power_cap_max": power_cap_max, "power_cap_min": power_cap_min})
-            elif element[0:4] == "temp" and element[-6:] == "_label": # check if element == temp*_label
+                loadParam("/sys/class/hwmon/{}/power{}_label".format(sensorgroup, powerID), "label", params)
+                loadParam("/sys/class/hwmon/{}/power{}_average".format(sensorgroup, powerID), "value", params)
+                loadParam("/sys/class/hwmon/{}/power{}_cap".format(sensorgroup, powerID), "cap", params)
+                loadParam("/sys/class/hwmon/{}/power{}_cap_default".format(sensorgroup, powerID), "cap_default", params)
+                loadParam("/sys/class/hwmon/{}/power{}_cap_max".format(sensorgroup, powerID), "cap_max", params)
+                loadParam("/sys/class/hwmon/{}/power{}_cap_min".format(sensorgroup, powerID), "cap_min", params)
+            elif element[0:4] == "temp" and element[-6:] == "_input": # check if element == temp*_input
                 tempID = element[4:].split("_")[0]
+                params = {"id": tempID, "type": "temp"}
                 # tempX_label
                 # tempX_crit
                 # tempX_crit_hyst
                 # tempX_emergency
-                # tempX_input ---> contains temperature in thousands of a degree
-                tempLabel = __readfile("{}/temp{}_label".format(gpu["hwmonDir"], tempID))
-                sensors.append({"label": tempLabel, "type": "temp", "id": tempID})
+                # tempX_input ---> contains temperature; for amdgpu: in milli-degrees (e.g. 16800 means 16.8°C)
+                loadParam("/sys/class/hwmon/{}/temp{}_label".format(sensorgroup, tempID), "label", params)
+                loadParam("/sys/class/hwmon/{}/temp{}_input".format(sensorgroup, tempID), "value", params)
+                loadParam("/sys/class/hwmon/{}/temp{}_crit".format(sensorgroup, tempID), "crit", params)
+                loadParam("/sys/class/hwmon/{}/temp{}_crit_hyst".format(sensorgroup, tempID), "crit_hyst", params)
+                loadParam("/sys/class/hwmon/{}/temp{}_emergency".format(sensorgroup, tempID), "emergency", params)
+                loadParam("/sys/class/hwmon/{}/temp{}_alarm".format(sensorgroup, tempID), "alarm", params)
+                loadParam("/sys/class/hwmon/{}/temp{}_min".format(sensorgroup, tempID), "min", params)
+                loadParam("/sys/class/hwmon/{}/temp{}_max".format(sensorgroup, tempID), "max", params)
+            elif element[0:2] == "in" and element[-6:] == "_label": # check if element == in*_label
+                inID = element[2:].split("_")[0]
+                params = {"id": inID, "type": "in"}
+                # inX_label
+                # inX_input ---> contains voltage
+                loadParam("/sys/class/hwmon/{}/in{}_label".format(sensorgroup, inID), "label", params)
+                loadParam("/sys/class/hwmon/{}/in{}_input".format(sensorgroup, inID), "value", params)
+            else:
+                continue
+
+            sensors["content"].append(params)
             # What about in0_input and in0_label? Idk. I can't make sense of what "in" is supposed to mean.
+        readout.append(sensors)
+    return readout
 
 
-#list GPUs (uses sysfs files at /sys/class/drm)
-def getGPUs():
+#get GPU info (uses sysfs files at /sys/class/drm)
+def gpu():
     global gpus
     dircontent = os.listdir("/sys/class/drm")
     gpus = []
@@ -139,59 +186,71 @@ def getGPUs():
         return {}
     
     for gpu in gpus:
-        try: # Check for the presence of hwmon. This should expose various types of data like fan RPM, fan PWM 0-255, and temperatures.
-            subdir = os.listdir("{}/device/hwmon".format(gpu["sysfsDir"]))
-            gpu["hwmonDir"] = "{}/device/hwmon/{}".format(gpu["sysfsDir"], subdir)
-        except:
-            gpu["hwmonDir"] = False
+        pass # temporary
+#        try: # Check for the presence of hwmon. This should expose various types of data like fan RPM, fan PWM 0-255, and temperatures.
+#            subdir = os.listdir("{}/device/hwmon".format(gpu["sysfsDir"]))
+#            gpu["hwmonDir"] = "{}/device/hwmon/{}".format(gpu["sysfsDir"], subdir)
+#        except:
+#            gpu["hwmonDir"] = False
+#        
+#        if gpu["hwmonDir"]:
+#            gpu["fan"] = {}
+#            gpu["power"] = {}
+#            gpu["frequency"] = {}
+#            gpu["temperature"] = {}
+#            dircontent = os.listdir(gpu["hwmonDir"])
+#            for element in dircontent:
+#                if element[0:3] == "fan" and element[-6:] == "_input": # check if element == fan*_input
+#                    fanID = element[3:].split("_")[0]
+#                    # fanX_enable ---> indicates whether the fan is spinning
+#                    # fanX_input = fanX_target --> contains fan RPM
+#                    # fanX_min
+#                    # fanX_max
+#                    gpu["fan"].append(fanID)
+#                elif element[0:4] == "freq" and element[-6:] == "_label": # check if element == freq*_label
+#                    freqID = element[4:].split("_")[0]
+#                    # freqX_label
+#                    # freqX_input ---> contains value of frequency
+#                    freqLabel = __readfile("{}/freq{}_label".format(gpu["hwmonDir"], freqID))
+#                    gpu["frequency"][freqID] = {"label": freqLabel} # e.g.: gpu["frequency"] = {"1": "sclk", "2": "mclk"}
+#                elif element[0:5] == "power" and element[-6:] == "_label": # check if element == power*_label
+#                    powerID = element[5:].split("_")[0]
+#                    # powerX_label
+#                    # powerX_average ---> contains power draw
+#                    # powerX_cap ---> for overclocking only.
+#                    # powerX_cap_default ---> for overclocking only.
+#                    # powerX_cap_max ---> for overclocking only.
+#                    # powerX_cap_min ---> for overclocking only.
+#                    powerLabel = __readfile("{}/power{}_label".format(gpu["hwmonDir"], powerID))
+#                    gpu["power"][powerID] = {"label": powerLabel} # e.g.: gpu["power"] = {"1": "PPT"}
+#                elif element[0:4] == "temp" and element[-6:] == "_input": # check if element == temp*_input
+#                    tempID = element[4:].split("_")[0]
+#                    # tempX_label
+#                    # tempX_crit
+#                    # tempX_crit_hyst
+#                    # tempX_emergency
+#                    # tempX_input ---> contains temperature in thousands of a degree
+#                    tempLabel = __readfile("{}/temp{}_label".format(gpu["hwmonDir"], tempID))
+#                    gpu["temperature"][tempID] = {"label": tempLabel}
+#                # What about in0_input and in0_label? Idk. I can't make sense of what "in" is supposed to mean.
+
+def loadParam(filepath, paramname, hashmap):
+    try:
+        read = __readfile(filepath)
+        if read[-1] == "\n":
+            read = read[:-1]
+        hashmap[paramname] = read
         
-        if gpu["hwmonDir"]:
-            gpu["fan"] = {}
-            gpu["power"] = {}
-            gpu["frequency"] = {}
-            gpu["temperature"] = {}
-            dircontent = os.listdir(gpu["hwmonDir"])
-            for element in dircontent:
-                if element[0:3] == "fan" and element[-6:] == "_input": # check if element == fan*_input
-                    fanID = element[3:].split("_")[0]
-                    # fanX_enable ---> indicates whether the fan is spinning
-                    # fanX_input = fanX_target --> contains fan RPM
-                    # fanX_min
-                    # fanX_max
-                    gpu["fan"].append(fanID)
-                elif element[0:4] == "freq" and element[-6:] == "_label": # check if element == freq*_label
-                    freqID = element[4:].split("_")[0]
-                    # freqX_label
-                    # freqX_input ---> contains value of frequency
-                    freqLabel = __readfile("{}/freq{}_label".format(gpu["hwmonDir"], freqID))
-                    gpu["frequency"][freqID] = {"label": freqLabel} # e.g.: gpu["frequency"] = {"1": "sclk", "2": "mclk"}
-                elif element[0:5] == "power" and element[-6:] == "_label": # check if element == power*_label
-                    powerID = element[5:].split("_")[0]
-                    # powerX_label
-                    # powerX_average ---> contains power draw
-                    # powerX_cap ---> for overclocking only.
-                    # powerX_cap_default ---> for overclocking only.
-                    # powerX_cap_max ---> for overclocking only.
-                    # powerX_cap_min ---> for overclocking only.
-                    powerLabel = __readfile("{}/power{}_label".format(gpu["hwmonDir"], powerID))
-                    gpu["power"][powerID] = {"label": powerLabel} # e.g.: gpu["power"] = {"1": "PPT"}
-                elif element[0:4] == "temp" and element[-6:] == "_label": # check if element == temp*_label
-                    tempID = element[4:].split("_")[0]
-                    # tempX_label
-                    # tempX_crit
-                    # tempX_crit_hyst
-                    # tempX_emergency
-                    # tempX_input ---> contains temperature in thousands of a degree
-                    tempLabel = __readfile("{}/temp{}_label".format(gpu["hwmonDir"], tempID))
-                    gpu["temperature"][tempID] = {"label": tempLabel}
-                # What about in0_input and in0_label? Idk. I can't make sense of what "in" is supposed to mean.
+    except:
+        pass
+
 def __readfile(filename):
     handle = open(filename, "r")
     read = handle.read()
     handle.close()
     return read
 
-#GPU name
+#GPU name #legacy nvidia-smi functions that cause lag
 def gpu_name():
     returnstring = ""
     for gpu in gpus:
@@ -290,3 +349,5 @@ def humanreadable(size):
         i += 1
     f = ('%.2f' % size).rstrip('0').rstrip('.')
     return '{} {}'.format(f, byteSuffixes[i])
+
+print(sensors())
