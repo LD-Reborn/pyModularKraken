@@ -9,21 +9,31 @@ import time # for debugging
 
 def parseRequest(pText):
     global gpus
-    funcmap = {"sensors": sensors, "gpu": gpu, "cpu": cpu, "cpu_all": cpu_all, "cpu_numcores": cpu_numcores, "ram_percent": ram_percent, "ram_total": ram_total, "ram_used": ram_used, "nic_address": nic_address, "nic_io": nic_io, "nic_linkspeed": nic_linkspeed, "nic_mtu": nic_mtu, "nic_isup": nic_isup}
-
+    funcmap = {
+                "sensors": sensors,
+                "gpu": gpu,
+                "cpu": cpu,
+                "cpu_all": cpu_all,
+                "cpu_numcores": cpu_numcores,
+                "ram_percent": ram_percent,
+                "ram_total": ram_total,
+                "ram_used": ram_used,
+                "nic_address": nic_address,
+                "nic_io": nic_io,
+                "nic_linkspeed": nic_linkspeed,
+                "nic_mtu": nic_mtu,
+                "nic_isup": nic_isup
+            }
     # old request style:
     #   cpu,cpu_all,cpu_numcores,sensors_fans,gpu_name,gpu_temp,gpu_utilization...
     #   
     # 
     # new request style:
-    #   cpu|cpu_all|cpu_numcores|sensors_fans|hwmon.1.temp1|gpu.0.name|gpu.0.temp|gpu.0.utilization
+    #   cpu|cpu_all|cpu_numcores|hwmon.1.temp1|gpu.0.name|gpu.0.mem_info_vram_used|gpu.0.mem_info_vram_total|gpu.0.gpu_busy_percent|gpu.0.mem_busy_percent...
     # 
     # Requesting "hwmon" gives the entire array/hashmap with all 'sensorgroups'.
     # "hwmon.1" gives all sensors from sensorgroup /sys/class/hwmon/hwmon1.
     # "hwmon.1.temp1" would give you just that sensor's data.
-    # 
-    # sensors_fans and gpu_temp will be replaced by hwmon readouts!
-    #
     requests = pText.split("|")
     returnstring = ""
     for request in requests:
@@ -68,7 +78,7 @@ def ram_total():
 def ram_used():
     return psutil.virtual_memory().used
 
-#read all sensors
+#read all sensors (currently HWMON only)
 def sensors(*args):
     try:
         if args[0][0].isdecimal(): # e.g. "hwmon.1", "hwmon.3.temp1", ...
@@ -97,7 +107,7 @@ def sensors(*args):
             continue
         sensors = {"group": sensorgroup, "content": []}
         loadParam("/sys/class/hwmon/{}/name".format(sensorgroup), "grouplabel", sensors)
-        print("DEBUG: {}".format(sensorgroup))
+#        print("DEBUG: {}".format(sensorgroup))
         dircontent = os.listdir("/sys/class/hwmon/{}".format(sensorgroup))
         for element in dircontent:
             try: # check for label and type filter
@@ -173,74 +183,36 @@ def sensors(*args):
     return readout
 
 
-#get GPU info (uses sysfs files at /sys/class/drm)
+#get GPU info (uses sysfs files at /sys/class/drm/card*/device/)
 def gpu():
     global gpus
     dircontent = os.listdir("/sys/class/drm")
     gpus = []
-    for element in dircontent:
-        if element[0:4] == "card":
-            gpus.append({"sysfsDir": "/sys/class/drm/{}".format(element)})
-    
-    if len(gpus) == 0:
-        return {}
-    
+    for element in dircontent: # First list all available GPUs
+        if element[0:4] == "card" and element.find("-") == -1:
+            gpus.append({"sysfsDir": "/sys/class/drm/{}/device".format(element)})
     for gpu in gpus:
-        pass # temporary
-#        try: # Check for the presence of hwmon. This should expose various types of data like fan RPM, fan PWM 0-255, and temperatures.
-#            subdir = os.listdir("{}/device/hwmon".format(gpu["sysfsDir"]))
-#            gpu["hwmonDir"] = "{}/device/hwmon/{}".format(gpu["sysfsDir"], subdir)
-#        except:
-#            gpu["hwmonDir"] = False
-#        
-#        if gpu["hwmonDir"]:
-#            gpu["fan"] = {}
-#            gpu["power"] = {}
-#            gpu["frequency"] = {}
-#            gpu["temperature"] = {}
-#            dircontent = os.listdir(gpu["hwmonDir"])
-#            for element in dircontent:
-#                if element[0:3] == "fan" and element[-6:] == "_input": # check if element == fan*_input
-#                    fanID = element[3:].split("_")[0]
-#                    # fanX_enable ---> indicates whether the fan is spinning
-#                    # fanX_input = fanX_target --> contains fan RPM
-#                    # fanX_min
-#                    # fanX_max
-#                    gpu["fan"].append(fanID)
-#                elif element[0:4] == "freq" and element[-6:] == "_label": # check if element == freq*_label
-#                    freqID = element[4:].split("_")[0]
-#                    # freqX_label
-#                    # freqX_input ---> contains value of frequency
-#                    freqLabel = __readfile("{}/freq{}_label".format(gpu["hwmonDir"], freqID))
-#                    gpu["frequency"][freqID] = {"label": freqLabel} # e.g.: gpu["frequency"] = {"1": "sclk", "2": "mclk"}
-#                elif element[0:5] == "power" and element[-6:] == "_label": # check if element == power*_label
-#                    powerID = element[5:].split("_")[0]
-#                    # powerX_label
-#                    # powerX_average ---> contains power draw
-#                    # powerX_cap ---> for overclocking only.
-#                    # powerX_cap_default ---> for overclocking only.
-#                    # powerX_cap_max ---> for overclocking only.
-#                    # powerX_cap_min ---> for overclocking only.
-#                    powerLabel = __readfile("{}/power{}_label".format(gpu["hwmonDir"], powerID))
-#                    gpu["power"][powerID] = {"label": powerLabel} # e.g.: gpu["power"] = {"1": "PPT"}
-#                elif element[0:4] == "temp" and element[-6:] == "_input": # check if element == temp*_input
-#                    tempID = element[4:].split("_")[0]
-#                    # tempX_label
-#                    # tempX_crit
-#                    # tempX_crit_hyst
-#                    # tempX_emergency
-#                    # tempX_input ---> contains temperature in thousands of a degree
-#                    tempLabel = __readfile("{}/temp{}_label".format(gpu["hwmonDir"], tempID))
-#                    gpu["temperature"][tempID] = {"label": tempLabel}
-#                # What about in0_input and in0_label? Idk. I can't make sense of what "in" is supposed to mean.
+        gpu["sensors"] = {}
+        # see this for documentation: https://kernel.org/doc/html/latest/gpu/amdgpu/driver-misc.html
+        trytoloadthis = ["gpu_busy_percent", "max_link_speed", "max_link_width", "mem_busy_percent", "mem_info_gtt_total", "mem_info_gtt_used", "mem_info_vis_vram_total", "mem_info_vis_vram_used", "mem_info_vram_total", "mem_info_vram_used", "mem_info_vram_vendor", "power_state", "pp_cur_state", "pp_dpm_dcefclk", "pp_dpm_fclk", "pp_dpm_mclk", "pp_dpm_pcie", "pp_dpm_sclk", "pp_dpm_socclk", "thermal_throttling_logging", "vbios_version"]
+        # Explanation to some stuff even I wasn't sure at first: 
+        # mem_info_gtt_*: Memory allocated / used for "graphics translation table"
+        # mem_info_vis_vram_*: "visible" memory, whatever that means; in my case it did not appear to differ from mem_info_vram_* value-wise.
+        # pp_dpm_fclk: Infinity fabric clock
+        # pp_dpm_sclk: Shader clock
+        # pp_dpm_mclk: Memory clock
+        # pp_dpm_socclk: SOC clock?
+        for element in trytoloadthis:
+            loadParam("{}/{}".format(gpu["sysfsDir"], element), element, gpu["sensors"])
+    return gpus
 
+#Read the contents of a file into a hashmap. Pseudocode: hashmap[paramname] = read(filepath)
 def loadParam(filepath, paramname, hashmap):
     try:
         read = __readfile(filepath)
         if read[-1] == "\n":
             read = read[:-1]
         hashmap[paramname] = read
-        
     except:
         pass
 
@@ -250,6 +222,7 @@ def __readfile(filename):
     handle.close()
     return read
 
+'''
 #GPU name #legacy nvidia-smi functions that cause lag
 def gpu_name():
     returnstring = ""
@@ -291,6 +264,7 @@ def gpu_memusedPercent():
     for gpu in gpus:
         returnstring += "{},".format(gpu.memoryUsed / gpu.memoryTotal * 100)
     return returnstring[:-1]
+'''
 
 #All nic addresses in format: nic=address,nic2=address,...
 def nic_address(pGetIPv6 = False): #With nic_address(True) you'll get multiple IPv6 addresses per NIC. Not a bug.
@@ -350,4 +324,3 @@ def humanreadable(size):
     f = ('%.2f' % size).rstrip('0').rstrip('.')
     return '{} {}'.format(f, byteSuffixes[i])
 
-print(sensors())
