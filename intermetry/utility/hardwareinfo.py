@@ -1,10 +1,11 @@
 import psutil
 #dependency ---> pip3 install gputil
 import GPUtil
+import json # for string serialization
 import sys
 import os
 sys.path.append("../..")
-#from log.log import *
+from log.log import *
 import time # for debugging
 
 def parseRequest(pText):
@@ -29,64 +30,80 @@ def parseRequest(pText):
     #   
     # 
     # new request style:
-    #   cpu|cpu_all|cpu_numcores|hwmon.1.temp1|gpu.0.name|gpu.0.mem_info_vram_used|gpu.0.mem_info_vram_total|gpu.0.gpu_busy_percent|gpu.0.mem_busy_percent...
-    # 
-    # Requesting "hwmon" gives the entire array/hashmap with all 'sensorgroups'.
-    # "hwmon.1" gives all sensors from sensorgroup /sys/class/hwmon/hwmon1.
-    # "hwmon.1.temp1" would give you just that sensor's data.
+    #   cpu|cpu_all|cpu_numcores|sensors.1.temp1|gpu.0.name|gpu.0.mem_info_vram_used|gpu.0.mem_info_vram_total|gpu.0.gpu_busy_percent|gpu.0.mem_busy_percent...
+    #
+    #
+    # resonse style: (importable with json.loads)
+    #   hardwareinfo:{'cpu': 39.7, 'cpu_all': [44.6, 37.7, 35.2, 44.2, 49.1, 35.8, 41.5, 35.8, 30.8, 33.3, 35.8, 40.0, 51.8, 47.2, 38.9, 35.3], 'cpu_numcores': 16, ...}
+    #
+    #
+    #
+    # Requesting "sensors" gives the entire array/hashmap with all 'sensorgroups'.
+    # You can filter by path or sensor type.
+    # path:
+    #   "sensors.1" gives all sensors from sensorgroup /sys/class/hwmon/hwmon1.
+    #   "sensors.1.temp1" would give you just that sensor's data. 
+    # sensor type:
+    #   "sensors.temp" gives you all data related to temperature.
+    #   "sensors.fan" gives you all data related to fans.
+    #   "sensors.freq" gives you all data related to frequency.
+    #   "sensors.power" gives you all data related to power consumption.
+    #   "sensors.in" gives you all data related to voltage and power supply.
     requests = pText.split("|")
-    returnstring = ""
+    #returnstring = ""
+    returnArray = {}
     for request in requests:
         time1 = time.time()
         try:
-            split = request.split("|")
-            returnstring += "{}|".format(funcmap[split[0]](split[1:]))
+            split = request.split(".")
+            #returnstring += "{}|".format(funcmap[split[0]](split[1:]))
+            returnArray[request] = funcmap[split[0]](split[1:])
         except Exception as msg:
             errout("HARDWAREINFO: unable to parse requested hardware info {}. Error: {}".format(request, msg))
         print("DEBUG@hardwareinfo request time {} for request {}".format(time.time() - time1, request))
-    return returnstring
+    return json.dumps(returnArray)
 
 #All temperature values from psutil
-def sensors_temperatures():
+def sensors_temperatures(*args):
     return psutil.sensors_temperatures()
 
 #All fanspeed values from psutil
-def sensors_fans():
+def sensors_fans(*args):
     return psutil.sensors_fans()
 
 #CPU usage in percent
-def cpu():
+def cpu(*args):
     return psutil.cpu_percent()
 
 #CPU usage by cores in [percent[, percent[, percent[...]]]]. E.g.: [10.3, 7.4, 7.5, 7.9, 9.4, 7.0, 7.9, 8.4]
-def cpu_all():
+def cpu_all(*args):
     return psutil.cpu_percent(percpu=True)
 
 #CPU core count
-def cpu_numcores():
+def cpu_numcores(*args):
     return psutil.cpu_count()
 
 #RAM usage in percent
-def ram_percent():
+def ram_percent(*args):
     return psutil.virtual_memory().percent
 
 #RAM total amount in bytes
-def ram_total():
+def ram_total(*args):
     return psutil.virtual_memory().total
 
 #RAM usage in bytes
-def ram_used():
+def ram_used(*args):
     return psutil.virtual_memory().used
 
 #read all sensors (currently HWMON only)
 def sensors(*args):
     try:
-        if args[0][0].isdecimal(): # e.g. "hwmon.1", "hwmon.3.temp1", ...
-           filter_groupid = int(args[0])
+        if args[0][0].isdecimal(): # e.g. "sensors.1", "sensors.3.temp1", ...
+           filter_groupid = int(args[0][0])
            filter_type = None
-        else: # e.g. "hwmon.fans", "hwmon.temp", ...
+        else: # e.g. "sensors.fans", "sensors.temp", ...
             filter_groupid = None
-            filter_type = args[0]
+            filter_type = args[0][0]
     except:
         filter_groupid = None
         filter_type = None
@@ -101,11 +118,11 @@ def sensors(*args):
         directory = os.listdir("/sys/class/hwmon")
     except:
         return False
-    readout = []
+    readout = {}
     for sensorgroup in directory:
         if filter_groupid != None and sensorgroup != "hwmon{}".format(filter_groupid):
             continue
-        sensors = {"group": sensorgroup, "content": []}
+        sensors = {"group": sensorgroup, "content": {}}
         loadParam("/sys/class/hwmon/{}/name".format(sensorgroup), "grouplabel", sensors)
 #        print("DEBUG: {}".format(sensorgroup))
         dircontent = os.listdir("/sys/class/hwmon/{}".format(sensorgroup))
@@ -129,6 +146,10 @@ def sensors(*args):
                 loadParam("/sys/class/hwmon/{}/fan{}_input".format(sensorgroup, fanID), "value", params)
                 loadParam("/sys/class/hwmon/{}/fan{}_min".format(sensorgroup, fanID), "min", params)
                 loadParam("/sys/class/hwmon/{}/fan{}_max".format(sensorgroup, fanID), "max", params)
+                try:
+                    sensors["content"][params["label"]] = params
+                except:
+                    sensors["content"][fanID] = params
             elif element[0:4] == "freq" and element[-6:] == "_label": # check if element == freq*_label
                 freqID = element[4:].split("_")[0]
                 params = {"id": freqID, "type": "freq"}
@@ -136,6 +157,10 @@ def sensors(*args):
                 # freqX_input ---> contains value of frequency
                 loadParam("/sys/class/hwmon/{}/freq{}_label".format(sensorgroup, freqID), "label", params)
                 loadParam("/sys/class/hwmon/{}/freq{}_input".format(sensorgroup, freqID), "value", params)
+                try:
+                    sensors["content"][params["label"]] = params
+                except:
+                    sensors["content"][freqID] = params
             elif element[0:5] == "power" and element[-6:] == "_label": # check if element == power*_label
                 powerID = element[5:].split("_")[0]
                 params = {"id": powerID, "type": "power"}
@@ -151,6 +176,10 @@ def sensors(*args):
                 loadParam("/sys/class/hwmon/{}/power{}_cap_default".format(sensorgroup, powerID), "cap_default", params)
                 loadParam("/sys/class/hwmon/{}/power{}_cap_max".format(sensorgroup, powerID), "cap_max", params)
                 loadParam("/sys/class/hwmon/{}/power{}_cap_min".format(sensorgroup, powerID), "cap_min", params)
+                try:
+                    sensors["content"][params["label"]] = params
+                except:
+                    sensors["content"][powerID] = params
             elif element[0:4] == "temp" and element[-6:] == "_input": # check if element == temp*_input
                 tempID = element[4:].split("_")[0]
                 params = {"id": tempID, "type": "temp"}
@@ -167,6 +196,10 @@ def sensors(*args):
                 loadParam("/sys/class/hwmon/{}/temp{}_alarm".format(sensorgroup, tempID), "alarm", params)
                 loadParam("/sys/class/hwmon/{}/temp{}_min".format(sensorgroup, tempID), "min", params)
                 loadParam("/sys/class/hwmon/{}/temp{}_max".format(sensorgroup, tempID), "max", params)
+                try:
+                    sensors["content"][params["label"]] = params
+                except:
+                    sensors["content"][tempID] = params
             elif element[0:2] == "in" and element[-6:] == "_label": # check if element == in*_label
                 inID = element[2:].split("_")[0]
                 params = {"id": inID, "type": "in"}
@@ -174,17 +207,23 @@ def sensors(*args):
                 # inX_input ---> contains voltage
                 loadParam("/sys/class/hwmon/{}/in{}_label".format(sensorgroup, inID), "label", params)
                 loadParam("/sys/class/hwmon/{}/in{}_input".format(sensorgroup, inID), "value", params)
+                try:
+                    sensors["content"][params["label"]] = params
+                except:
+                    sensors["content"][inID] = params
             else:
                 continue
 
-            sensors["content"].append(params)
             # What about in0_input and in0_label? Idk. I can't make sense of what "in" is supposed to mean.
-        readout.append(sensors)
+        try:
+            readout[sensors["grouplabel"]] = sensors
+        except:
+            readout[sensorgroup] = sensors
     return readout
 
 
 #get GPU info (uses sysfs files at /sys/class/drm/card*/device/)
-def gpu():
+def gpu(*args):
     global gpus
     dircontent = os.listdir("/sys/class/drm")
     gpus = []
@@ -267,7 +306,11 @@ def gpu_memusedPercent():
 '''
 
 #All nic addresses in format: nic=address,nic2=address,...
-def nic_address(pGetIPv6 = False): #With nic_address(True) you'll get multiple IPv6 addresses per NIC. Not a bug.
+def nic_address(*args): #, pGetIPv6 = False): #With nic_address(True) you'll get multiple IPv6 addresses per NIC. Not a bug.
+    try:
+        getIPv6 = (args[0][0] == "1" or args[0][0].lower() == "true")
+    except:
+        getIPv6 = False
     returnstring = ""
     nics = psutil.net_if_addrs()
     for nic in nics:
@@ -275,13 +318,13 @@ def nic_address(pGetIPv6 = False): #With nic_address(True) you'll get multiple I
             #print("DEBUG")
             #print(nic)
             #print(address)
-            if address.family.value == 2 + 8 * pGetIPv6: #2 = IPv4. 10 = IPv6
+            if address.family.value == 2 + 8 * getIPv6: #2 = IPv4. 10 = IPv6
                 #print("is v4\n")
                 returnstring += "{}={},".format(nic, address.address)
     return returnstring[:-1]
 
 #All nic TOTAL up/down byte values in format: nic=up/down, nic2=up/down,...
-def nic_io():
+def nic_io(*args):
     returnstring = ""
     nics = psutil.net_io_counters(pernic=True)
     for nic in nics:
@@ -290,7 +333,7 @@ def nic_io():
 
 #All nic linkspeeds in MB/s in format: nic=linkspeed, nic2=linkspeed,...
 #Link speed seems to jump to 65535 if you unplug the cable from respective nic. Developers might have had a few drinks. Relatable.
-def nic_linkspeed():
+def nic_linkspeed(*args):
     returnstring = ""
     nics = psutil.net_if_stats()
     for nic in nics:
@@ -298,7 +341,7 @@ def nic_linkspeed():
     return returnstring[:-1]
 
 #All nic mtu in format: nic=mtu, nic2=mtu,...
-def nic_mtu():
+def nic_mtu(*args):
     returnstring = ""
     nics = psutil.net_if_stats()
     for nic in nics:
@@ -307,7 +350,7 @@ def nic_mtu():
 
 #All nic up status in format: nic=isup, nic2=isup,...
 #Testing has showed that unplugging the cable does make the returned value flip to False. Haven't tested Wifi though.
-def nic_isup():
+def nic_isup(*args):
     returnstring = ""
     nics = psutil.net_if_stats()
     for nic in nics:
