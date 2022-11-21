@@ -61,7 +61,6 @@
             <variable name="tcpu" function="tcpu" every="0.5"/>
             <label x="250" y="230" variable="tcpu"/>
             
-            <variable name="gpuTemp" function="gpuTemp" every="0.5"/>
             <image x="450" y="210" image="assets/hexa.png"/>
             <label x="495" y="170" font="Arial 20 bold" text="tGPU"/>
             <variable name="tgpu" function="tgpu" every="0.5"/>
