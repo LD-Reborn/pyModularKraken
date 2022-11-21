@@ -1,0 +1,269 @@
+The request
+	"hardwareinfo:cpu|cpu_all|ram_percent|ram_total|gpu|nic_address|nic_io|nic_linkspeed|nic_mtu|nic_isup|sensors.temp|sensors.fan"
+
+gets answered like this:
+
+{
+	'cpu': 45.8,
+	'cpu_all':
+	[
+		25.0,
+		50.0,
+		50.0,
+		0.0,
+		66.7,
+		66.7,
+		50.0,
+		50.0,
+		25.0,
+		75.0,
+		33.3,
+		50.0,
+		100.0,
+		50.0,
+		66.7,
+		50.0
+	],
+	'ram_percent': 47.6,
+	'ram_total': 16690515968,
+	'gpu':
+	[
+		{
+			'sysfsDir': '/sys/class/drm/card0/device',
+			'sensors':
+			{
+				'gpu_busy_percent': '1',
+				'max_link_speed': '16.0 GT/s PCIe',
+				'max_link_width': '16',
+				'mem_busy_percent': '0',
+				'mem_info_gtt_total': '8345257984',
+				'mem_info_gtt_used': '100855808',
+				'mem_info_vis_vram_total': '12868124672',
+				'mem_info_vis_vram_used': '1228156928',
+				'mem_info_vram_total': '12868124672',
+				'mem_info_vram_used': '1228156928',
+				'mem_info_vram_vendor': 'samsung',
+				'power_state': 'D0',
+				'pp_cur_state': '0',
+				'pp_dpm_dcefclk': '0: 417Mhz \n1: 960Mhz *\n2: 1200Mhz ',
+				'pp_dpm_fclk': '0: 500Mhz \n1: 1523Mhz *\n2: 1941Mhz ',
+				'pp_dpm_mclk': '0: 96Mhz \n1: 456Mhz \n2: 675Mhz \n3: 1124Mhz *',
+				'pp_dpm_pcie': '0: 2.5GT/s, x1 310Mhz \n1: 8.0GT/s, x16 619Mhz *',
+				'pp_dpm_sclk': '0: 500Mhz *\n1: 2880Mhz ',
+				'pp_dpm_socclk': '0: 480Mhz \n1: 1200Mhz *',
+				'thermal_throttling_logging': '0000:09:00.0: thermal throttling logging enabled, with interval 60 seconds',
+				'vbios_version': '113-D5270301-S01'
+			}
+		}
+	],
+	'nic_address': 'lo=127.0.0.1,enp5s0=192.168.0.101,anbox0=192.168.250.1,ztrf2vegnr=192.168.192.101,ztr2qy64cl=10.147.20.101',
+	'nic_io': 'lo=9194190/9194190,enp5s0=181689922/6766597225,anbox0=0/0,ztrf2vegnr=42160/214232,ztr2qy64cl=43162/40163',
+	'nic_linkspeed': 'lo=0,enp5s0=1000,anbox0=65535,ztrf2vegnr=10,ztr2qy64cl=10',
+	'nic_mtu': 'lo=65536,enp5s0=1500,anbox0=1500,ztrf2vegnr=2800,ztr2qy64cl=2800',
+	'nic_isup': 'lo=True,enp5s0=True,anbox0=False,ztrf2vegnr=True,ztr2qy64cl=True',
+	'sensors.temp':
+	{
+		'amdgpu':
+		{
+			'group': 'hwmon4',
+			'content':
+			{
+				'mem':
+				{
+					'id': '3',
+					'type':
+					'temp',
+					'label': 'mem',
+					'value': '56000',
+					'crit': '105000',
+					'crit_hyst': '-273150',
+					'emergency': '110000'
+				},
+				'edge':
+				{
+					'id': '1',
+					'type': 'temp',
+					'label': 'edge',
+					'value': '55000',
+					'crit': '110000',
+					'crit_hyst': '-273150',
+					'emergency': '115000'
+				},
+				'junction':
+				{
+					'id': '2',
+					'type': 'temp',
+					'label': 'junction',
+					'value': '57000',
+					'crit': '110000',
+					'crit_hyst': '-273150',
+					'emergency': '115000'
+				}
+			},
+			'grouplabel': 'amdgpu'
+		},
+		'gigabyte_wmi':
+		{
+			'group': 'hwmon2',
+			'content':
+			{
+				'6':
+				{
+					'id': '6',
+					'type': 'temp',
+					'value': '45000'
+				},
+				'3':
+				{
+					'id': '3',
+					'type': 'temp',
+					'value': '47000'
+				},
+				'4':
+				{
+					'id': '4',
+					'type': 'temp',
+					'value': '16000'
+				},
+				'1':
+				{
+					'id': '1',
+					'type': 'temp',
+					'value': '30000'
+				},
+				'5':
+				{
+					'id': '5',
+					'type': 'temp',
+					'value': '45000'
+				},
+				'2':
+				{
+					'id': '2',
+					'type': 'temp',
+					'value': '42000'
+				}
+			},
+			'grouplabel': 'gigabyte_wmi'
+		},
+		'acpitz':
+		{
+			'group': 'hwmon0',
+			'content':
+			{
+				'1':
+				{
+					'id': '1',
+					'type': 'temp',
+					'value': '16800',
+					'crit': '20800'
+				},
+				'2':
+				{
+					'id': '2',
+					'type': 'temp',
+					'value': '16800',
+					'crit': '20800'
+				}
+			},
+			'grouplabel': 'acpitz'
+		},
+		'k10temp':
+		{
+			'group': 'hwmon3',
+			'content':
+			{
+				'Tccd1':
+				{
+					'id': '3',
+					'type': 'temp',
+					'label': 'Tccd1',
+					'value': '49000'
+				},
+				'Tctl':
+				{
+					'id': '1',
+					'type': 'temp',
+					'label': 'Tctl',
+					'value': '47500'
+				}
+			},
+			'grouplabel': 'k10temp'
+		},
+		'nvme':
+		{
+			'group': 'hwmon1',
+			'content':
+			{
+				'Composite':
+				{
+					'id': '1',
+					'type': 'temp',
+					'label': 'Composite',
+					'value': '41850',
+					'crit': '89850',
+					'alarm': '0',
+					'min': '-273150',
+					'max': '84850'
+				}
+			},
+			'grouplabel': 'nvme'
+		}
+	},
+	'sensors.fan':
+	{
+		'hwmon4':
+		{
+			'group': 'hwmon4',
+			'content':
+			{
+				'0':
+				{
+					'id': '1',
+					'type': 'fan',
+					'label': '0',
+					'value': '0',
+					'min': '0',
+					'max': '3400'
+				}
+			},
+			'grouplabel': 'amdgpu'
+		},
+		'hwmon2':
+		{
+			'group': 'hwmon2',
+			'content':
+			{
+
+			},
+			'grouplabel': 'gigabyte_wmi'
+		},
+		'hwmon0':
+		{
+			'group': 'hwmon0',
+			'content':
+			{
+
+			},
+			'grouplabel': 'acpitz'
+		},
+		'hwmon3':
+		{
+			'group': 'hwmon3',
+			'content':
+			{
+
+			},
+			'grouplabel': 'k10temp'
+		},
+		'hwmon1':
+		{
+			'group': 'hwmon1',
+			'content':
+			{
+
+			},
+			'grouplabel': 'nvme'
+		}
+	}
+}
