@@ -72,10 +72,11 @@ core:
     #implemented! ~ Isaias
     
     -Implement function to add modules. (Set name, generate queue pair, and forward to requesting module)
-
+    -Add function that the core calls on the destination module everytime there is a new modulequeue_in (so that the modules don't need to poll the queue 10-20 times a second.)
 
 Github / general:
     
+    -Create Discord server and add to Github page
     -Make guided install script that generates private and public keys, and configures all the config files.
 	-Create tutorials and copy-paste friendly example sections.
     #-Add a GPLv2 or GPLv3 license?
