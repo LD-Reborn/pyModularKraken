@@ -29,24 +29,31 @@
             <variable name="cpuPercentGraph" function="cpuPercentGraph" every="0.5"/>
             <image x="150" y="60" image="assets/hexa.png"/>
             <label x="200" y="20" font="Arial 20 bold" text="CPU"/>
+            
             <label x="200" y="80" font="Arial 15" variable="cpuPercent"/>
             <label x="170" y="115" font="Arial 7" variable="cpuAll"/>
             <label x="190" y="130" font="mono 5" variable="cpuPercentGraph"/>
             
             <variable name="gpuPercent" function="gpuPercent" every="0.5"/>
             <variable name="gpuMemused" function="gpuMemused" every="0.5"/>
+            <variable name="gpuMemusedPercent" function="gpuMemusedPercent" every="0.5"/>
             <variable name="gpuPercentGraph" function="gpuPercentGraph" every="0.5"/>
             <image x="350" y="60" image="assets/hexa.png"/>
             <label x="400" y="20" font="Arial 20 bold" text="GPU"/>
-            <label x="400" y="80" font="Arial 15" variable="gpuPercent"/>
-            <label x="380" y="110" font="Arial 10" variable="gpuMemused"/>
+            <label x="390" y="70" font="Arial 10" color="#AAAAAA" text="GPU"/>
+            <label x="385" y="85" font="Arial 15" variable="gpuPercent"/>
+            <label x="430" y="70" font="Arial 10" color="#AAAAAA" text="MEM"/>
+            <label x="430" y="85" font="Arial 15" variable="gpuMemusedPercent"/>
+            <label x="385" y="115" font="Arial 8" variable="gpuMemused"/>
             <label x="390" y="130" font="mono 5" variable="gpuPercentGraph"/>
 
             <variable name="ramPercent" function="ramPercent" every="0.5"/>
+            <variable name="ramUsage" function="ramUsage" every="0.5"/>
             <variable name="ramPercentGraph" function="ramPercentGraph" every="1"/>
             <image x="550" y="60" image="assets/hexa.png"/>
             <label x="595" y="20" font="Arial 20 bold" text="RAM"/>
             <label x="600" y="80" font="Arial 15" variable="ramPercent"/>
+            <label x="585" y="110" font="Arial 10" variable="ramUsage"/>
             <label x="590" y="130" font="mono 5" variable="ramPercentGraph"/>
 
             <image x="750" y="60" image="assets/hexa.png" onclick="hexa.nicswitch"/>
@@ -59,18 +66,24 @@
             <image x="250" y="210" image="assets/hexa.png"/>
             <label x="295" y="170" font="Arial 20 bold" text="tCPU"/>
             <variable name="tcpu" function="tcpu" every="0.5"/>
-            <label x="250" y="230" variable="tcpu"/>
+            <label x="300" y="230" font="Arial 15" variable="tcpu"/>
             
+            <variable name="tgpu" function="tgpu" every="0.5"/>
+            <variable name="tgpuMem" function="tgpuMem" every="0.5"/>
+            <variable name="tgpuPPT" function="tgpuPPT" every="0.5"/>
             <image x="450" y="210" image="assets/hexa.png"/>
             <label x="495" y="170" font="Arial 20 bold" text="tGPU"/>
-            <variable name="tgpu" function="tgpu" every="0.5"/>
-            <label x="450" y="230" variable="tgpu"/>
-            <label x="505" y="245" font="Arial 10" variable="gpuTemp"/>
+            <label x="505" y="220" font="Arial 10" color="#AAAAAA" text="junction"/>
+            <label x="505" y="235" font="Arial 15" variable="tgpu"/>
+            <label x="512" y="260" font="Arial 10" color="#AAAAAA" text="mem"/>
+            <label x="512" y="275" font="Arial 10" variable="tgpuMem"/>
+            <label x="515" y="295" font="Arial 10" color="#AAAAAA" text="PPT"/>
+            <label x="505" y="310" font="Arial 10" variable="tgpuPPT"/>
 
             <image x="650" y="210" image="assets/hexa.png"/>
             <label x="695" y="170" font="Arial 20 bold" text="tSYS"/>
             <variable name="tsys" function="tsys" every="0.5"/>
-            <label x="650" y="230" variable="tsys"/>
+            <label x="700" y="230" font="Arial 15" variable="tsys"/>
 
             <image x="850" y="210" image="assets/hexa.png" onclick="hexa.nicswitch"/>
             <label x="890" y="230" font="Arial 15" text="enp6s0"/>
@@ -79,6 +92,19 @@
             <variable name="nic2io" function="nic2io" every="1.0"/>
             <label x="885" y="295" color="#888888" justify="center" font="Arial 8" variable="nic2io"/>
 
+            <image x="150" y="410" image="assets/hexa_long_e15.png"/>
+            <label x="170" y="450" font="Arial 30" text=" ‒ "/>
+            <label x="455" y="450" font="Arial 30" text=" + "/>
+            <image x="540" y="410" image="assets/hexa_long.png"/>
+            <label x="635" y="425" font="Arial 15" text="69%"/>
+            <label x="565" y="450" font="Arial 30" text=" ‒ "/>
+            <label x="695" y="455" font="Arial 30" text=" + "/>
+            <label x="630" y="465" font="Arial 15" text="OUT"/>
+            <image x="775" y="410" image="assets/hexa_long.png"/>
+            <label x="870" y="425" font="Arial 15" text="69%"/>
+            <label x="800" y="450" font="Arial 30" text=" ‒ "/>
+            <label x="930" y="455" font="Arial 30" text=" + "/>
+            <label x="865" y="465" font="Arial 15" text="  IN  "/>
         </page>
         <page name="audio">
             <label font="Arial 25" color="#ff0000" bg="#00ff00" text="Nothing to see here in the audio page" x="150" y="50"/>
