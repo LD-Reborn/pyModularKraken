@@ -1,4 +1,6 @@
-# ModularKraken
+# DISCONTINUED - What even is this codebase?
+
+# ~~ModularKraken~~
 ## What is ModularKraken?
 
 ModularKraken is a networking framework that allows you to skip **as many steps** as possible when implementing communication between devices.
